@@ -845,6 +845,19 @@ body.print-preview #printSheet{display:block;padding:40px 16px}
       </div>
     </div>
   </section>
+
+  <!-- Closing band (home page only) -->
+  <section class="band alt center closing reveal" aria-labelledby="h-next">
+    <div class="wrap">
+      <p class="eyebrow">Next step</p>
+      <h2 class="tw" id="h-next">Your reviewer's edits<br><strong>are the rulebook.</strong></h2>
+      <p class="lede" id="closingText">Paste two versions of a draft to begin. Edits that recur become rules you confirm, check and export.</p>
+      <div class="actions" id="closingActions">
+        <a class="btn btn-solid" href="#compare" data-focus="txtSent">Compare drafts <span class="arr" aria-hidden="true">→</span></a>
+        <a class="btn btn-outline" href="#how">See how it works</a>
+      </div>
+    </div>
+  </section>
 </div>
 
 <!-- ============================ COMPARE + TAG ============================ -->
@@ -1107,19 +1120,6 @@ body.print-preview #printSheet{display:block;padding:40px 16px}
 
 </main>
 
-<!-- Closing band -->
-<section class="band alt center closing reveal" aria-labelledby="h-next">
-  <div class="wrap">
-    <p class="eyebrow">Next step</p>
-    <h2 class="tw" id="h-next">Your reviewer's edits<br><strong>are the rulebook.</strong></h2>
-    <p class="lede">Check your next draft against what you have learned, or export the skill.</p>
-    <div class="actions">
-      <a class="btn btn-solid" href="#check" data-focus="checkText">Check a draft <span class="arr" aria-hidden="true">→</span></a>
-      <a class="btn btn-outline" href="#export">Export skill <span class="arr" aria-hidden="true">→</span></a>
-    </div>
-  </div>
-</section>
-
 <footer class="site-footer">
   <div class="wrap">
     <div class="foot-grid">
@@ -1242,7 +1242,7 @@ body.print-preview #printSheet{display:block;padding:40px 16px}
    ========================================================================== */
 'use strict';
 
-const APP_VERSION = '1.4.1';
+const APP_VERSION = '1.4.2';
 const COURSE_LINE = 'NYU School of Law · Artificial Intelligence and Corporate Deals and Advice';
 const TOOL_CREDIT = 'Made with Redline to Rule, by Henning Fischer.';
 const STORAGE_KEY = 'redlineToRule.v1';
@@ -4446,7 +4446,20 @@ function nextStep() {
   return { step: 'Repeat', text: 'compare the next draft that comes back', btn: 'Compare drafts', run: () => goTo('compare', S.ui.compareMode === 'redline' ? 'redlineFile' : S.ui.compareMode === 'oral' ? 'txtOral' : 'txtSent') };
 }
 
+/** Home closing band: the same next step as the guide bar, so it follows the workflow
+    (compare and tag first, then rules; check and export once rules are confirmed). */
+function renderClosing() {
+  const ns = nextStep(), hasRules = activeRules(S, S.activeProfileId, 'all').length > 0;
+  const why = hasRules ? '' : ns.step === 'Learn' ? ' Only rules you confirm enter the draft check and the skill.' : ' Edits that recur become rules you confirm, check and export.';
+  $('closingText').textContent = capitalize(ns.text) + '.' + why;
+  const second = !hasRules ? h('a', { class: 'btn btn-outline', href: '#how' }, 'See how it works')
+    : ns.step === 'Export' ? h('a', { class: 'btn btn-outline', href: '#check', 'data-focus': 'checkText' }, 'Check a draft', ' ', arrow())
+    : h('a', { class: 'btn btn-outline', href: '#export' }, 'Export skill', ' ', arrow());
+  $('closingActions').replaceChildren(h('button', { type: 'button', class: 'btn btn-solid', onclick: ns.run }, ns.btn, ' ', arrow()), second);
+}
+
 function renderNextBar() {
+  renderClosing();
   const bar = $('nextBar'), show = !!currentView && currentView !== 'home';
   bar.hidden = !show;
   document.documentElement.classList.toggle('has-next', show);
