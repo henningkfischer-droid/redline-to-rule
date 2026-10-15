@@ -132,6 +132,33 @@ html[data-theme="dark"] .site-header{background:#3D0563}
 .crumbs a{color:var(--text-2);text-decoration:none}
 .crumbs a:hover{color:var(--link)}
 .crumbs a[aria-current="step"]{color:var(--link);font-weight:700}
+/* Sub-steps (1.1/1.2, 3.1/3.2): an NYU Law-style drop-down. Hover peeks, click pins it open. */
+.crumbs{position:relative;z-index:40}
+.has-sub{position:relative;display:inline-flex}
+.crumb-toggle{display:inline-flex;align-items:center;gap:6px;background:none;border:0;padding:0;font:inherit;letter-spacing:inherit;text-transform:inherit;color:var(--text-2);cursor:pointer}
+.crumb-toggle:hover,.has-sub.open .crumb-toggle{color:var(--link)}
+.crumb-toggle[aria-current="step"]{color:var(--link);font-weight:700}
+.chev{width:10px;height:10px;fill:none;stroke:currentColor;stroke-width:1.6;transition:transform .25s var(--ease)}
+.has-sub.open .chev{transform:rotate(180deg)}
+.crumb-menu{position:absolute;top:calc(100% + 16px);left:-24px;width:320px;background:var(--surface);border-top:3px solid var(--accent);border-radius:0 0 8px 8px;
+  box-shadow:0 0 0 1px var(--line),0 24px 60px rgba(30,10,48,.18);text-transform:none;letter-spacing:normal;font-weight:400;z-index:45;
+  opacity:0;visibility:hidden;transform:translateY(8px);transition:opacity .2s var(--ease),transform .2s var(--ease),visibility 0s .2s}
+.crumb-menu::before{content:"";position:absolute;top:-12px;left:var(--caret-x,48px);border:9px solid transparent;border-top:0;border-bottom-color:var(--accent)}
+.crumb-menu::after{content:"";position:absolute;left:0;right:0;top:-20px;height:17px}   /* hover bridge across the gap */
+.has-sub.open .crumb-menu{opacity:1;visibility:visible;transform:none;transition:opacity .2s var(--ease),transform .2s var(--ease),visibility 0s}
+.crumb-menu a{display:grid;grid-template-columns:46px minmax(0,1fr);gap:3px 12px;padding:16px 22px;color:var(--text);text-decoration:none;border-bottom:1px solid var(--line);transition:background .2s}
+.crumb-menu a:last-child{border-bottom:0;border-radius:0 0 8px 8px}
+.crumb-menu a:hover,.crumb-menu a:focus-visible{background:var(--chip-bg);outline:none}
+.crumb-menu a[aria-current="step"]{box-shadow:inset 3px 0 0 var(--accent)}
+.cm-n{grid-row:1/span 2;font:300 26px/1 var(--serif);color:var(--link);letter-spacing:-.01em}
+.cm-t{font:700 16px/1.3 var(--sans);color:var(--link)}
+.cm-d{font-size:13px;line-height:1.4;color:var(--text-2)}
+html[data-theme="dark"] .crumb-menu{box-shadow:0 0 0 1px var(--line),0 24px 60px rgba(0,0,0,.5)}
+@media (max-width:600px){
+  .has-sub{position:static}
+  .crumb-menu{left:16px;right:16px;width:auto}
+  .crumb-menu::before{display:none}
+}
 
 @media (max-width:900px){
   .menu-btn{display:grid;margin-left:auto}
@@ -671,9 +698,21 @@ body.print-preview #printSheet{display:block;padding:40px 16px}
 <!-- Step breadcrumb (working screens only) -->
 <nav class="crumbs" id="crumbs" aria-label="Workflow steps" hidden>
   <ol class="wrap">
-    <li><a href="#compare" data-step="compare">1 Compare</a></li>
+    <li><span class="has-sub">
+      <button type="button" class="crumb-toggle" data-step="compare" aria-expanded="false" aria-controls="crumbMenuCompare">1 Compare<svg class="chev" viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 4.5 6 8l3.5-3.5"/></svg></button>
+      <span class="crumb-menu" id="crumbMenuCompare">
+        <a href="#compare" data-sub="compare" data-scroll="h-compare"><span class="cm-n">1.1</span><span class="cm-t">Compare</span><span class="cm-d">Bring in both versions, a tracked-changes file or your notes</span></a>
+        <a href="#compare" data-sub="tag" data-scroll="tagSection"><span class="cm-n">1.2</span><span class="cm-t">Tag</span><span class="cm-d">Record why each change was made</span></a>
+      </span>
+    </span></li>
     <li><a href="#ledger" data-step="ledger">2 Ledger</a></li>
-    <li><a href="#rules" data-step="rules">3 Rules</a></li>
+    <li><span class="has-sub">
+      <button type="button" class="crumb-toggle" data-step="rules" aria-expanded="false" aria-controls="crumbMenuRules">3 Rules<svg class="chev" viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 4.5 6 8l3.5-3.5"/></svg></button>
+      <span class="crumb-menu" id="crumbMenuRules">
+        <a href="#rules" data-sub="learn" data-scroll="h-rules"><span class="cm-n">3.1</span><span class="cm-t">Learn</span><span class="cm-d">Candidate rules from recurring edits</span></a>
+        <a href="#rules" data-sub="confirm" data-scroll="h-confirmed"><span class="cm-n">3.2</span><span class="cm-t">Confirm</span><span class="cm-d">The rules that enter the skill and the check</span></a>
+      </span>
+    </span></li>
     <li><a href="#check" data-step="check">4 Check</a></li>
     <li><a href="#export" data-step="export">5 Export</a></li>
   </ol>
@@ -1143,7 +1182,7 @@ body.print-preview #printSheet{display:block;padding:40px 16px}
    ========================================================================== */
 'use strict';
 
-const APP_VERSION = '1.3.1';
+const APP_VERSION = '1.3.2';
 const STORAGE_KEY = 'redlineToRule.v1';
 const SCHEMA_VERSION = 1;
 const ONE_OFF = 'Judgment call/one-off';
@@ -3248,9 +3287,60 @@ function scrollToSection(id) {
 function updateCrumbs() {
   const crumbs = $('crumbs');
   crumbs.hidden = currentView === 'home';
-  for (const a of crumbs.querySelectorAll('a')) {
-    if (a.dataset.step === currentView) a.setAttribute('aria-current', 'step'); else a.removeAttribute('aria-current');
+  const sub = currentView === 'compare' ? (S.ui.openComparisonId ? 'tag' : 'compare') : null;
+  for (const el of crumbs.querySelectorAll('[data-step], [data-sub]')) {
+    if ((el.dataset.step || el.dataset.sub) === (el.dataset.step ? currentView : sub)) el.setAttribute('aria-current', 'step'); else el.removeAttribute('aria-current');
+  }  for (const w of crumbs.querySelectorAll('.has-sub')) setCrumbMenu(w, false);
+}
+
+/** Step-trail drop-down: open or close one menu (only one is open at a time). via: 'hover' peeks, 'click' pins. */
+function setCrumbMenu(wrap, open, via) {
+  const btn = wrap.querySelector('.crumb-toggle');
+  if (open) {
+    for (const w of document.querySelectorAll('#crumbs .has-sub.open')) if (w !== wrap) setCrumbMenu(w, false);
+    wrap.style.setProperty('--caret-x', Math.round(24 + btn.offsetWidth / 2 - 9) + 'px');
+    wrap.dataset.via = via || 'click';
   }
+  wrap.classList.toggle('open', open);
+  btn.setAttribute('aria-expanded', String(open));
+}
+function wireCrumbMenus() {
+  const canHover = window.matchMedia('(hover: hover)');
+  for (const wrap of document.querySelectorAll('#crumbs .has-sub')) {
+    const btn = wrap.querySelector('.crumb-toggle');
+    let closeTimer = 0;
+    wrap.addEventListener('mouseenter', () => {
+      if (!canHover.matches) return;
+      clearTimeout(closeTimer);
+      if (!wrap.classList.contains('open')) setCrumbMenu(wrap, true, 'hover');
+    });
+    wrap.addEventListener('mouseleave', () => {
+      if (canHover.matches && wrap.dataset.via === 'hover') closeTimer = setTimeout(() => setCrumbMenu(wrap, false), 180);
+    });
+    // A click pins a menu that hover opened; otherwise it toggles.
+    btn.addEventListener('click', () => {
+      const open = wrap.classList.contains('open');
+      if (open && wrap.dataset.via === 'hover') wrap.dataset.via = 'click'; else setCrumbMenu(wrap, !open, 'click');
+    });
+    wrap.addEventListener('keydown', e => {
+      const links = [...wrap.querySelectorAll('.crumb-menu a')], i = links.indexOf(document.activeElement);
+      if (e.key === 'Escape' && wrap.classList.contains('open')) { e.preventDefault(); setCrumbMenu(wrap, false); btn.focus(); }
+      else if (e.key === 'ArrowDown') { e.preventDefault(); if (!wrap.classList.contains('open')) setCrumbMenu(wrap, true, 'click'); links[Math.min(i + 1, links.length - 1)].focus(); }
+      else if (e.key === 'ArrowUp' && i >= 0) { e.preventDefault(); if (i === 0) btn.focus(); else links[i - 1].focus(); }
+    });
+    wrap.addEventListener('focusout', e => { if (!wrap.contains(e.relatedTarget)) setCrumbMenu(wrap, false); });
+  }
+  // A sub-step opens its screen and scrolls to its section.
+  $('crumbs').addEventListener('click', e => {
+    const a = e.target.closest('.crumb-menu a');
+    if (!a) return;
+    e.preventDefault();
+    setCrumbMenu(a.closest('.has-sub'), false);
+    goTo(a.getAttribute('href').slice(1), a.dataset.scroll);
+  });
+  document.addEventListener('click', e => {
+    if (!e.target.closest('#crumbs .has-sub')) for (const w of document.querySelectorAll('#crumbs .has-sub.open')) setCrumbMenu(w, false);
+  });
 }
 
 /** Scroll to (and briefly highlight) an element queued by another screen. */
@@ -4803,6 +4893,7 @@ function endTour(finished) {
 
 function wireEvents() {
   for (const id of ['btnDemo', 'btnDemoFooter']) $(id).addEventListener('click', loadDemoData);
+  wireCrumbMenus();
   $('btnAI').addEventListener('click', toggleAI);
   $('btnAIOff').addEventListener('click', () => setAI(false));
   $('btnAiTags').addEventListener('click', () => suggestTags(S.ui.openComparisonId));
