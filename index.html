@@ -470,7 +470,59 @@ mark.ai{background:rgba(87,6,140,.1);border-bottom:2px dashed var(--accent);colo
 html[data-theme="dark"] mark.ai{background:rgba(180,138,217,.18)}
 
 /* ==========================================================================
-   13. Motion
+   13. First use (home panel, tour, hints) and the printable rules sheet
+   ========================================================================== */
+.try-band{padding:64px 0 0}
+.try-card{display:flex;flex-wrap:wrap;gap:20px 40px;align-items:center;justify-content:space-between}
+.try-text{flex:1 1 440px}
+.try-text .lede{margin-top:10px}
+@media (max-width:600px){.try-band{padding-top:40px}.try-card .btn{white-space:normal}}
+.empty-start{margin-top:40px;display:flex;flex-wrap:wrap;align-items:center;gap:6px 14px;font-size:15px;color:var(--text)}
+.empty-start .btn-text{padding:4px 2px}
+.ai-teaser{background:var(--chip-bg);border-radius:12px;padding:12px 16px;font-size:14px;color:var(--text);margin:0 0 28px}
+.ai-teaser .btn-text{padding:2px 4px}
+#rulesAiTeaser{margin:-12px 0 40px}
+html[data-theme="dark"] .ai-teaser,html[data-theme="dark"] .empty-start{--link:#C9A9E6}
+.foot-link{background:none;border:0;padding:0;color:#E2D3F0;font:inherit;text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+
+.tour{position:fixed;right:24px;bottom:24px;z-index:95;width:390px;max-width:calc(100% - 24px);background:#1E0A30;color:#fff;border-radius:20px;padding:22px 24px 18px;box-shadow:0 18px 50px rgba(30,10,48,.45)}
+html[data-theme="dark"] .tour{background:#341C4C}
+.tour :focus-visible{outline-color:#fff}
+.tour-step{font:600 11px/1 var(--sans);letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.78);margin:0 0 10px}
+.tour-title{font:700 21px/1.25 var(--serif);margin:0 0 8px;color:#fff}
+.tour-title:focus{outline:none}
+.tour-text{font-size:15px;line-height:1.5;color:rgba(255,255,255,.94)}
+.tour-note{margin-top:10px;font-size:13.5px;line-height:1.45;color:var(--nyu-gold)}
+.tour-actions{display:flex;align-items:center;gap:10px;margin-top:18px}
+.tour-skip{margin-right:auto;background:none;border:0;color:#fff;font:600 13.5px var(--sans);text-decoration:underline;text-underline-offset:3px;cursor:pointer;padding:6px 2px}
+.tour-back{background:transparent;color:#fff;border:1.5px solid rgba(255,255,255,.7);border-radius:999px;padding:8px 16px;font:600 14px var(--sans);cursor:pointer}
+.tour-back:disabled{opacity:.4;cursor:default}
+.tour-next{background:var(--nyu-gold);color:var(--nyu-ink-violet);border:0;border-radius:999px;padding:9px 18px;font:700 14px var(--sans);cursor:pointer}
+html.touring .next-bar{display:none!important}
+html.touring .toasts{top:84px;bottom:auto}   /* keep messages clear of the tour panel */
+.tour-focus{outline:3px solid var(--nyu-gold-line)!important;outline-offset:6px;border-radius:var(--radius)}
+@media (max-width:600px){.tour{left:12px;right:12px;bottom:12px;width:auto;padding:18px}}
+
+/* Printable rules sheet: hidden on screen; Export > "Print or save as PDF" prints only this. */
+#printSheet{display:none;font:11pt/1.5 Georgia,"Times New Roman",serif;color:#111;background:#fff;max-width:7in;margin:0 auto}
+#printSheet h1{font:700 22pt/1.2 Georgia,serif;color:#57068C;margin:0 0 6pt}
+#printSheet h2{font:700 14pt/1.3 Georgia,serif;color:#57068C;margin:18pt 0 6pt;break-after:avoid}
+#printSheet .ps-meta{font:9.5pt/1.4 Helvetica,Arial,sans-serif;color:#555;margin:0 0 2pt}
+#printSheet ol,#printSheet ul{margin:0;padding-left:18pt}
+#printSheet li{margin:0 0 9pt;break-inside:avoid}
+#printSheet .ps-rule{font-weight:700}
+#printSheet .ps-cat{font:9pt Helvetica,Arial,sans-serif;color:#555}
+#printSheet .ps-line{font:9.5pt/1.45 Helvetica,Arial,sans-serif;color:#333;margin:2pt 0 0}
+@media print{
+  body.print-skill{background:#fff}
+  body.print-skill>*:not(#printSheet){display:none!important}
+  body.print-skill #printSheet{display:block}
+}
+body.print-preview>*:not(#printSheet){display:none!important}
+body.print-preview #printSheet{display:block;padding:40px 16px}
+
+/* ==========================================================================
+   14. Motion
    ========================================================================== */
 .js-anim .reveal{opacity:0;transform:translateY(18px);transition:opacity .5s var(--ease),transform .5s var(--ease)}
 .js-anim .reveal.in{opacity:1;transform:none}
@@ -554,6 +606,19 @@ html[data-theme="dark"] mark.ai{background:rgba(180,138,217,.18)}
     </div>
   </section>
 
+  <section class="band try-band" aria-labelledby="h-try">
+    <div class="wrap">
+      <div class="card try-card">
+        <div class="try-text">
+          <p class="eyebrow">New here?</p>
+          <h2 class="tw" id="h-try">Try it in <strong>2 minutes</strong></h2>
+          <p class="lede">Load the fictional demo (Partner A and Partner B) and follow a five-step tour: a redline becomes cards you tag, recurring edits become rules, a new draft is checked, and the rules are exported. Your own data stays as it is.</p>
+        </div>
+        <button type="button" class="btn btn-solid" id="btnTour">Load the demo and take the tour <span class="arr" aria-hidden="true">→</span></button>
+      </div>
+    </div>
+  </section>
+
   <section class="band reveal" aria-labelledby="h-numbers">
     <div class="wrap">
       <div class="sec-head">
@@ -565,6 +630,7 @@ html[data-theme="dark"] mark.ai{background:rgba(180,138,217,.18)}
         <div><div class="num" id="numCandidates">0</div><p class="num-label">Candidate rules</p><a class="arrow-link" href="#rules">Review <span class="arr" aria-hidden="true">→</span></a></div>
         <div><div class="num" id="numConfirmed">0</div><p class="num-label">Confirmed rules</p><a class="arrow-link" href="#export">Export skill <span class="arr" aria-hidden="true">→</span></a></div>
       </div>
+      <div class="notice empty-start" id="emptyStart" role="note" hidden></div>
     </div>
   </section>
 
@@ -668,6 +734,7 @@ html[data-theme="dark"] mark.ai{background:rgba(180,138,217,.18)}
         <button type="button" class="btn btn-outline btn-sm" id="btnAiTags">Suggest tags</button>
         <span class="ai-status" id="tagAiStatus" role="status" aria-live="polite"></span>
       </div>
+      <div class="ai-teaser" id="tagAiTeaser" hidden></div>
       <div id="changeList" class="change-list"></div>
     </div>
   </section>
@@ -743,6 +810,7 @@ html[data-theme="dark"] mark.ai{background:rgba(180,138,217,.18)}
         <button type="button" class="btn btn-outline btn-sm" id="btnAiWording">Draft rule wording</button>
         <span class="ai-status" id="rulesAiStatus" role="status" aria-live="polite"></span>
       </div>
+      <div class="ai-teaser" id="rulesAiTeaser" hidden></div>
       <h3 class="h3">Candidate rules</h3>
       <div id="candList" class="rule-list"></div>
       <details class="rejected" id="rejectedWrap" hidden><summary id="rejectedSummary">Rejected candidates</summary><div id="rejList" class="rule-list" style="margin-top:20px"></div></details>
@@ -816,7 +884,10 @@ html[data-theme="dark"] mark.ai{background:rgba(180,138,217,.18)}
         <div class="actions">
           <button type="button" class="btn btn-solid" id="btnCopySkill">Copy to clipboard <span class="arr" aria-hidden="true">→</span></button>
           <button type="button" class="btn btn-outline" id="btnDownloadSkill">Download .txt <span class="arr" aria-hidden="true">→</span></button>
+          <button type="button" class="btn btn-outline" id="btnWordSkill">Download Word (.docx) <span class="arr" aria-hidden="true">→</span></button>
+          <button type="button" class="btn btn-outline" id="btnPrintSkill">Print or save as PDF <span class="arr" aria-hidden="true">→</span></button>
         </div>
+        <p class="meta" style="margin-top:12px">The Word file and the PDF are a formatted rules sheet with the same content as the skill, made on this device. For a PDF in Safari, choose PDF ▸ Save as PDF in the print dialog.</p>
       </div>
     </div>
   </section>
@@ -861,13 +932,30 @@ html[data-theme="dark"] mark.ai{background:rgba(180,138,217,.18)}
     <p id="footerPrivacy">Privacy: Redline to Rule runs entirely in this browser. It makes no network requests and stores data only in this browser's local storage. Use sample or anonymized text; do not paste client confidential information.</p>
     <p>Version <span id="appVersion"></span> · AI edition: AI is optional, off until you switch it on, and uses OpenRouter only.</p>
     <p>Built for Corporate Deal Agreements and Advice Utilizing AI, NYU School of Law.</p>
+    <p><button type="button" class="foot-link" id="btnTourFooter">Take the 2-minute tour</button></p>
   </div>
 </footer>
+
+<!-- Printable rules sheet (Export > Print or save as PDF); shown only when printing -->
+<article id="printSheet" aria-hidden="true"></article>
 
 <datalist id="typeList"></datalist>
 <div class="toasts" id="toasts" role="status" aria-live="polite"></div>
 
 <!-- Guided flow: always shows the one next action -->
+<!-- Guided tour (Home > "Load the demo and take the tour"): one panel, five steps -->
+<div class="tour" id="tour" role="dialog" aria-modal="false" aria-labelledby="tourTitle" hidden>
+  <p class="tour-step" id="tourStep"></p>
+  <h2 class="tour-title" id="tourTitle" tabindex="-1"></h2>
+  <p class="tour-text" id="tourText"></p>
+  <p class="tour-note" id="tourNote" hidden></p>
+  <div class="tour-actions">
+    <button type="button" class="tour-skip" id="tourSkip">Skip tour</button>
+    <button type="button" class="tour-back" id="tourBack">Back</button>
+    <button type="button" class="tour-next" id="tourNext">Next</button>
+  </div>
+</div>
+
 <div class="next-bar" id="nextBar" role="region" aria-label="Next step" hidden>
   <div class="next-text"><span class="next-step" id="nextStepLabel">Next</span><span id="nextText" aria-live="polite"></span></div>
   <button type="button" class="btn btn-ghost btn-sm" id="nextBtn">Continue <span class="arr" aria-hidden="true">→</span></button>
@@ -923,7 +1011,7 @@ html[data-theme="dark"] mark.ai{background:rgba(180,138,217,.18)}
    ========================================================================== */
 'use strict';
 
-const APP_VERSION = '1.1.0';
+const APP_VERSION = '1.2.0';
 const STORAGE_KEY = 'redlineToRule.v1';
 const SCHEMA_VERSION = 1;
 const ONE_OFF = 'Judgment call/one-off';
@@ -1787,40 +1875,159 @@ function activeRules(st, profileId, type) {
   return st.rules.filter(r => r.profileId === profileId && ruleApplies(r, type) && liveEvidence(st, r).length >= st.settings.minEvidence);
 }
 
-/** Build the plain-text skill. Returns {body, hash, count}; the version line is added by the caller. */
-function compileSkill(st, profileId, type, meta) {
+/** One evidence change as a short example: a before -> after pair if there is one, else the shortest edit or oral note. */
+function ruleExample(changes) {
+  const usable = changes.filter(c => c.kind === 'oral' ? (c.feedback || '').trim() : (c.del || c.ins));
+  if (!usable.length) return '';
+  const letters = s => String(s || '').replace(/[^\p{L}\p{N}]/gu, '').length;
+  const q = s => '"' + clip(s, 140) + '"';
+  const show = c => {
+    if (c.kind === 'oral') return 'the reviewer said ' + q(c.feedback);
+    if (c.del && c.ins) {
+      // A short replacement reads better with the words that lead into it.
+      const lead = countWords(c.del) < 4 && countWords(c.ins) < 6 ? wordsOf(c.before.replace(/[…¶]/g, ' ')).slice(-4).join(' ') : '';
+      return lead ? q('…' + lead + ' ' + c.del) + ' → ' + q('…' + lead + ' ' + c.ins) : q(c.del) + ' → ' + q(c.ins);
+    }
+    return c.del ? 'deleted ' + q(c.del) : 'added ' + q(c.ins);
+  };
+  // Prefer a before -> after pair with real words in it, about a sentence long; whole rewritten paragraphs come last.
+  const rank = c => {
+    const n = letters(show(c));
+    return (c.kind === 'oral' ? 3 : c.kind === 'paragraph' ? 2 : c.del && c.ins ? 0 : 1) * 1e6 + (n < 15 ? 5e5 : 0) + Math.abs(n - 70);
+  };
+  return show(usable.slice().sort((a, b) => rank(a) - rank(b))[0]);
+}
+
+/**
+ * The skill as structured data, shared by the plain-text skill, the Word file and the
+ * printable (PDF) sheet, so all three always say the same thing.
+ */
+function skillSheet(st, profileId, type, meta) {
   const profile = st.profiles.find(p => p.id === profileId) || { name: 'Unknown reviewer' };
   const rules = activeRules(st, profileId, type);
   const scoped = [...new Set(rules.filter(r => r.deliverableScope !== 'all').map(r => r.deliverableScope))];
-  const applies = type && type !== 'all' ? type
-    : scoped.length ? 'All deliverables (some rules apply only to: ' + scoped.join(', ') + ')' : 'All deliverables';
-  const L = [];
-  L.push('Name: ' + (meta.name || profile.name + ' drafting skill'));
-  L.push('Reviewer profile: ' + profile.name);
-  L.push('Applies to: ' + applies);
-  L.push('Purpose: ' + (meta.purpose || defaultPurpose(profile.name)));
+  const items = rules.map((r, i) => {
+    const ev = liveEvidence(st, r), d = evidenceDates(st, ev);
+    return {
+      n: i + 1, category: r.category, text: r.text,
+      evidence: plural(ev.length, 'instance') + ' in ' + plural(d.docs, 'draft') + ', ' + fmtDate(d.first) + (d.latest !== d.first ? ' to ' + fmtDate(d.latest) : '') + '.',
+      example: ruleExample(ev), scope: r.deliverableScope !== 'all' ? r.deliverableScope + ' only.' : '',
+      check: r.checkType === 'auto' && r.check ? describeCheck(r.check) : ''
+    };
+  });
+  const selfChecks = items.filter(x => x.check).map(x => 'Rule ' + x.n + ': ' + x.check);
+  const humans = items.filter(x => !x.check).map(x => x.n);
+  if (humans.length) selfChecks.push('Rule' + (humans.length > 1 ? 's ' : ' ') + humans.join(', ') + ': read the draft and confirm by hand.');
+  return {
+    name: meta.name || profile.name + ' drafting skill', profile: profile.name,
+    applies: type && type !== 'all' ? type : scoped.length ? 'All deliverables (some rules apply only to: ' + scoped.join(', ') + ')' : 'All deliverables',
+    purpose: meta.purpose || defaultPurpose(profile.name), minEvidence: st.settings.minEvidence, rules: items, selfChecks,
+    gate: 'A qualified lawyer must review the output before it is sent.',
+    data: 'Use labels such as Buyer, Seller and Target; do not include client names or confidential facts.'
+  };
+}
+
+/** Build the plain-text skill. Returns {body, hash, count, sheet}; the version line is added by the caller. */
+function compileSkill(st, profileId, type, meta) {
+  const sk = skillSheet(st, profileId, type, meta), L = [];
+  L.push('Name: ' + sk.name);
+  L.push('Reviewer profile: ' + sk.profile);
+  L.push('Applies to: ' + sk.applies);
+  L.push('Purpose: ' + sk.purpose);
   L.push('');
   L.push('Rules:');
-  if (!rules.length) L.push('(No confirmed rules with at least ' + st.settings.minEvidence + ' instances yet.)');
-  rules.forEach((r, i) => {
-    const ev = liveEvidence(st, r), d = evidenceDates(st, ev);
-    L.push((i + 1) + '. [' + r.category + '] ' + r.text);
-    L.push('   Evidence: ' + plural(ev.length, 'instance') + ' in ' + plural(d.docs, 'draft') + ', ' + fmtDate(d.first) + (d.latest !== d.first ? ' to ' + fmtDate(d.latest) : '') + '.');
-    if (r.deliverableScope !== 'all') L.push('   Applies to: ' + r.deliverableScope + ' only.');
-  });
+  if (!sk.rules.length) L.push('(No confirmed rules with at least ' + sk.minEvidence + ' instances yet.)');
+  for (const r of sk.rules) {
+    L.push(r.n + '. [' + r.category + '] ' + r.text);
+    L.push('   Evidence: ' + r.evidence);
+    if (r.example) L.push('   Example: ' + r.example);
+    if (r.scope) L.push('   Applies to: ' + r.scope);
+  }
   L.push('');
   L.push('Self-check steps:');
-  const autos = rules.map((r, i) => [r, i + 1]).filter(([r]) => r.checkType === 'auto' && r.check);
-  const humans = rules.map((r, i) => [r, i + 1]).filter(([r]) => !(r.checkType === 'auto' && r.check));
-  autos.forEach(([r, n]) => L.push('- Rule ' + n + ': ' + describeCheck(r.check)));
-  if (humans.length) L.push('- Rule' + (humans.length > 1 ? 's ' : ' ') + humans.map(x => x[1]).join(', ') + ': read the draft and confirm by hand.');
-  if (!rules.length) L.push('- None yet.');
+  for (const s of sk.selfChecks) L.push('- ' + s);
+  if (!sk.rules.length) L.push('- None yet.');
   L.push('');
-  L.push('Human review gate: A qualified lawyer must review the output before it is sent.');
+  L.push('Human review gate: ' + sk.gate);
   L.push('');
-  L.push('Data handling: Use labels such as Buyer, Seller and Target; do not include client names or confidential facts.');
+  L.push('Data handling: ' + sk.data);
   const body = L.join('\n');
-  return { body, hash: hashStr(body), count: rules.length };
+  return { body, hash: hashStr(body), count: sk.rules.length, sheet: sk };
+}
+
+/* ------------------------- Word (.docx) export, built on this device -------------------------
+   A minimal Word file: three XML parts in an uncompressed ZIP. No library and no network. */
+
+function utf8Bytes(s) {
+  const out = [];
+  for (const ch of String(s)) {
+    const c = ch.codePointAt(0);
+    if (c < 0x80) out.push(c);
+    else if (c < 0x800) out.push(0xC0 | c >> 6, 0x80 | c & 63);
+    else if (c < 0x10000) out.push(0xE0 | c >> 12, 0x80 | c >> 6 & 63, 0x80 | c & 63);
+    else out.push(0xF0 | c >> 18, 0x80 | c >> 12 & 63, 0x80 | c >> 6 & 63, 0x80 | c & 63);
+  }
+  return out;
+}
+const CRC_TABLE = (() => {
+  const t = new Uint32Array(256);
+  for (let n = 0; n < 256; n++) { let c = n; for (let k = 0; k < 8; k++) c = c & 1 ? 0xEDB88320 ^ (c >>> 1) : c >>> 1; t[n] = c >>> 0; }
+  return t;
+})();
+function crc32(bytes) { let c = 0xFFFFFFFF; for (let i = 0; i < bytes.length; i++) c = CRC_TABLE[(c ^ bytes[i]) & 255] ^ (c >>> 8); return (c ^ 0xFFFFFFFF) >>> 0; }
+/** ZIP archive with stored (uncompressed) entries: [{name, text}] -> Uint8Array. */
+function zipStore(files) {
+  const out = [], central = [];
+  const put = (arr, xs) => { for (let i = 0; i < xs.length; i++) arr.push(xs[i]); };
+  const u16 = n => [n & 255, n >>> 8 & 255], u32 = n => [n & 255, n >>> 8 & 255, n >>> 16 & 255, n >>> 24 & 255];
+  for (const f of files) {
+    const name = utf8Bytes(f.name), data = utf8Bytes(f.text), crc = crc32(data), offset = out.length;
+    const head = [].concat(u16(20), u16(0x0800), u16(0), u16(0), u16(0x21), u32(crc), u32(data.length), u32(data.length), u16(name.length));
+    put(out, [].concat(u32(0x04034b50), head, u16(0))); put(out, name); put(out, data);
+    put(central, [].concat(u32(0x02014b50), u16(20), head, u16(0), u16(0), u16(0), u16(0), u32(0), u32(offset))); put(central, name);
+  }
+  const start = out.length;
+  put(out, central);
+  put(out, [].concat(u32(0x06054b50), u16(0), u16(0), u16(files.length), u16(files.length), u32(central.length), u32(start), u16(0)));
+  return Uint8Array.from(out);
+}
+function xmlText(s) { return String(s).replace(/[^\x09\x0A\x0D\x20-퟿-�\u{10000}-\u{10FFFF}]/gu, '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+/** A Word paragraph from runs: [{text, bold, italic, size (pt), color, serif}]. */
+function wPara(runs, opts) {
+  const o = opts || {};
+  const ppr = '<w:pPr><w:spacing w:before="' + (o.before || 0) + '" w:after="' + (o.after == null ? 120 : o.after) + '"/>' + (o.indent ? '<w:ind w:left="' + o.indent + '"/>' : '') + (o.keepNext ? '<w:keepNext/>' : '') + '</w:pPr>';
+  return '<w:p>' + ppr + runs.map(r => '<w:r><w:rPr>' + (r.serif ? '<w:rFonts w:ascii="Georgia" w:hAnsi="Georgia"/>' : '') + (r.bold ? '<w:b/>' : '') + (r.italic ? '<w:i/>' : '') +
+    (r.color ? '<w:color w:val="' + r.color + '"/>' : '') + '<w:sz w:val="' + Math.round((r.size || 11) * 2) + '"/></w:rPr><w:t xml:space="preserve">' + xmlText(r.text) + '</w:t></w:r>').join('') + '</w:p>';
+}
+/** The skill as a Word rules sheet. `versionText` is the line from versionLine(). Returns Uint8Array. */
+function buildSkillDocx(sk, versionText) {
+  const P = [], gray = '555555', violet = '57068C';
+  const head = t => P.push(wPara([{ text: t, bold: true, size: 15, serif: true, color: violet }], { before: 240, after: 100, keepNext: true }));
+  P.push(wPara([{ text: sk.name, bold: true, size: 24, serif: true, color: violet }], { after: 80 }));
+  P.push(wPara([{ text: 'Reviewer profile: ' + sk.profile + ' · Applies to: ' + sk.applies, size: 10, color: gray }], { after: 60 }));
+  P.push(wPara([{ text: versionText, size: 10, color: gray }], { after: 200 }));
+  P.push(wPara([{ text: 'Purpose: ', bold: true }, { text: sk.purpose }]));
+  head('Rules');
+  if (!sk.rules.length) P.push(wPara([{ text: 'No confirmed rules with at least ' + sk.minEvidence + ' instances yet.', italic: true }]));
+  for (const r of sk.rules) {
+    P.push(wPara([{ text: r.n + '. ', bold: true, size: 12 }, { text: r.text, bold: true, size: 12 }, { text: '  [' + r.category + ']', size: 10, color: gray }], { before: 120, after: 40, keepNext: true }));
+    P.push(wPara([{ text: 'Evidence: ', bold: true, size: 10 }, { text: r.evidence, size: 10 }], { indent: 360, after: 20 }));
+    if (r.example) P.push(wPara([{ text: 'Example: ', bold: true, size: 10 }, { text: r.example, size: 10, italic: true }], { indent: 360, after: 20 }));
+    if (r.scope) P.push(wPara([{ text: 'Applies to: ', bold: true, size: 10 }, { text: r.scope, size: 10 }], { indent: 360, after: 20 }));
+  }
+  head('Self-check steps');
+  for (const s of sk.selfChecks.length ? sk.selfChecks : ['None yet.']) P.push(wPara([{ text: '• ' + s }], { indent: 360, after: 60 }));
+  head('Human review gate');
+  P.push(wPara([{ text: sk.gate }]));
+  head('Data handling');
+  P.push(wPara([{ text: sk.data }]));
+  const doc = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:body>' + P.join('') +
+    '<w:sectPr><w:pgSz w:w="12240" w:h="15840"/><w:pgMar w:top="1440" w:right="1440" w:bottom="1440" w:left="1440" w:header="720" w:footer="720" w:gutter="0"/></w:sectPr></w:body></w:document>';
+  return zipStore([
+    { name: '[Content_Types].xml', text: '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/></Types>' },
+    { name: '_rels/.rels', text: '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="word/document.xml"/></Relationships>' },
+    { name: 'word/document.xml', text: doc }
+  ]);
 }
 function defaultPurpose(name) {
   return 'Apply ' + name + "'s recurring drafting preferences, learned from their actual edits, to a draft before it is sent to them for review.";
@@ -2831,6 +3038,7 @@ function renderChrome() {
   $('numbersProfile').textContent = 'For ' + name;
   for (const id of ['rulesProfileName', 'checkProfileName', 'exportProfileName', 'cmpProfileChip']) $(id).textContent = name;
   renderAiChrome();
+  renderEmptyStart();
   renderNextBar();
 }
 
@@ -3738,6 +3946,7 @@ function runDraftCheck() {
       annotated(text, all));
   };
   if (aiOn() && humans.length) out.append(aiReviewCard(text, humans, drawAnnotated));
+  else if (humans.length && showAiTeaser(pid)) out.append(aiTeaser(h('div', { class: 'ai-teaser', style: 'margin-bottom:24px' }), true, TEASE.check));
   drawAnnotated([]);
   out.append(annot);
   flowChecked.add(pid);
@@ -4077,6 +4286,7 @@ function setAI(on) {
   S.settings.ai = on;
   if (!on) for (const c of AI.controllers) { c.byUser = true; c.abort(); }
   commit();
+  if (currentView === 'check' && !$('reportSection').hidden && $('checkText').value.trim()) runDraftCheck();   // show or hide the AI review
   toast(on ? 'AI on. Check each suggestion before you save it.' : 'AI off. Nothing leaves this device.');
 }
 function renderAiChrome() {
@@ -4093,6 +4303,7 @@ function renderAiChrome() {
     ? "Privacy: AI is on. Text used by AI features (changes to tag, reasons, rule evidence, a draft you ask the AI to review) is sent to OpenRouter (openrouter.ai) and the AI model; the page can contact no other address, and nothing is sent while AI is off. Data is stored only in this browser's local storage. Use sample or anonymized text; do not paste client confidential information."
     : footerLocalText;
   $('rulesAiBar').hidden = !on;
+  aiTeaser($('rulesAiTeaser'), showAiTeaser(S.activeProfileId), TEASE.rules);
   renderRulesAiButtons();
 }
 
@@ -4120,6 +4331,7 @@ function renderTagAiBar() {
   btn.textContent = 'Suggest tags for ' + plural(n, 'untagged ' + unitOf(cmp));
   $('tagAiStatus').textContent = st ? st.text : '';
   $('tagAiStatus').classList.toggle('err', !!(st && st.err));
+  aiTeaser($('tagAiTeaser'), !!cmp && showAiTeaser(cmp.profileId), TEASE.tags);
 }
 
 /** Ask the AI for a category and a reason for each untagged change of a comparison (in batches). */
@@ -4285,6 +4497,165 @@ function aiReviewCard(text, rules, onMarks) {
   return card;
 }
 
+/* ------------------------------- Word and PDF export ------------------------------- */
+
+function exportDocx() {
+  const sk = currentSkill();
+  downloadFile(slug(sk.name) + '-v' + sk.v + '.docx', buildSkillDocx(sk.sheet, versionLine(sk.v)), 'application/vnd.openxmlformats-officedocument.wordprocessingml.document');
+  recordVersion(sk); updatePreview(); renderNextBar();
+  toast('Word file downloaded (version ' + sk.v + ').');
+}
+/** Fill the print-only rules sheet from the same data as the skill. */
+function renderPrintSheet(sk) {
+  const s = sk.sheet;
+  $('printSheet').replaceChildren(
+    h('h1', null, s.name),
+    h('p', { class: 'ps-meta' }, 'Reviewer profile: ' + s.profile + ' · Applies to: ' + s.applies),
+    h('p', { class: 'ps-meta' }, versionLine(sk.v)),
+    h('p', { style: 'margin-top:10pt' }, h('b', null, 'Purpose: '), s.purpose),
+    h('h2', null, 'Rules'),
+    s.rules.length ? h('ol', null, s.rules.map(r => h('li', null,
+      h('span', { class: 'ps-rule' }, r.text), ' ', h('span', { class: 'ps-cat' }, '[' + r.category + ']'),
+      h('p', { class: 'ps-line' }, h('b', null, 'Evidence: '), r.evidence),
+      r.example ? h('p', { class: 'ps-line' }, h('b', null, 'Example: '), h('i', null, r.example)) : null,
+      r.scope ? h('p', { class: 'ps-line' }, h('b', null, 'Applies to: '), r.scope) : null)))
+      : h('p', null, h('i', null, 'No confirmed rules with at least ' + s.minEvidence + ' instances yet.')),
+    h('h2', null, 'Self-check steps'), h('ul', null, (s.selfChecks.length ? s.selfChecks : ['None yet.']).map(x => h('li', null, x))),
+    h('h2', null, 'Human review gate'), h('p', null, s.gate),
+    h('h2', null, 'Data handling'), h('p', null, s.data));
+}
+let titleBeforePrint = '';
+function printSkill() {
+  const sk = currentSkill();
+  renderPrintSheet(sk);
+  document.body.classList.add('print-skill');
+  titleBeforePrint = document.title;
+  document.title = sk.name + ' v' + sk.v;   // Safari suggests the title as the PDF file name
+  recordVersion(sk); updatePreview(); renderNextBar();
+  window.print();
+}
+function afterPrint() {
+  document.body.classList.remove('print-skill');
+  if (titleBeforePrint) { document.title = titleBeforePrint; titleBeforePrint = ''; }
+}
+
+/* ----------------------- First use: hints, empty start, guided tour ----------------------- */
+
+function isDemoProfile(pid) { const p = S.profiles.find(x => x.id === pid); return !!(p && p.demo); }
+/** On the fictional demo, while AI is off, a short note says what AI would add (nothing is sent). */
+function showAiTeaser(pid) { return !aiOn() && aiAvailable() && isDemoProfile(pid); }
+const TEASE = {
+  tags: 'with AI on, each change gets a suggested category and reason, which you confirm or change.',
+  rules: 'with AI on, the AI can group reasons that mean the same thing and propose clear rule wording.',
+  check: 'with AI on, the AI can review the human-checked rules, and every quote it gives is checked against your draft.'
+};
+function aiTeaser(el, show, text) {
+  el.hidden = !show;
+  if (show) el.replaceChildren(h('span', { class: 'ai-mark' }, h('span', { 'aria-hidden': 'true' }, '✦ '), 'AI can help: '),
+    text + ' Nothing is sent until you switch AI on. ', h('button', { type: 'button', class: 'btn-text', onclick: toggleAI }, 'Switch on AI'));
+  return el;
+}
+
+/** Home: a fresh profile explains what to do first instead of showing only zeros. */
+function renderEmptyStart() {
+  const pid = S.activeProfileId, el = $('emptyStart');
+  el.hidden = S.comparisons.some(c => c.profileId === pid) || S.rules.some(r => r.profileId === pid);
+  if (el.hidden) return;
+  el.replaceChildren(
+    h('span', null, 'Nothing recorded for ' + activeProfile().name + ' yet. First give this profile a label for your reviewer (for example "Partner A"), then compare a draft that came back.'),
+    h('button', { type: 'button', class: 'btn-text', onclick: () => { renderProfileRows(); $('dlgProfiles').showModal(); } }, 'Rename profile'),
+    h('a', { class: 'btn-text', href: '#compare', 'data-focus': 'txtSent' }, 'Start a comparison'),
+    h('button', { type: 'button', class: 'btn-text', onclick: startTour }, 'Take the tour'));
+}
+
+/* Guided tour: five steps over the fictional demo (Partner A). It only ever changes demo data. */
+let tourStep = -1;
+const tourPause = ms => new Promise(r => setTimeout(r, ms));
+function tourProfile() { return S.profiles.find(p => p.demo && p.name === 'Partner A') || S.profiles.find(p => p.demo); }
+function tourComparison() { const p = tourProfile(); return p && S.comparisons.filter(c => c.profileId === p.id && c.demo).sort((a, b) => a.date.localeCompare(b.date))[0]; }
+/** Show a screen for the current step. Returns false once the user has moved to another step, so a slow step never pulls the screen back. */
+async function tourGo(view, live) {
+  if (!live()) return false;
+  const p = tourProfile();
+  if (p && S.activeProfileId !== p.id) { S.activeProfileId = p.id; commit(); }
+  goTo(view);
+  await tourPause(200);
+  return live();
+}
+const TOUR = [
+  { title: 'Three ways in', text: 'Start with what came back from the reviewer: your draft plus their clean version, one Word file with tracked changes, or your notes when the feedback was only oral. The app finds every change by itself.',
+    go: async live => await tourGo('compare', live) && document.querySelector('#compareForm .mode-row') },
+  { title: 'Tag each change', text: 'Each card is one edit the reviewer made. Record why: pick a category, write a one-line reason, press Enter. "This matter only" keeps deal-specific edits out of your rules. With AI on, a suggested tag waits on each card for you to confirm.',
+    go: async live => {
+      if (!await tourGo('compare', live)) return null;
+      openComparison(tourComparison().id);
+      await tourPause(250);
+      return live() && document.querySelector('#changeList .change-card');
+    } },
+  { title: 'Recurring edits become rules', text: 'When the same kind of edit comes back, it becomes a candidate rule with its evidence attached. You adjust the wording, then confirm or reject it. Only rules with enough evidence count.',
+    go: async live => await tourGo('rules', live) && (document.querySelector('#candList .rule-card') || document.querySelector('#ruleList .rule-card')) },
+  { title: 'Check a new draft', text: 'Before the next draft goes out, check it against the confirmed rules. Pattern checks run by themselves and highlight problems; the other rules become a checklist, or with AI on, an AI review whose quotes are checked against your draft.',
+    go: async live => {
+      const p = tourProfile();
+      let note = '';
+      if (!live()) return null;
+      if (!activeRules(S, p.id, 'all').length) {
+        for (const c of readyCandidates(p.id)) {
+          const cfg = S.candidateEdits[c.key] || { text: c.proposed, deliverableScope: c.suggested.deliverableScope, checkType: c.suggested.checkType, check: c.suggested.check };
+          S.rules.push(ruleFromCandidate(S, c, cfg));
+          delete S.candidateEdits[c.key];
+        }
+        commit();
+        note = 'For this tour, the demo candidates were confirmed for you.';
+      }
+      if (!await tourGo('check', live)) return null;
+      const text = tourComparison().sent;
+      $('checkText').value = text; S.ui.checkDraft.text = text; updateCounts();
+      runDraftCheck();
+      await tourPause(300);
+      return { el: document.querySelector('#checkReport .report-head') || $('reportSection'), note };
+    } },
+  { title: 'Export the skill', text: 'The confirmed rules, each with its evidence and an example, become a plain-text skill for any approved AI tool, or a Word or PDF rules sheet to share.',
+    go: async live => await tourGo('export', live) && $('skillPreview').closest('.card') }
+];
+function clearTourFocus() { for (const el of document.querySelectorAll('.tour-focus')) el.classList.remove('tour-focus'); }
+async function showTourStep(i) {
+  tourStep = i;
+  clearTourFocus();
+  const s = TOUR[i];
+  $('tourStep').textContent = 'Tour · step ' + (i + 1) + ' of ' + TOUR.length;
+  $('tourTitle').textContent = s.title;
+  $('tourText').textContent = s.text;
+  $('tourNote').hidden = true;
+  $('tourBack').disabled = i === 0;
+  $('tourNext').textContent = i === TOUR.length - 1 ? 'Finish' : 'Next';
+  let res = null;
+  try { res = await s.go(() => tourStep === i); } catch (e) { console.error(e); }
+  if (tourStep !== i) return;   // the user moved on meanwhile
+  const el = res && res.el !== undefined ? res.el : res;
+  if (res && res.note) { $('tourNote').textContent = res.note; $('tourNote').hidden = false; }
+  if (el) { el.classList.add('tour-focus'); el.scrollIntoView({ behavior: reducedMotion() ? 'auto' : 'smooth', block: 'start' }); }   // top of the highlight stays above the panel
+  $('tourTitle').focus({ preventScroll: true });
+}
+async function startTour() {
+  if (!tourComparison()) {
+    await loadDemoData();
+    if (!tourComparison()) return;   // the user chose not to load the demo
+  }
+  document.documentElement.classList.add('touring');
+  $('tour').hidden = false;
+  await showTourStep(0);
+}
+function endTour(finished) {
+  if (tourStep < 0) return;
+  tourStep = -1;
+  clearTourFocus();
+  $('tour').hidden = true;
+  document.documentElement.classList.remove('touring');
+  renderNextBar();
+  toast(finished ? (aiAvailable() && !aiOn() ? 'Tour finished. To try the AI features, switch on AI in the top bar.' : 'Tour finished.') : 'Tour closed. Restart it from the home page or the footer.');
+}
+
 /* ------------------------------------- Init ------------------------------------- */
 
 function wireEvents() {
@@ -4292,6 +4663,13 @@ function wireEvents() {
   $('btnAI').addEventListener('click', toggleAI);
   $('btnAIOff').addEventListener('click', () => setAI(false));
   $('btnAiTags').addEventListener('click', () => suggestTags(S.ui.openComparisonId));
+  $('btnWordSkill').addEventListener('click', exportDocx);
+  $('btnPrintSkill').addEventListener('click', printSkill);
+  window.addEventListener('afterprint', afterPrint);
+  for (const id of ['btnTour', 'btnTourFooter']) $(id).addEventListener('click', startTour);
+  $('tourNext').addEventListener('click', () => { if (tourStep >= TOUR.length - 1) endTour(true); else showTourStep(tourStep + 1); });
+  $('tourBack').addEventListener('click', () => { if (tourStep > 0) showTourStep(tourStep - 1); });
+  $('tourSkip').addEventListener('click', () => endTour(false));
   $('btnAiGroup').addEventListener('click', groupReasons);
   $('btnAiWording').addEventListener('click', draftWording);
   $('btnTheme').addEventListener('click', () => {
@@ -4324,6 +4702,7 @@ function wireEvents() {
   });
   document.addEventListener('keydown', e => {
     if (e.key !== 'Escape') return;
+    if (tourStep >= 0 && !document.querySelector('dialog[open]')) endTour(false);
     const tip = document.querySelector('.help[aria-expanded="true"]');
     closeHelpTips();
     if (tip) tip.focus();
