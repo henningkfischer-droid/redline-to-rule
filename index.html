@@ -332,7 +332,7 @@ html[data-theme="dark"] .site-footer{background:#3D0563}
 .foot-meta{display:flex;flex-wrap:wrap;gap:4px 0}
 .foot-meta>span+span::before{content:"·";margin:0 10px;color:rgba(255,255,255,.5)}
 .foot-ny{margin:32px 0 0;text-align:center;font-size:9.5px;letter-spacing:.04em;color:rgba(255,255,255,.76)}
-.ny-song{display:inline-block;color:#fff;text-decoration:none;cursor:pointer;transition:transform .2s var(--ease)}   /* opens the song on Spotify */
+.ny-song{display:inline-block;color:#fff;text-decoration:none;cursor:pointer;transition:transform .2s var(--ease)}   /* opens the song on YouTube */
 .ny-song:hover,.ny-song:focus-visible{transform:scale(1.35)}
 @media (max-width:760px){.foot-grid{grid-template-columns:1fr 1fr}.foot-brand{grid-column:1/-1}.foot-meta{flex-direction:column;gap:4px}.foot-meta>span+span::before{content:none}}
 
@@ -1145,7 +1145,7 @@ body.print-preview #printSheet{display:block;padding:40px 16px}
       <p class="foot-meta"><span>© 2026 Henning Fischer</span><span>Version <span id="appVersion"></span></span><span>AI edition: AI is optional, off until you switch it on, and uses OpenRouter only.</span></p>
     </div>
     <!-- Sign-off (home page only; route() toggles it) -->
-    <p class="foot-ny" id="footNY">built by New Yorkers for New Yorkers<a class="ny-song" href="https://open.spotify.com/intl-de/track/0K2WjMLZYr09LKwurGRYRE?si=01e38b32e9d34826" target="_blank" rel="noopener noreferrer" title="Play the song on Spotify" aria-label="Play the song on Spotify (opens in a new tab)">🗽</a></p>
+    <p class="foot-ny" id="footNY">built by New Yorkers for New Yorkers<a class="ny-song" href="https://www.youtube.com/watch?v=le1QF3uoQNg" target="_blank" rel="noopener noreferrer" title="Play the song on YouTube" aria-label="Play the song on YouTube (opens in a new tab)">🗽</a></p>
   </div>
 </footer>
 
@@ -1247,7 +1247,7 @@ body.print-preview #printSheet{display:block;padding:40px 16px}
    ========================================================================== */
 'use strict';
 
-const APP_VERSION = '1.4.5';
+const APP_VERSION = '1.4.6';
 const COURSE_LINE = 'NYU School of Law · Artificial Intelligence and Corporate Deals and Advice';
 const TOOL_CREDIT = 'Made with Redline to Rule, by Henning Fischer.';
 const STORAGE_KEY = 'redlineToRule.v1';
