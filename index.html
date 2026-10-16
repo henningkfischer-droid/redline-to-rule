@@ -1185,7 +1185,7 @@ body.print-preview #printSheet{display:block;padding:40px 16px}
 <dialog id="dlgConfirm" aria-labelledby="dlgConfirmTitle">
   <button type="button" class="dlg-x" id="dlgConfirmX" aria-label="Close" hidden><svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M3 3l10 10M13 3L3 13" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></button>
   <form method="dialog" class="dlg-body">
-    <h2 id="dlgConfirmTitle">Are you sure?</h2>
+    <h2 id="dlgConfirmTitle" tabindex="-1">Are you sure?</h2>
     <p class="lede" id="dlgConfirmBody"></p>
     <div class="field" id="dlgConfirmField" hidden style="margin-top:18px"><label for="dlgConfirmInput" id="dlgConfirmLabel">Type DELETE to confirm</label><input type="text" id="dlgConfirmInput" autocomplete="off"></div>
     <div class="dlg-actions">
@@ -1255,7 +1255,7 @@ body.print-preview #printSheet{display:block;padding:40px 16px}
    ========================================================================== */
 'use strict';
 
-const APP_VERSION = '1.4.14';
+const APP_VERSION = '1.4.15';
 const COURSE_LINE = 'NYU School of Law · Artificial Intelligence and Corporate Deals and Advice';
 const TOOL_CREDIT = 'Made with Redline to Rule, by Henning Fischer.';
 const STORAGE_KEY = 'redlineToRule.v1';
@@ -3225,7 +3225,8 @@ function askConfirm({ title, body, ok = 'Confirm', typeToConfirm = null, closeX 
     cancel.onclick = x.onclick = () => done(false);
     dlg.oncancel = e => { e.preventDefault(); done(false); };
     dlg.showModal();
-    (typeToConfirm ? input : closeX ? x : cancel).focus();
+    // With the X, start on the title (like About) so the X does not open with a focus ring.
+    (typeToConfirm ? input : closeX ? $('dlgConfirmTitle') : cancel).focus();
   });
 }
 
