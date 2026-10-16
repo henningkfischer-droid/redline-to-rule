@@ -331,6 +331,7 @@ html[data-theme="dark"] .site-footer{background:#3D0563}
 .foot-legal p+p{margin-top:10px}
 .foot-meta{display:flex;flex-wrap:wrap;gap:4px 0}
 .foot-meta>span+span::before{content:"·";margin:0 10px;color:rgba(255,255,255,.5)}
+.foot-ny{margin:32px 0 0;text-align:center;font-size:9.5px;letter-spacing:.04em;color:rgba(255,255,255,.76)}
 @media (max-width:760px){.foot-grid{grid-template-columns:1fr 1fr}.foot-brand{grid-column:1/-1}.foot-meta{flex-direction:column;gap:4px}.foot-meta>span+span::before{content:none}}
 
 /* ==========================================================================
@@ -1141,6 +1142,8 @@ body.print-preview #printSheet{display:block;padding:40px 16px}
       <p>A student project for a course at NYU School of Law. Not an official NYU School of Law website or tool.</p>
       <p class="foot-meta"><span>© 2026 Henning Fischer</span><span>Version <span id="appVersion"></span></span><span>AI edition: AI is optional, off until you switch it on, and uses OpenRouter only.</span></p>
     </div>
+    <!-- Sign-off (home page only; route() toggles it) -->
+    <p class="foot-ny" id="footNY">built by New Yorkers for New Yorkers🗽</p>
   </div>
 </footer>
 
@@ -1242,7 +1245,7 @@ body.print-preview #printSheet{display:block;padding:40px 16px}
    ========================================================================== */
 'use strict';
 
-const APP_VERSION = '1.4.2';
+const APP_VERSION = '1.4.3';
 const COURSE_LINE = 'NYU School of Law · Artificial Intelligence and Corporate Deals and Advice';
 const TOOL_CREDIT = 'Made with Redline to Rule, by Henning Fischer.';
 const STORAGE_KEY = 'redlineToRule.v1';
@@ -3324,6 +3327,7 @@ function route() {
   const changed = name !== currentView;
   currentView = name;
   for (const v of document.querySelectorAll('.view')) v.hidden = v.dataset.view !== name;
+  $('footNY').hidden = name !== 'home';
   for (const a of document.querySelectorAll('#navTabs a[data-tab]')) {
     if (a.dataset.tab === name) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current');
   }
