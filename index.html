@@ -322,7 +322,8 @@ html[data-theme="dark"] .site-footer{background:#3D0563}
 .foot-grid{display:grid;grid-template-columns:1.6fr 1fr 1fr;gap:40px;padding-bottom:48px;border-bottom:1px solid rgba(255,255,255,.2);margin-bottom:28px}
 .site-footer .wordmark{color:#fff;font-size:14px;margin-bottom:20px}
 .foot-about{max-width:380px;font-size:14px}
-.foot-about em{font-style:normal;color:#fff}
+.foot-about a{color:#fff;text-decoration:underline;text-decoration-color:rgba(255,255,255,.45);text-underline-offset:3px}   /* course page at NYU Law */
+.foot-about a:hover{text-decoration-color:#fff}
 .foot-col h2{font:600 11px/1.3 var(--sans);letter-spacing:.2em;text-transform:uppercase;color:#fff;margin:6px 0 20px}
 .foot-col ul{list-style:none;margin:0;padding:0;display:grid;gap:12px}
 .foot-col a,.foot-link{color:rgba(255,255,255,.9);text-decoration:none;font:400 14px/1.5 var(--sans);background:none;border:0;padding:0;cursor:pointer;text-align:left}
@@ -1127,7 +1128,7 @@ body.print-preview #printSheet{display:block;padding:40px 16px}
     <div class="foot-grid">
       <div class="foot-brand">
         <span class="wordmark" aria-hidden="true">REDLINE<span class="wm-div"></span>RULE</span>
-        <p class="foot-about">A drafting-rules tool built for <em>Artificial Intelligence and Corporate Deals and Advice</em>, NYU School of Law, Fall 2026.</p>
+        <p class="foot-about">A drafting-rules tool built for <a href="https://its.law.nyu.edu/courses/description.cfm?id=39516" target="_blank" rel="noopener noreferrer" aria-label="Artificial Intelligence and Corporate Deals and Advice (course page, opens in a new tab)">Artificial Intelligence and Corporate Deals and Advice</a>, NYU School of Law, Fall 2026.</p>
       </div>
       <nav class="foot-col" aria-labelledby="footWork">
         <h2 id="footWork">Workflow</h2>
@@ -1140,7 +1141,7 @@ body.print-preview #printSheet{display:block;padding:40px 16px}
     </div>
     <div class="foot-legal">
       <p id="footerPrivacy">Privacy: Redline to Rule runs entirely in this browser. It makes no network requests and stores data only in this browser's local storage. Use sample or anonymized text; do not paste client confidential information.</p>
-      <p>A student project for a course at NYU School of Law. Not an official NYU School of Law website or tool.</p>
+      <p>Not an official NYU School of Law website or tool.</p>
       <p class="foot-meta"><span>© 2026 Henning Fischer</span><span>Version <span id="appVersion"></span></span><span>AI edition: AI is optional, off until you switch it on, and uses OpenRouter only.</span></p>
     </div>
     <!-- Sign-off (home page only; route() toggles it) -->
@@ -1246,7 +1247,7 @@ body.print-preview #printSheet{display:block;padding:40px 16px}
    ========================================================================== */
 'use strict';
 
-const APP_VERSION = '1.4.10';
+const APP_VERSION = '1.4.11';
 const COURSE_LINE = 'NYU School of Law · Artificial Intelligence and Corporate Deals and Advice';
 const TOOL_CREDIT = 'Made with Redline to Rule, by Henning Fischer.';
 const STORAGE_KEY = 'redlineToRule.v1';
