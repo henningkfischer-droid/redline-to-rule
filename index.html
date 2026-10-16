@@ -1247,7 +1247,7 @@ body.print-preview #printSheet{display:block;padding:40px 16px}
    ========================================================================== */
 'use strict';
 
-const APP_VERSION = '1.4.6';
+const APP_VERSION = '1.4.7';
 const COURSE_LINE = 'NYU School of Law · Artificial Intelligence and Corporate Deals and Advice';
 const TOOL_CREDIT = 'Made with Redline to Rule, by Henning Fischer.';
 const STORAGE_KEY = 'redlineToRule.v1';
@@ -3357,7 +3357,6 @@ function route() {
   const changed = name !== currentView;
   currentView = name;
   for (const v of document.querySelectorAll('.view')) v.hidden = v.dataset.view !== name;
-  $('footNY').hidden = name !== 'home';
   for (const a of document.querySelectorAll('#navTabs a[data-tab]')) {
     if (a.dataset.tab === name) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current');
   }
