@@ -322,8 +322,8 @@ html[data-theme="dark"] .site-footer{background:#3D0563}
 .foot-grid{display:grid;grid-template-columns:1.6fr 1fr 1fr;gap:40px;padding-bottom:48px;border-bottom:1px solid rgba(255,255,255,.2);margin-bottom:28px}
 .site-footer .wordmark{color:#fff;font-size:14px;margin-bottom:20px}
 .foot-about{max-width:380px;font-size:14px}
-.foot-about a{color:#fff;text-decoration:underline;text-decoration-color:rgba(255,255,255,.45);text-underline-offset:3px}   /* course page at NYU Law */
-.foot-about a:hover{text-decoration-color:#fff}
+.foot-about a{color:#fff;text-decoration:none}   /* course page at NYU Law */
+.foot-about a:hover{text-decoration:underline;text-underline-offset:3px}
 .foot-col h2{font:600 11px/1.3 var(--sans);letter-spacing:.2em;text-transform:uppercase;color:#fff;margin:6px 0 20px}
 .foot-col ul{list-style:none;margin:0;padding:0;display:grid;gap:12px}
 .foot-col a,.foot-link{color:rgba(255,255,255,.9);text-decoration:none;font:400 14px/1.5 var(--sans);background:none;border:0;padding:0;cursor:pointer;text-align:left}
@@ -1247,7 +1247,7 @@ body.print-preview #printSheet{display:block;padding:40px 16px}
    ========================================================================== */
 'use strict';
 
-const APP_VERSION = '1.4.11';
+const APP_VERSION = '1.4.12';
 const COURSE_LINE = 'NYU School of Law · Artificial Intelligence and Corporate Deals and Advice';
 const TOOL_CREDIT = 'Made with Redline to Rule, by Henning Fischer.';
 const STORAGE_KEY = 'redlineToRule.v1';
