@@ -1245,7 +1245,7 @@ body.print-preview #printSheet{display:block;padding:40px 16px}
    ========================================================================== */
 'use strict';
 
-const APP_VERSION = '1.4.3';
+const APP_VERSION = '1.4.4';
 const COURSE_LINE = 'NYU School of Law · Artificial Intelligence and Corporate Deals and Advice';
 const TOOL_CREDIT = 'Made with Redline to Rule, by Henning Fischer.';
 const STORAGE_KEY = 'redlineToRule.v1';
@@ -2895,6 +2895,34 @@ function demoTagFor(tags, h) {
 }
 
 /** Replace any earlier demo data with fresh demo profiles, comparisons and tags. */
+/** The pair "Load demo" puts in the Compare form, so a first-time user starts at step 1.1 and walks
+    the whole flow: compare, tag, review rules, check, export. Partner A's usual edits, not yet compared. */
+const DEMO_START = {
+  type: 'Memo', date: '2026-10-13', matter: 'Matter 5',
+  sent: `MEMORANDUM
+To: Partner A
+From: Associate
+Re: Escrow in the Target share purchase agreement
+
+Background
+
+Seller has asked whether Buyer would agree to replace the escrow with warranty and indemnity insurance. The parties discussed the point on the call on Tuesday.
+
+Buyer should keep an escrow of 10% of the purchase price for 18 months, because the draft policy excludes the known tax matters that were identified in the course of diligence (W&I Policy Draft, s. 4.2).`,
+  returned: `MEMORANDUM
+To: Partner A
+From: Associate
+Re: Escrow in the Target share purchase agreement
+
+Bottom line: we recommend that Buyer keep an escrow of 10% of the purchase price for 18 months.
+
+- The draft policy excludes the known tax matters found in diligence (W&I Policy Draft, s. 4.2) [TO VERIFY].
+
+Open issues
+
+- Confirm whether Seller will share the cost of the policy.`
+};
+
 function loadDemo(st) {
   for (const p of st.profiles.filter(p => p.demo)) deleteProfile(st, p.id);
   // Drop the untouched starter profile so the demo is not cluttered.
@@ -4319,13 +4347,14 @@ async function loadDemoData() {
     if (!ok) return;
   }
   loadDemo(S);
-  S.ui.compareDraft = {}; S.ui.checkDraft = {};
+  // Start at step 1.1: a new demo memo waits in the Compare form, and the bar at the bottom leads on to Export.
+  S.ui.compareMode = 'two';
+  S.ui.compareDraft = Object.assign({}, DEMO_START); S.ui.checkDraft = {};
   $('reportSection').hidden = true; lastReportProfile = null;
   compareFormFilled = false; checkFilled = false;
   commit();
-  toast('Demo loaded: candidate rules are ready to review.');
-  const ready = readyCandidates(S.activeProfileId);
-  goTo('rules', ready.length ? 'cand-' + ready[0].key : null);
+  toast('Demo loaded. Step 1.1: compare the two versions, then follow the bar at the bottom.');
+  goTo('compare');
 }
 
 async function copySkill() {
@@ -4406,9 +4435,16 @@ async function importRedline(f) {
 
 /** After text arrives in a field (paste or .txt file), take the obvious next action. */
 function afterTextLoaded(id) {
-  const sent = $('txtSent').value.trim(), back = $('txtBack').value.trim();
   if (id === 'checkText') { if ($('checkText').value.trim()) runDraftCheck(); return; }
   if (S.ui.compareMode === 'oral') return;   // notes are often typed in several goes: "Add feedback" starts it
+  // Your own text pasted next to the untouched demo memo starts a fresh pair instead of comparing against the demo.
+  const other = id === 'txtSent' ? 'txtBack' : 'txtSent', demoText = { txtSent: DEMO_START.sent, txtBack: DEMO_START.returned };
+  if ($(other).value.trim() === demoText[other].trim() && $(id).value.trim() !== demoText[id].trim()) {
+    $(other).value = '';
+    if ($('cmpMatter').value === DEMO_START.matter) $('cmpMatter').value = '';
+    $(other).dispatchEvent(new Event('input'));
+  }
+  const sent = $('txtSent').value.trim(), back = $('txtBack').value.trim();
   if (sent && back) { runCompare(); return; }
   if (id === 'txtSent' && sent) $('txtBack').focus();
   if (id === 'txtBack' && back) $('txtSent').focus();
@@ -4420,26 +4456,25 @@ function nextStep() {
   const cmp = cmpById(S.ui.openComparisonId);
   const left = cmp && cmp.profileId === pid ? S.changes.filter(c => c.comparisonId === cmp.id && !c.category).sort((a, b) => a.idx - b.idx) : [];
   if (left.length) return { step: 'Tag', text: plural(left.length, unitOf(cmp)) + ' left to tag in ' + (cmp.matter || (cmp.source === 'oral' ? 'this feedback' : 'this comparison')), btn: 'Tag next ' + unitOf(cmp), run: () => openChange(left[0].id) };
+  // Versions (or notes) already in the Compare form: comparing them comes first.
+  if (currentView === 'compare') {
+    if (S.ui.compareMode === 'oral') { if ($('txtOral').value.trim()) return { step: 'Compare', text: 'add the feedback points', btn: 'Add feedback', run: runCompare }; }
+    else if ($('txtSent').value.trim() && $('txtBack').value.trim()) return { step: 'Compare', text: 'run the comparison', btn: 'Compare', run: runCompare };
+  }
   const ready = readyCandidates(pid);
   if (ready.length) return { step: 'Learn', text: plural(ready.length, 'candidate rule') + ' ready to review for ' + name, btn: 'Review rules', run: () => goTo('rules', 'cand-' + ready[0].key) };
   const stale = staleRules(pid);
   if (stale.length) return { step: 'Learn', text: plural(stale.length, 'rule') + ' may be outdated: keep or remove ' + (stale.length > 1 ? 'them' : 'it'), btn: 'Review', run: () => goTo('rules', 'rule-' + stale[0].id) };
   const rules = activeRules(S, pid, 'all');
   if (!rules.length) {
-    if (S.ui.compareMode === 'oral') {
-      return currentView === 'compare' && $('txtOral').value.trim()
-        ? { step: 'Compare', text: 'add the feedback points', btn: 'Add feedback', run: runCompare }
-        : { step: 'Compare', text: "write down the reviewer's oral feedback", btn: 'Write feedback', run: () => goTo('compare', 'txtOral') };
-    }
-    const filled = $('txtSent').value.trim() && $('txtBack').value.trim();
-    if (currentView === 'compare' && filled) return { step: 'Compare', text: 'run the comparison', btn: 'Compare', run: runCompare };
+    if (S.ui.compareMode === 'oral') return { step: 'Compare', text: "write down the reviewer's oral feedback", btn: 'Write feedback', run: () => goTo('compare', 'txtOral') };
     const any = S.comparisons.some(c => c.profileId === pid);
     if (S.ui.compareMode === 'redline') return { step: 'Compare', text: 'drop the Word file with tracked changes', btn: 'Choose file', run: () => currentView === 'compare' ? $('redlineFile').click() : goTo('compare', 'redlineFile') };
     return { step: 'Compare', text: any ? 'compare another draft to find recurring edits' : 'paste two versions of a draft to begin', btn: 'Compare drafts', run: () => goTo('compare', 'txtSent') };
   }
   if (!flowChecked.has(pid)) {
     if (currentView === 'check' && $('checkText').value.trim()) return { step: 'Check', text: 'run the check on your draft', btn: 'Check draft', run: runDraftCheck };
-    return { step: 'Check', text: 'paste your next draft to check it against ' + plural(rules.length, 'rule'), btn: 'Check a draft', run: () => goTo('check', 'checkText') };
+    return { step: 'Check', text: (isDemoProfile(pid) ? 'paste your next draft, or use the demo draft, to check it against ' : 'paste your next draft to check it against ') + plural(rules.length, 'rule'), btn: 'Check a draft', run: () => goTo('check', 'checkText') };
   }
   if (!skillUpToDate(pid)) {
     const updated = Object.keys(S.skillVersions).some(k => k.startsWith(pid + '|'));
@@ -5159,7 +5194,14 @@ function wireEvents() {
 
   // Compare mode: clean revised version vs one file with tracked changes.
   for (const r of document.querySelectorAll('input[name=cmpMode]')) r.addEventListener('change', () => {
-    S.ui.compareMode = r.value; applyCompareMode(); save(); renderNextBar();
+    S.ui.compareMode = r.value;
+    // Switching to a Word file or oral notes: the untouched demo memo would only get in the way.
+    if (r.value !== 'two' && $('txtSent').value.trim() === DEMO_START.sent.trim() && $('txtBack').value.trim() === DEMO_START.returned.trim()) {
+      $('txtSent').value = ''; $('txtBack').value = '';
+      if ($('cmpMatter').value === DEMO_START.matter) $('cmpMatter').value = '';
+      storeCompareDraft(); updateCounts();
+    }
+    applyCompareMode(); save(); renderNextBar();
   });
   $('redlineFile').addEventListener('change', () => {
     const f = $('redlineFile').files && $('redlineFile').files[0];
