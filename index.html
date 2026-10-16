@@ -541,6 +541,13 @@ dialog::backdrop{background:rgba(20,8,32,.45);-webkit-backdrop-filter:blur(4px);
 .dlg-body h2{font:700 24px/1.25 var(--serif);margin:0 0 10px}
 .dlg-body .lede{margin-top:0;font-size:15.5px}
 .dlg-actions{display:flex;justify-content:flex-end;flex-wrap:wrap;gap:12px;margin-top:28px}
+/* Close (X) in the top right corner: the demo confirmation (askConfirm closeX) and About this project */
+.dlg-x{position:absolute;top:14px;right:14px;z-index:1;width:36px;height:36px;display:grid;place-items:center;background:var(--surface);border:0;border-radius:50%;color:var(--text-2);cursor:pointer;transition:background .2s,color .2s}
+.dlg-x:hover{background:var(--chip-bg);color:var(--text)}
+.dlg-x:not([hidden])~.dlg-body h2{padding-right:28px}
+/* About has no Close button, so only its body scrolls and the X stays in the corner */
+#dlgAbout[open]{display:flex;flex-direction:column;overflow:hidden}
+#dlgAbout .dlg-body{overflow:auto;min-height:0}
 .profile-rows{display:grid;gap:10px;margin:20px 0}
 .profile-row{display:flex;gap:10px;align-items:center}
 .profile-row input{flex:1}
@@ -1176,6 +1183,7 @@ body.print-preview #printSheet{display:block;padding:40px 16px}
 
 <!-- Generic confirmation dialog -->
 <dialog id="dlgConfirm" aria-labelledby="dlgConfirmTitle">
+  <button type="button" class="dlg-x" id="dlgConfirmX" aria-label="Close" hidden><svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M3 3l10 10M13 3L3 13" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></button>
   <form method="dialog" class="dlg-body">
     <h2 id="dlgConfirmTitle">Are you sure?</h2>
     <p class="lede" id="dlgConfirmBody"></p>
@@ -1189,6 +1197,7 @@ body.print-preview #printSheet{display:block;padding:40px 16px}
 
 <!-- Profile manager -->
 <dialog id="dlgAbout" aria-labelledby="dlgAboutTitle">
+  <button type="button" class="dlg-x" id="btnAboutX" aria-label="Close"><svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M3 3l10 10M13 3L3 13" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></button>
   <div class="dlg-body about">
     <p class="eyebrow">About this project</p>
     <h2 id="dlgAboutTitle" tabindex="-1">Redline to <strong>Rule</strong></h2>
@@ -1201,13 +1210,12 @@ body.print-preview #printSheet{display:block;padding:40px 16px}
       <dt>Privacy</dt>
       <dd>Everything runs in this browser and is stored only here. With AI on, only the text an AI feature needs goes to OpenRouter; the page can contact no other address.</dd>
       <dt>Course</dt>
-      <dd>Artificial Intelligence and Corporate Deals and Advice, NYU School of Law, Fall 2026. A student project; not an official NYU School of Law tool.</dd>
+      <dd>Artificial Intelligence and Corporate Deals and Advice, NYU School of Law, Fall 2026.</dd>
       <dt>Author</dt>
       <dd>Henning Fischer</dd>
       <dt>Version</dt>
       <dd>Redline to Rule <span id="aboutVersion"></span></dd>
     </dl>
-    <div class="dlg-actions"><button type="button" class="btn btn-solid" id="btnAboutClose">Close</button></div>
   </div>
 </dialog>
 
@@ -1247,7 +1255,7 @@ body.print-preview #printSheet{display:block;padding:40px 16px}
    ========================================================================== */
 'use strict';
 
-const APP_VERSION = '1.4.13';
+const APP_VERSION = '1.4.14';
 const COURSE_LINE = 'NYU School of Law · Artificial Intelligence and Corporate Deals and Advice';
 const TOOL_CREDIT = 'Made with Redline to Rule, by Henning Fischer.';
 const STORAGE_KEY = 'redlineToRule.v1';
@@ -3199,9 +3207,9 @@ function toast(msg) {
 }
 
 /** Promise-based confirmation dialog; optional "type X to confirm". */
-function askConfirm({ title, body, ok = 'Confirm', typeToConfirm = null }) {
+function askConfirm({ title, body, ok = 'Confirm', typeToConfirm = null, closeX = false }) {
   return new Promise(resolve => {
-    const dlg = $('dlgConfirm'), okBtn = $('dlgConfirmOk'), input = $('dlgConfirmInput');
+    const dlg = $('dlgConfirm'), okBtn = $('dlgConfirmOk'), input = $('dlgConfirmInput'), cancel = $('dlgConfirmCancel'), x = $('dlgConfirmX');
     $('dlgConfirmTitle').textContent = title;
     $('dlgConfirmBody').textContent = body || '';
     setBtnLabel(okBtn, ok);
@@ -3212,10 +3220,12 @@ function askConfirm({ title, body, ok = 'Confirm', typeToConfirm = null }) {
     input.oninput = () => { okBtn.disabled = input.value.trim() !== typeToConfirm; };
     const done = v => { dlg.close(); resolve(v); };
     okBtn.onclick = () => done(true);
-    $('dlgConfirmCancel').onclick = () => done(false);
+    // closeX: an X in the top right corner replaces the Cancel button (Escape still cancels).
+    cancel.hidden = closeX; x.hidden = !closeX;
+    cancel.onclick = x.onclick = () => done(false);
     dlg.oncancel = e => { e.preventDefault(); done(false); };
     dlg.showModal();
-    (typeToConfirm ? input : $('dlgConfirmCancel')).focus();
+    (typeToConfirm ? input : closeX ? x : cancel).focus();
   });
 }
 
@@ -4344,7 +4354,7 @@ async function importBackup(file) {
 async function loadDemoData() {
   const hasOwn = S.comparisons.some(c => !c.demo);
   if (hasOwn || S.profiles.some(p => p.demo)) {
-    const ok = await askConfirm({ title: 'Load the demo?', body: 'This adds two fictional reviewer profiles, Partner A and Partner B, with sample comparisons. Any earlier demo data is replaced; your own data stays.', ok: 'Load demo' });
+    const ok = await askConfirm({ title: 'Load the demo?', body: 'This adds two fictional reviewer profiles, Partner A and Partner B, with sample comparisons. Any earlier demo data is replaced; your own data stays.', ok: 'Load demo', closeX: true });
     if (!ok) return;
   }
   loadDemo(S);
@@ -5031,11 +5041,11 @@ function wireEvents() {
     $('aboutVersion').textContent = APP_VERSION;
     const dlg = $('dlgAbout');
     dlg.showModal();
-    // The browser focuses the only button (Close, at the bottom); start at the top instead.
+    // The browser focuses the only button (the X); start at the title instead.
     $('dlgAboutTitle').focus({ preventScroll: true });
-    dlg.scrollTop = 0;
+    dlg.querySelector('.dlg-body').scrollTop = 0;
   });
-  $('btnAboutClose').addEventListener('click', () => $('dlgAbout').close());
+  $('btnAboutX').addEventListener('click', () => $('dlgAbout').close());
   $('btnAI').addEventListener('click', toggleAI);
   $('btnAIOff').addEventListener('click', () => setAI(false));
   $('btnAiTags').addEventListener('click', () => suggestTags(S.ui.openComparisonId));
