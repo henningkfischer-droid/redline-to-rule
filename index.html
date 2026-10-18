@@ -139,9 +139,10 @@ html[data-theme="dark"] .site-header{background:#3D0563}
 .profile-picker{display:flex;align-items:center;gap:8px}
 .site-header select{width:auto;max-width:170px;height:30px;border-radius:999px;padding:0 30px 0 12px;font:500 13px/1 var(--sans);color:#fff;background-color:transparent;border-color:rgba(255,255,255,.45);
   background-image:linear-gradient(45deg,transparent 50%,#fff 50%),linear-gradient(135deg,#fff 50%,transparent 50%)}
-.site-header select:hover{border-color:#fff}
 .select-probe{position:absolute;visibility:hidden;white-space:nowrap;font:500 13px/1 var(--sans)}   /* measures the chosen reviewer (fitProfileSelect) */
-.site-header select:focus{border-color:#fff;box-shadow:0 0 0 3px rgba(255,255,255,.28)}
+.site-header select:focus{border-color:rgba(255,255,255,.45);box-shadow:none}   /* a click leaves no frame (the picker keeps focus) */
+.site-header select:hover{border-color:#fff}
+.site-header select:focus-visible:not([data-pointer]){border-color:#fff;box-shadow:0 0 0 3px rgba(255,255,255,.28)}   /* keyboard focus keeps its ring */
 .site-header select option{color:#212121;background:#fff}
 .icon-btn{width:34px;height:34px;border-radius:50%;border:1px solid var(--input-border);background:var(--surface);color:var(--text);display:grid;place-items:center;cursor:pointer;padding:0;transition:border-color .2s,color .2s}
 .icon-btn:hover{border-color:var(--accent);color:var(--link)}
@@ -628,6 +629,11 @@ html[data-theme="dark"] .local-note.ai-on{background:#3A2A0A;color:#F5C26B}
 html[data-theme="dark"] .ai-sugg,html[data-theme="dark"] .ai-note,html[data-theme="dark"] .ai-bar{--link:#C9A9E6}   /* AA contrast on the tinted box */
 .ai-status{font-size:14px;color:var(--text)}
 .ai-status.err{color:var(--del-text)}
+/* AI at work: a soft light sweeps across the cards being worked on (setAiBusy), instead of status text */
+.ai-busy{position:relative;--shimmer:rgba(87,6,140,.09)}
+html[data-theme="dark"] .ai-busy{--shimmer:rgba(201,169,230,.12)}
+.ai-busy::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;background:linear-gradient(100deg,transparent 35%,var(--shimmer) 50%,transparent 65%) 0 0/250% 100% no-repeat;animation:ai-shimmer 1.4s linear infinite}
+@keyframes ai-shimmer{from{background-position:100% 0}to{background-position:0 0}}
 .ai-sugg{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center;background:var(--chip-bg);color:var(--text);border-radius:6px;padding:10px 14px;font-size:14px;line-height:1.45;margin-top:16px}
 .ai-sugg .meta{color:var(--text);flex-basis:100%}
 .ai-sugg .btn-text{padding:4px 6px}
@@ -658,6 +664,9 @@ html[data-theme="dark"] mark.ai{background:rgba(180,138,217,.18)}
 @media (max-width:600px){.try-card{margin-top:40px;padding:28px 22px}.try-card .btn{white-space:normal}}
 .empty-start{margin-top:40px;display:flex;flex-wrap:wrap;align-items:center;gap:6px 14px;font-size:15px;color:var(--text)}
 .empty-start .btn-text{padding:4px 2px}
+.name-reviewer{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+.name-reviewer label{font-weight:600}
+.name-reviewer input{width:180px;padding:7px 12px;font-size:14px}
 .ai-teaser{background:var(--chip-bg);border-radius:6px;padding:12px 16px;font-size:14px;color:var(--text);margin:0 0 28px}
 .ai-teaser .btn-text{padding:2px 4px}
 #rulesAiTeaser{margin:-12px 0 40px}
@@ -709,6 +718,7 @@ body.print-preview #printSheet{display:block;padding:40px 16px}
 @media (prefers-reduced-motion:reduce){
   html{scroll-behavior:auto}
   *,*::before,*::after{transition:none!important;animation:none!important}
+  .ai-busy::after{background:var(--shimmer)}   /* a still tint instead of the sweep */
   .js-anim .reveal{opacity:1;transform:none}
 }
 </style>
@@ -1254,7 +1264,7 @@ body.print-preview #printSheet{display:block;padding:40px 16px}
    ========================================================================== */
 'use strict';
 
-const APP_VERSION = '1.4.19';
+const APP_VERSION = '1.4.21';
 const COURSE_LINE = 'NYU School of Law · Artificial Intelligence and Corporate Deals and Advice';
 const TOOL_CREDIT = 'Made with Redline to Rule, by Henning Fischer.';
 const STORAGE_KEY = 'redlineToRule.v1';
@@ -2606,8 +2616,12 @@ function verifyQuote(text, quote) {
 
 /* ------------------------------------ State ------------------------------------ */
 
+const STARTER_PROFILE = 'My reviewer';
+/** A profile still carrying the starter name (or "Reviewer 1", used before v1.4.21) has not been named yet. */
+const isStarterName = name => name === STARTER_PROFILE || name === 'Reviewer 1';
+
 function defaultState() {
-  const p = { id: uid('p'), name: 'Reviewer 1', demo: false };
+  const p = { id: uid('p'), name: STARTER_PROFILE, demo: false };
   return {
     schema: SCHEMA_VERSION, profiles: [p], activeProfileId: p.id,
     categories: DEFAULT_CATEGORIES.slice(), deliverableTypes: DEFAULT_TYPES.slice(),
@@ -2728,7 +2742,7 @@ function deleteProfile(st, profileId) {
   st.rules = st.rules.filter(r => r.profileId !== profileId);
   st.rejected = st.rejected.filter(r => r.profileId !== profileId);
   st.profiles = st.profiles.filter(p => p.id !== profileId);
-  if (!st.profiles.length) st.profiles.push({ id: uid('p'), name: 'Reviewer 1', demo: false });
+  if (!st.profiles.length) st.profiles.push({ id: uid('p'), name: STARTER_PROFILE, demo: false });
   if (!st.profiles.some(p => p.id === st.activeProfileId)) st.activeProfileId = st.profiles[0].id;
 }
 
@@ -2935,7 +2949,7 @@ Open issues
 function loadDemo(st) {
   for (const p of st.profiles.filter(p => p.demo)) deleteProfile(st, p.id);
   // Drop the untouched starter profile so the demo is not cluttered.
-  st.profiles = st.profiles.filter(p => !(p.name === 'Reviewer 1' && !st.comparisons.some(c => c.profileId === p.id) && !st.rules.some(r => r.profileId === p.id)));
+  st.profiles = st.profiles.filter(p => !(isStarterName(p.name) && !st.comparisons.some(c => c.profileId === p.id) && !st.rules.some(r => r.profileId === p.id)));
   const ids = [];
   for (const spec of DEMO) {
     const profile = { id: uid('p'), name: spec.name, demo: true };
@@ -3787,7 +3801,7 @@ function changeCard(ch, i, n) {
     h('div', { class: 'field' }, h('span', { class: 'label', 'aria-hidden': 'true' }, 'Scope'), seg),
     h('div', { class: 'tag-actions' }, h('button', { type: 'button', class: 'btn btn-outline btn-sm', onmousedown: keepFocus, onclick: finishCard }, 'Save and next', ' ', arrow()))));
   applyAi(true);
-  return card;
+  return markAiBusy(card);
 }
 
 const AUTO_DELAY = 900;   // pause before moving on, so the toast can be read
@@ -4112,7 +4126,7 @@ function candidateCard(c) {
   ta.addEventListener('input', () => { cfg.text = ta.value; store(); autoGrow(ta); });
   const confirmBtn = h('button', { type: 'button', class: 'btn btn-gold', disabled: !enough, onclick: () => confirmCandidate(c, cfg) }, 'Confirm rule', ' ', arrow());
   const members = c.members.map(id => byId.get(id)).filter(Boolean);
-  return h('article', { class: 'rule-card', id: 'cand-' + c.key, 'aria-label': 'Candidate rule: ' + cfg.text },
+  return markAiBusy(h('article', { class: 'rule-card', id: 'cand-' + c.key, 'aria-label': 'Candidate rule: ' + cfg.text },
     h('div', { class: 'rule-top' }, h('span', { class: 'chip' }, c.category), h('span', { class: 'meta' }, 'Candidate')),
     ta,
     aiWordingBox(c, byId, cfg, ta, store),
@@ -4122,7 +4136,7 @@ function candidateCard(c) {
     ruleConfigBlock(cfg, store),
     enough ? null : h('p', { class: 'warn-note' }, 'Needs ' + N + ' instances to confirm (has ' + c.count + ').'),
     h('div', { class: 'actions', style: 'margin-top:0' }, confirmBtn,
-      h('button', { type: 'button', class: 'btn-text', onclick: () => rejectCandidate(c) }, 'Reject')));
+      h('button', { type: 'button', class: 'btn-text', onclick: () => rejectCandidate(c) }, 'Reject'))));
 }
 
 function rejectedCard(c) {
@@ -4523,10 +4537,11 @@ function renderClosing() {
 
 function renderNextBar() {
   renderClosing();
-  const bar = $('nextBar'), show = !!currentView && currentView !== 'home';
+  // The bar stays out of the way until there is a first comparison (yours or the demo); its text stays current either way.
+  const bar = $('nextBar'), onScreen = !!currentView && currentView !== 'home', show = onScreen && S.comparisons.length > 0;
   bar.hidden = !show;
   document.documentElement.classList.toggle('has-next', show);
-  if (!show) return;
+  if (!onScreen) return;
   const ns = nextStep();
   $('nextStepLabel').textContent = 'Next · ' + ns.step;
   $('nextText').textContent = capitalize(ns.text);
@@ -4553,7 +4568,18 @@ const AI_REASONING = { 'openai/gpt-5-nano': 'low', 'nvidia/nemotron-3-super-120b
 const AI_NAMES = { 'openai/gpt-5-nano': 'GPT-5 nano', 'nvidia/nemotron-3-super-120b-a12b:free': 'Nemotron 3 Super (free)', 'google/gemma-4-31b-it:free': 'Gemma 4 31B (free)', 'openrouter/free': 'a free model' };
 const AI_LIMITS = { paidMs: 45000, freeMs: 45000 };   // per model: a slow model is abandoned for the next one
 const AI_TAG_BATCH = 12;                             // changes per tag-suggestion request
-const AI = { paidBlocked: false, freeBlocked: false, toldFree: false, requests: 0, cost: 0, lastModel: '', busy: new Set(), controllers: new Set() };
+const AI = { paidBlocked: false, freeBlocked: false, toldFree: false, requests: 0, cost: 0, lastModel: '', busy: new Set(), controllers: new Set(), busyCards: new Set() };
+
+/** While the AI works, the cards it is working on shimmer (ids in AI.busyCards survive re-renders); progress text goes to screen readers only. */
+function markAiBusy(el) {
+  const on = AI.busyCards.has(el.id);
+  el.classList.toggle('ai-busy', on);
+  if (on) el.setAttribute('aria-busy', 'true'); else el.removeAttribute('aria-busy');
+  return el;
+}
+function setAiBusy(ids, on) {
+  for (const id of ids) { if (on) AI.busyCards.add(id); else AI.busyCards.delete(id); const el = $(id); if (el) markAiBusy(el); }
+}
 const aiCardHooks = new Map();                       // change id -> refresh that card's AI suggestion
 const Q_LABEL = { verbatim: 'Verbatim', close: 'Close', invented: 'May be invented' };
 let aiKeyCache = null, tagAiStatus = null, rulesAiStatus = null, footerLocalText = '';
@@ -4702,7 +4728,7 @@ function earlierReasons(pid) {
   }
   return [...counts.values()].sort((a, b) => b.n - a.n).map(e => ({ category: e.category, reason: e.reason }));
 }
-function setTagStatus(cmpId, text, err) { tagAiStatus = { cmpId, text, err: !!err }; renderTagAiBar(); }
+function setTagStatus(cmpId, text, err, interim) { tagAiStatus = { cmpId, text, err: !!err, interim: !!interim }; renderTagAiBar(); }
 function renderTagAiBar() {
   const bar = $('tagAiBar'), cmp = cmpById(S.ui.openComparisonId);
   const st = cmp && tagAiStatus && tagAiStatus.cmpId === cmp.id ? tagAiStatus : null;
@@ -4713,6 +4739,7 @@ function renderTagAiBar() {
   btn.textContent = 'Suggest tags for ' + plural(n, 'untagged ' + unitOf(cmp));
   $('tagAiStatus').textContent = st ? st.text : '';
   $('tagAiStatus').classList.toggle('err', !!(st && st.err));
+  $('tagAiStatus').classList.toggle('sr-only', !!(st && st.interim));   // progress shows as a shimmer on the cards
   aiTeaser($('tagAiTeaser'), !!cmp && showAiTeaser(cmp.profileId), TEASE.tags);
 }
 
@@ -4729,8 +4756,13 @@ async function suggestTags(cmpId) {
     for (let k = 0; k < todo.length; k += AI_TAG_BATCH) {
       const batch = todo.slice(k, k + AI_TAG_BATCH), ids = batch.map((_, j) => String(j + 1));
       const range = todo.length > AI_TAG_BATCH ? ' (changes ' + (k + 1) + '–' + (k + batch.length) + ' of ' + todo.length + ')' : '';
-      const r = await aiRequest(buildTagPrompt(batch.map((ch, j) => aiEditItem(ids[j], cmp, ch)), cats, earlier, cmp.type),
-        { maxTokens: 4000, onStatus: s => setTagStatus(cmpId, s + range) });
+      const cardIds = batch.map(ch => 'chg-' + ch.id);
+      setAiBusy(cardIds, true);
+      let r;
+      try {
+        r = await aiRequest(buildTagPrompt(batch.map((ch, j) => aiEditItem(ids[j], cmp, ch)), cats, earlier, cmp.type),
+          { maxTokens: 4000, onStatus: s => setTagStatus(cmpId, s + range, false, true) });
+      } finally { setAiBusy(cardIds, false); }
       if (!aiOn()) return;
       const got = readTagSuggestions(r.data, ids, cats);
       batch.forEach((ch, j) => {
@@ -4751,13 +4783,14 @@ async function suggestTags(cmpId) {
 
 /* ---- 2 and 3. Grouping reasons by meaning, drafting rule wording ---- */
 
-function setRulesStatus(text, err) { rulesAiStatus = { pid: S.activeProfileId, text, err: !!err }; renderRulesAiButtons(); }
+function setRulesStatus(text, err, interim) { rulesAiStatus = { pid: S.activeProfileId, text, err: !!err, interim: !!interim }; renderRulesAiButtons(); }
 function renderRulesAiButtons() {
   const busy = AI.busy.has('rules'), st = rulesAiStatus && rulesAiStatus.pid === S.activeProfileId ? rulesAiStatus : null;
   $('btnAiGroup').disabled = busy;
   $('btnAiWording').disabled = busy;
   $('rulesAiStatus').textContent = st ? st.text : 'The AI suggests; you confirm every rule.';
   $('rulesAiStatus').classList.toggle('err', !!(st && st.err));
+  $('rulesAiStatus').classList.toggle('sr-only', !!(st && st.interim));
 }
 
 async function groupReasons() {
@@ -4765,10 +4798,12 @@ async function groupReasons() {
   const pid = S.activeProfileId, input = mergeInput(S, pid);
   if (!input.length) { setRulesStatus('Nothing to group yet: a category needs at least two differently worded reasons.'); return; }
   AI.busy.add('rules');
-  setRulesStatus('Asking the AI…');
+  setRulesStatus('Asking the AI…', false, true);
+  const busyIds = [...document.querySelectorAll('#view-rules .rule-card[id^="cand-"]')].map(el => el.id);
+  setAiBusy(busyIds, true);
   try {
     const { messages, idMap } = buildMergePrompt(input);
-    const r = await aiRequest(messages, { maxTokens: 4000, onStatus: setRulesStatus });
+    const r = await aiRequest(messages, { maxTokens: 4000, onStatus: s => setRulesStatus(s, false, true) });
     if (!aiOn()) return;
     const merges = readMerges(r.data, idMap);
     // A new answer replaces this reviewer's earlier AI merges; merges you undid stay undone.
@@ -4788,7 +4823,7 @@ async function groupReasons() {
       : merges.length ? 'The AI proposed only merges you undid earlier, so nothing changed.'
         : 'The AI found no reasons that mean the same thing in different words.');
   } catch (e) { setRulesStatus(aiFailText(e), true); }
-  finally { AI.busy.delete('rules'); renderRulesAiButtons(); }
+  finally { setAiBusy(busyIds, false); AI.busy.delete('rules'); renderRulesAiButtons(); }
 }
 function undoMerge(m) { m.undone = true; commit(); toast('Merge undone: these reasons are grouped by shared words again.'); }
 /** "Merged by AI" notes listing the merged wordings that appear among the given reasons. */
@@ -4805,9 +4840,11 @@ async function draftWording() {
   const pid = S.activeProfileId, list = visibleCandidates(pid).slice(0, 20), byId = new Map(S.changes.map(c => [c.id, c]));
   if (!list.length) { setRulesStatus('No candidate rules to word yet.'); return; }
   AI.busy.add('rules');
-  setRulesStatus('Asking the AI…');
+  setRulesStatus('Asking the AI…', false, true);
+  const busyIds = list.map(c => 'cand-' + c.key);
+  setAiBusy(busyIds, true);
   try {
-    const r = await aiRequest(buildWordingPrompt(list, byId), { maxTokens: 3000, onStatus: setRulesStatus });
+    const r = await aiRequest(buildWordingPrompt(list, byId), { maxTokens: 3000, onStatus: s => setRulesStatus(s, false, true) });
     if (!aiOn()) return;
     const ids = list.map((_, i) => 'g' + (i + 1)), got = readWordings(r.data, ids);
     let n = 0;
@@ -4816,7 +4853,7 @@ async function draftWording() {
     commit();
     setRulesStatus(n ? 'AI wording proposed for ' + plural(n, 'candidate') + ' (' + aiModelName(r.model) + '). Use it or keep your own.' : 'The AI gave no usable wording.');
   } catch (e) { setRulesStatus(aiFailText(e), true); }
-  finally { AI.busy.delete('rules'); renderRulesAiButtons(); }
+  finally { setAiBusy(busyIds, false); AI.busy.delete('rules'); renderRulesAiButtons(); }
 }
 /** The AI's proposed wording for a candidate, shown only while its evidence is unchanged. */
 function aiWordingBox(c, byId, cfg, ta, store) {
@@ -4847,6 +4884,8 @@ function aiReviewCard(text, rules, onMarks) {
   btn.addEventListener('click', async () => {
     btn.disabled = true;
     status.classList.remove('err');
+    status.classList.add('sr-only');   // the card shimmers while the AI reviews
+    setAiBusy(['aiReviewCard'], true);
     try {
       const { messages, cut } = buildReviewPrompt(rules, text);
       const r = await aiRequest(messages, { maxTokens: 6000, onStatus: s => { status.textContent = s; } });
@@ -4874,7 +4913,7 @@ function aiReviewCard(text, rules, onMarks) {
       onMarks(marks);
       setBtnLabel(btn, 'Review again');
     } catch (e) { status.textContent = aiFailText(e); status.classList.add('err'); }
-    finally { btn.disabled = false; }
+    finally { btn.disabled = false; status.classList.remove('sr-only'); setAiBusy(['aiReviewCard'], false); }
   });
   return card;
 }
@@ -4941,16 +4980,25 @@ function aiTeaser(el, show, text) {
   return el;
 }
 
-/** Home: a fresh profile explains what to do first instead of showing only zeros. */
+/** Home: a fresh profile explains what to do first instead of showing only zeros. Until it is named, it asks for the reviewer's name. */
 function renderEmptyStart() {
-  const pid = S.activeProfileId, el = $('emptyStart');
+  const pid = S.activeProfileId, el = $('emptyStart'), p = activeProfile();
   el.hidden = S.comparisons.some(c => c.profileId === pid) || S.rules.some(r => r.profileId === pid);
   if (el.hidden) return;
-  el.replaceChildren(
-    h('span', null, 'Nothing recorded for ' + activeProfile().name + ' yet. First give this profile a label for your reviewer (for example "Partner A"), then compare a draft that came back.'),
-    h('button', { type: 'button', class: 'btn-text', onclick: () => { renderProfileRows(); $('dlgProfiles').showModal(); } }, 'Rename profile'),
+  const next = [
     h('a', { class: 'btn-text', href: '#compare', 'data-focus': 'txtSent' }, 'Start a comparison'),
-    h('button', { type: 'button', class: 'btn-text', onclick: startTour }, 'Take the tour'));
+    h('button', { type: 'button', class: 'btn-text', onclick: startTour }, 'Take the tour')];
+  if (!isStarterName(p.name)) { el.replaceChildren(h('span', null, 'Nothing recorded for ' + p.name + ' yet. Compare a draft that came back to begin.'), ...next); return; }
+  const inp = h('input', { type: 'text', id: 'starterName', maxlength: '80', placeholder: 'Partner A', autocomplete: 'off' });
+  const form = h('form', { class: 'name-reviewer' }, h('label', { for: 'starterName' }, 'Name your reviewer'), inp, h('button', { type: 'submit', class: 'btn btn-solid btn-sm' }, 'Save'));
+  form.addEventListener('submit', e => {
+    e.preventDefault();
+    const v = inp.value.trim();
+    if (!v) { inp.focus(); return; }
+    p.name = v; commit(); toast('Reviewer named ' + v + '.');
+    const link = $('emptyStart').querySelector('a'); if (link) link.focus();
+  });
+  el.replaceChildren(h('span', null, 'Start with the person whose edits you learn from: their name labels the rules.'), form, ...next);
 }
 
 /* Guided tour: five steps over the fictional demo (Partner A). It only ever changes demo data. */
@@ -5121,6 +5169,9 @@ function wireEvents() {
     if (sel.value === MANAGE_PROFILES) { sel.value = S.activeProfileId; renderProfileRows(); $('dlgProfiles').showModal(); return; }
     S.activeProfileId = sel.value; commit(); updateSubSteps();
   });
+  // Safari can treat a clicked select as keyboard-focused; mark pointer use so only the keyboard shows the focus ring.
+  $('profileSelect').addEventListener('pointerdown', () => { $('profileSelect').dataset.pointer = ''; });
+  for (const ev of ['keydown', 'blur']) $('profileSelect').addEventListener(ev, () => { delete $('profileSelect').dataset.pointer; });
   window.addEventListener('resize', fitProfileSelect, { passive: true });
   document.fonts.ready.then(fitProfileSelect);   // remeasure once the embedded Inter has loaded
   $('dlgProfilesClose').addEventListener('click', () => $('dlgProfiles').close());
