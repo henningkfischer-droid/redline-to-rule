@@ -113,10 +113,9 @@ h2.tw{font-size:clamp(34px,4.6vw,56px)}
 /* ==========================================================================
    4. Header (NYU violet bar): navigation with sub-step menus, tools, privacy note
    ========================================================================== */
-.pill-gold{background:var(--nyu-gold);color:var(--nyu-ink-violet);border:0;border-radius:3px;font:700 10.5px/1 var(--sans);letter-spacing:.12em;text-transform:uppercase;padding:6px 10px;cursor:pointer;transition:filter .2s}
-.pill-gold:hover{filter:brightness(1.06)}
-.theme-toggle{background:transparent;border:1px solid rgba(255,255,255,.4);color:#fff;width:22px;height:22px;border-radius:50%;display:grid;place-items:center;cursor:pointer;padding:0}
-.theme-toggle svg{width:12px;height:12px}
+.theme-toggle{background:transparent;border:1px solid rgba(255,255,255,.45);color:#fff;width:30px;height:30px;border-radius:50%;display:grid;place-items:center;cursor:pointer;padding:0;transition:border-color .2s,background .2s}
+.theme-toggle:hover{border-color:#fff;background:rgba(255,255,255,.08)}
+.theme-toggle svg{width:14px;height:14px}
 
 .site-header{position:sticky;top:0;z-index:50;background:var(--bar);color:#fff;transition:background .25s,box-shadow .25s}
 /* Literal colours per theme: Safari can keep a stale var() background after a theme switch. */
@@ -126,8 +125,9 @@ html[data-theme="dark"] .site-header{background:#3D0563}
 .site-header :focus-visible{outline-color:#fff}
 .nav-in{display:flex;align-items:center;gap:20px;height:64px}
 .nav-tools{display:flex;align-items:center;gap:7px}
-.mode-pill{display:inline-flex;align-items:center;gap:6px;background:transparent;border:1px solid rgba(255,255,255,.45);color:#fff;border-radius:999px;font:600 11px/1 var(--sans);letter-spacing:.1em;text-transform:uppercase;padding:6px 11px;cursor:pointer;white-space:nowrap;transition:border-color .2s,background .2s}
+.mode-pill{display:inline-flex;align-items:center;gap:6px;background:transparent;border:1px solid rgba(255,255,255,.45);color:#fff;border-radius:999px;font:600 11px/1 var(--sans);letter-spacing:.1em;text-transform:uppercase;height:30px;padding:0 12px;cursor:pointer;white-space:nowrap;transition:border-color .2s,background .2s}   /* the header tools share this look: 30px pills, one border, 11px capitals */
 .mode-pill:hover,.mode-pill[aria-expanded="true"]{border-color:#fff;background:rgba(255,255,255,.08)}
+.mode-pill.away{visibility:hidden}   /* AI on: the label steps aside but keeps its space, so the tabs do not shift */
 .mode-pill svg{width:12px;height:12px}
 .wordmark{display:flex;align-items:center;gap:14px;font:500 15px/1 var(--sans);letter-spacing:.32em;color:inherit;text-decoration:none;white-space:nowrap}
 .wm-div{width:1px;height:22px;background:currentColor;opacity:.55}
@@ -137,14 +137,16 @@ html[data-theme="dark"] .site-header{background:#3D0563}
 .tab-link:hover,.tab-link[aria-current="page"]{color:#fff}
 .tab-link:hover::after,.tab-link[aria-current="page"]::after{transform:scaleX(1)}
 .profile-picker{display:flex;align-items:center;gap:8px}
-.site-header select{width:auto;max-width:170px;border-radius:4px;padding:8px 30px 8px 12px;font-size:13.5px;color:#fff;background-color:transparent;border-color:rgba(255,255,255,.55);
+.site-header select{width:auto;max-width:170px;height:30px;border-radius:999px;padding:0 30px 0 12px;font:600 11px/1 var(--sans);letter-spacing:.1em;text-transform:uppercase;color:#fff;background-color:transparent;border-color:rgba(255,255,255,.45);
   background-image:linear-gradient(45deg,transparent 50%,#fff 50%),linear-gradient(135deg,#fff 50%,transparent 50%)}
+.site-header select:hover{border-color:#fff}
+.select-probe{position:absolute;visibility:hidden;white-space:nowrap;font:600 11px/1 var(--sans);letter-spacing:.1em;text-transform:uppercase}   /* measures the chosen reviewer (fitProfileSelect) */
 .site-header select:focus{border-color:#fff;box-shadow:0 0 0 3px rgba(255,255,255,.28)}
-.site-header select option{color:#212121;background:#fff}
+.site-header select option{color:#212121;background:#fff;text-transform:none;letter-spacing:0}
 .icon-btn{width:34px;height:34px;border-radius:50%;border:1px solid var(--input-border);background:var(--surface);color:var(--text);display:grid;place-items:center;cursor:pointer;padding:0;transition:border-color .2s,color .2s}
 .icon-btn:hover{border-color:var(--accent);color:var(--link)}
 .icon-btn svg{width:16px;height:16px}
-.site-header .icon-btn{background:transparent;color:#fff;border-color:rgba(255,255,255,.55)}
+.site-header .icon-btn{width:30px;height:30px;background:transparent;color:#fff;border-color:rgba(255,255,255,.45)}
 .site-header .icon-btn:hover{border-color:#fff;color:#fff}
 .menu-btn{display:none}
 /* Privacy note: a small panel under the "Local only" label; with AI on, a full-width amber strip */
@@ -178,6 +180,7 @@ html[data-theme="dark"] .sub-menu{box-shadow:0 0 0 1px var(--line),0 24px 60px r
 /* Below 1200px the tabs move into the menu so the bar never crowds */
 @media (max-width:1199px){
   .menu-btn{display:grid;order:3}
+  .mode-pill.away{display:none}   /* the tabs are in the menu here, so nothing can shift */
   .nav-tools{margin-left:auto}
   .tabs{position:absolute;top:100%;left:0;right:0;flex-direction:column;align-items:stretch;gap:0;background:var(--bar);box-shadow:0 20px 40px rgba(0,0,0,.2);padding:4px 16px 16px;display:none}
   html[data-theme="light"] .tabs{background:#57068C}
@@ -204,13 +207,12 @@ html[data-theme="dark"] .sub-menu{box-shadow:0 0 0 1px var(--line),0 24px 60px r
   .nav-tools{order:4;width:100%;margin-left:0}
   .nav-tools .profile-picker{flex:1;min-width:0}
   .site-header .profile-picker select{max-width:none;width:100%}
-  .mode-pill{padding:6px 8px}
+  .mode-pill{padding:0 10px}
   .mode-pill #modeLabel{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
-  #btnDemo{display:none}   /* the home page and the footer offer the demo on phones */
 }
 @media (max-width:520px){
   .wordmark{letter-spacing:.18em;font-size:13px;gap:8px}
-  .site-header select{max-width:118px;font-size:13px;padding:7px 26px 7px 10px}
+  .site-header select{max-width:118px;padding:0 26px 0 10px}
   .nav-in{gap:10px}
 }
 
@@ -611,7 +613,8 @@ details.cfg .rule-config{background:transparent!important;padding-top:0}
 /* ==========================================================================
    12. AI (optional): switch, banner, suggestions, quote checks
    ========================================================================== */
-.ai-switch{display:inline-flex;align-items:center;gap:7px;background:transparent;border:1px solid rgba(255,255,255,.45);color:#fff;border-radius:999px;font:700 11.5px/1 var(--sans);padding:4px 6px 4px 11px;cursor:pointer}
+.ai-switch{display:inline-flex;align-items:center;gap:7px;background:transparent;border:1px solid rgba(255,255,255,.45);color:#fff;border-radius:999px;font:600 11px/1 var(--sans);letter-spacing:.1em;height:30px;padding:0 6px 0 12px;cursor:pointer;transition:background .2s}
+.ai-switch:hover{background:rgba(255,255,255,.08)}
 .ai-switch .track{position:relative;width:26px;height:16px;border-radius:999px;background:rgba(255,255,255,.28);transition:background .2s}
 .ai-switch .track::after{content:"";position:absolute;top:2px;left:2px;width:12px;height:12px;border-radius:50%;background:#fff;transition:transform .2s var(--ease)}
 .ai-switch[aria-checked="true"]{border-color:var(--nyu-gold)}
@@ -744,13 +747,9 @@ body.print-preview #printSheet{display:block;padding:40px 16px}
     <div class="nav-tools">
       <button type="button" class="mode-pill" id="btnMode" aria-expanded="false" aria-controls="privacyNote"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg><span id="modeLabel">Local only</span></button>
       <button type="button" class="ai-switch" id="btnAI" role="switch" aria-checked="false">AI <span class="track" aria-hidden="true"></span></button>
-      <button type="button" class="pill-gold" id="btnDemo">Load demo</button>
       <div class="profile-picker">
         <label for="profileSelect" class="sr-only">Reviewer profile</label>
         <select id="profileSelect"></select>
-        <button type="button" class="icon-btn" id="btnProfiles" aria-label="Manage reviewer profiles">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg>
-        </button>
       </div>
       <button type="button" class="theme-toggle" id="btnTheme" aria-label="Switch to dark mode" aria-pressed="false">
         <svg id="iconMoon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
@@ -760,7 +759,7 @@ body.print-preview #printSheet{display:block;padding:40px 16px}
   </div>
   <div class="local-note" id="privacyNote" role="note">
     <span id="privacyLocal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>Local only. Nothing leaves this device. Use sample or anonymized text; do not paste client confidential information.</span>
-    <span id="privacyAI" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M7 18a5 5 0 0 1-.6-9.96A6 6 0 0 1 18 9a4.5 4.5 0 0 1-.5 9z"/></svg>AI on: text used by AI features is sent to OpenRouter (openrouter.ai) and the AI model. Use anonymized text only (Buyer, Seller, Target; no client names).<button type="button" class="btn-text" id="btnAIOff">Turn AI off</button></span>
+    <span id="privacyAI" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M7 18a5 5 0 0 1-.6-9.96A6 6 0 0 1 18 9a4.5 4.5 0 0 1-.5 9z"/></svg>AI on: text used by AI features is sent to OpenRouter (openrouter.ai) and the AI model. Use anonymized text only.<button type="button" class="btn-text" id="btnAIOff">Turn AI off</button></span>
   </div>
 </header>
 
@@ -1255,7 +1254,7 @@ body.print-preview #printSheet{display:block;padding:40px 16px}
    ========================================================================== */
 'use strict';
 
-const APP_VERSION = '1.4.16';
+const APP_VERSION = '1.4.18';
 const COURSE_LINE = 'NYU School of Law · Artificial Intelligence and Corporate Deals and Advice';
 const TOOL_CREDIT = 'Made with Redline to Rule, by Henning Fischer.';
 const STORAGE_KEY = 'redlineToRule.v1';
@@ -3304,10 +3303,23 @@ function applyTheme() {
   $('iconSun').toggleAttribute('hidden', t !== 'dark');
 }
 
+const MANAGE_PROFILES = '__manage__';   // the reviewer picker's last option: opens the profile manager
+
+/** Size the reviewer picker to the chosen name; a select is otherwise as wide as its longest option. Phones keep the full-width picker. */
+function fitProfileSelect() {
+  const sel = $('profileSelect');
+  sel.style.width = '';
+  if (window.matchMedia('(max-width:760px)').matches) return;
+  const probe = h('span', { class: 'select-probe' }, sel.selectedOptions[0] ? sel.selectedOptions[0].textContent : '');
+  sel.after(probe); const w = probe.offsetWidth; probe.remove();
+  sel.style.width = (w + 44) + 'px';   // padding 12 + 30 (arrow), border 2; max-width still caps it
+}
+
 /** Parts shared by every screen: profile picker, type list, live numbers, names. */
 function renderChrome() {
   if (!S.profiles.some(p => p.id === S.activeProfileId)) S.activeProfileId = S.profiles[0].id;
-  fillSelect($('profileSelect'), S.profiles.map(p => [p.id, p.name]), S.activeProfileId);
+  fillSelect($('profileSelect'), [...S.profiles.map(p => [p.id, p.name]), [MANAGE_PROFILES, 'Manage reviewers…']], S.activeProfileId);
+  fitProfileSelect();
   const dl = clear($('typeList'));
   for (const t of S.deliverableTypes) dl.appendChild(h('option', { value: t }));
   const pid = S.activeProfileId, name = activeProfile().name;
@@ -4657,8 +4669,7 @@ function renderAiChrome() {
   b.setAttribute('aria-checked', String(on));
   b.disabled = !aiAvailable();
   b.title = !aiAvailable() ? 'AI is not available: this copy has no OpenRouter key' : on ? 'AI is on (OpenRouter). Click to turn it off.' : 'AI is off. Click to turn it on.';
-  $('modeLabel').textContent = on ? 'AI on' : 'Local only';
-  $('btnMode').hidden = on;   // with AI on, the full notice shows as an amber strip instead
+  $('btnMode').classList.toggle('away', on);   // with AI on, the full notice shows as an amber strip instead
   if (on) setPrivacyPanel(false);
   $('privacyLocal').hidden = on;
   $('privacyAI').hidden = !on;
@@ -5033,7 +5044,7 @@ function endTour(finished) {
 /* ------------------------------------- Init ------------------------------------- */
 
 function wireEvents() {
-  for (const id of ['btnDemo', 'btnDemoFooter']) $(id).addEventListener('click', loadDemoData);
+  $('btnDemoFooter').addEventListener('click', loadDemoData);
   wireSubMenus();
   $('btnMode').addEventListener('click', () => setPrivacyPanel(!$('privacyNote').classList.contains('open')));
   document.addEventListener('click', e => { if (!e.target.closest('#btnMode') && !e.target.closest('#privacyNote')) setPrivacyPanel(false); });
@@ -5104,8 +5115,14 @@ function wireEvents() {
   });
 
   // Profiles
-  $('profileSelect').addEventListener('change', () => { S.activeProfileId = $('profileSelect').value; commit(); updateSubSteps(); });
-  $('btnProfiles').addEventListener('click', () => { renderProfileRows(); $('dlgProfiles').showModal(); });
+  // The picker's last entry opens the profile manager; the reviewer stays as it was.
+  $('profileSelect').addEventListener('change', () => {
+    const sel = $('profileSelect');
+    if (sel.value === MANAGE_PROFILES) { sel.value = S.activeProfileId; renderProfileRows(); $('dlgProfiles').showModal(); return; }
+    S.activeProfileId = sel.value; commit(); updateSubSteps();
+  });
+  window.addEventListener('resize', fitProfileSelect, { passive: true });
+  document.fonts.ready.then(fitProfileSelect);   // remeasure once the embedded Inter has loaded
   $('dlgProfilesClose').addEventListener('click', () => $('dlgProfiles').close());
   $('addProfileForm').addEventListener('submit', e => {
     e.preventDefault();
