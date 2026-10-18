@@ -125,7 +125,7 @@ html[data-theme="dark"] .site-header{background:#3D0563}
 .site-header :focus-visible{outline-color:#fff}
 .nav-in{display:flex;align-items:center;gap:20px;height:64px}
 .nav-tools{display:flex;align-items:center;gap:7px}
-.mode-pill{display:inline-flex;align-items:center;gap:6px;background:transparent;border:1px solid rgba(255,255,255,.45);color:#fff;border-radius:999px;font:600 11px/1 var(--sans);letter-spacing:.1em;text-transform:uppercase;height:30px;padding:0 12px;cursor:pointer;white-space:nowrap;transition:border-color .2s,background .2s}   /* the header tools share this look: 30px pills, one border, 11px capitals */
+.mode-pill{display:inline-flex;align-items:center;gap:6px;background:transparent;border:1px solid rgba(255,255,255,.45);color:#fff;border-radius:999px;font:600 11px/1 var(--sans);letter-spacing:.1em;text-transform:uppercase;height:30px;padding:0 12px;cursor:pointer;white-space:nowrap;transition:border-color .2s,background .2s}   /* the header tools share this look: 30px pills, one border, 11px capitals (the reviewer name shows as typed) */
 .mode-pill:hover,.mode-pill[aria-expanded="true"]{border-color:#fff;background:rgba(255,255,255,.08)}
 .mode-pill.away{visibility:hidden}   /* AI on: the label steps aside but keeps its space, so the tabs do not shift */
 .mode-pill svg{width:12px;height:12px}
@@ -137,12 +137,12 @@ html[data-theme="dark"] .site-header{background:#3D0563}
 .tab-link:hover,.tab-link[aria-current="page"]{color:#fff}
 .tab-link:hover::after,.tab-link[aria-current="page"]::after{transform:scaleX(1)}
 .profile-picker{display:flex;align-items:center;gap:8px}
-.site-header select{width:auto;max-width:170px;height:30px;border-radius:999px;padding:0 30px 0 12px;font:600 11px/1 var(--sans);letter-spacing:.1em;text-transform:uppercase;color:#fff;background-color:transparent;border-color:rgba(255,255,255,.45);
+.site-header select{width:auto;max-width:170px;height:30px;border-radius:999px;padding:0 30px 0 12px;font:500 13px/1 var(--sans);color:#fff;background-color:transparent;border-color:rgba(255,255,255,.45);
   background-image:linear-gradient(45deg,transparent 50%,#fff 50%),linear-gradient(135deg,#fff 50%,transparent 50%)}
 .site-header select:hover{border-color:#fff}
-.select-probe{position:absolute;visibility:hidden;white-space:nowrap;font:600 11px/1 var(--sans);letter-spacing:.1em;text-transform:uppercase}   /* measures the chosen reviewer (fitProfileSelect) */
+.select-probe{position:absolute;visibility:hidden;white-space:nowrap;font:500 13px/1 var(--sans)}   /* measures the chosen reviewer (fitProfileSelect) */
 .site-header select:focus{border-color:#fff;box-shadow:0 0 0 3px rgba(255,255,255,.28)}
-.site-header select option{color:#212121;background:#fff;text-transform:none;letter-spacing:0}
+.site-header select option{color:#212121;background:#fff}
 .icon-btn{width:34px;height:34px;border-radius:50%;border:1px solid var(--input-border);background:var(--surface);color:var(--text);display:grid;place-items:center;cursor:pointer;padding:0;transition:border-color .2s,color .2s}
 .icon-btn:hover{border-color:var(--accent);color:var(--link)}
 .icon-btn svg{width:16px;height:16px}
@@ -1254,7 +1254,7 @@ body.print-preview #printSheet{display:block;padding:40px 16px}
    ========================================================================== */
 'use strict';
 
-const APP_VERSION = '1.4.18';
+const APP_VERSION = '1.4.19';
 const COURSE_LINE = 'NYU School of Law · Artificial Intelligence and Corporate Deals and Advice';
 const TOOL_CREDIT = 'Made with Redline to Rule, by Henning Fischer.';
 const STORAGE_KEY = 'redlineToRule.v1';
