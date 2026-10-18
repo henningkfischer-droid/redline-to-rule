@@ -726,7 +726,7 @@ body.print-preview #printSheet{display:block;padding:40px 16px}
         <button type="button" class="sub-toggle" aria-expanded="false" aria-controls="subCompare" aria-label="Show steps 1.1 and 1.2"><svg class="chev" viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 4.5 6 8l3.5-3.5"/></svg></button>
         <span class="sub-menu" id="subCompare">
         <a href="#compare" data-sub="compare" data-scroll="h-compare"><span class="cm-n">1.1</span><span class="cm-t">Compare</span><span class="cm-d">Bring in both versions or your notes</span></a>
-        <a href="#compare" data-sub="tag" data-scroll="tagSection"><span class="cm-n">1.2</span><span class="cm-t">Tag</span><span class="cm-d">Record why each change was made</span></a>
+        <a href="#compare" data-sub="tag" data-scroll="h-tag"><span class="cm-n">1.2</span><span class="cm-t">Tag</span><span class="cm-d">Record why each change was made</span></a>
         </span>
       </span>
       <a href="#ledger" data-tab="ledger" class="tab-link">Ledger</a>
@@ -1255,7 +1255,7 @@ body.print-preview #printSheet{display:block;padding:40px 16px}
    ========================================================================== */
 'use strict';
 
-const APP_VERSION = '1.4.15';
+const APP_VERSION = '1.4.16';
 const COURSE_LINE = 'NYU School of Law · Artificial Intelligence and Corporate Deals and Advice';
 const TOOL_CREDIT = 'Made with Redline to Rule, by Henning Fischer.';
 const STORAGE_KEY = 'redlineToRule.v1';
@@ -3846,7 +3846,7 @@ function openComparison(cmpId, changeId) {
   S.ui.openComparisonId = cmpId;
   if (S.activeProfileId !== cmp.profileId) { S.activeProfileId = cmp.profileId; derive(); renderChrome(); }
   save();
-  goTo('compare', changeId ? 'chg-' + changeId : 'tagSection');
+  goTo('compare', changeId ? 'chg-' + changeId : 'h-tag');   // the heading, like 3.2, not the band's top padding
 }
 function openChange(changeId) {
   const ch = S.changes.find(c => c.id === changeId);
