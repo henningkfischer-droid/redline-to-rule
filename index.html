@@ -1275,7 +1275,7 @@ body.print-preview #printSheet{display:block;padding:40px 16px}
    ========================================================================== */
 'use strict';
 
-const APP_VERSION = '1.4.23';
+const APP_VERSION = '1.4.24';
 const COURSE_LINE = 'NYU School of Law · Artificial Intelligence and Corporate Deals and Advice';
 const TOOL_CREDIT = 'Made with Redline to Rule, by Henning Fischer.';
 const STORAGE_KEY = 'redlineToRule.v1';
@@ -3385,20 +3385,24 @@ function setupReveal() {
 }
 
 /** Home hero: the redline strikes, inserts, then shows the rule it became. Shown complete with reduced motion. */
+const HERO_LETTER_MS = 60;   // pace of the green insertions: one letter every 60 ms
 function playHeroRedline() {
   const rl = $('heroRedline'), steps = ['s1', 's2', 's3', 's4', 's5'];
   if (reducedMotion()) { rl.classList.add(...steps); return; }
-  steps.forEach((s, i) => setTimeout(() => {
-    const w = rl.querySelector('.ins-w[data-step="' + s + '"]');
-    if (w) writeIn(w.querySelector('ins'));
-    rl.classList.add(s);
-  }, 700 + i * 900));
+  // Each step waits for the one before it; after an insertion, until its last letter is in.
+  let at = 700;
+  for (const s of steps) {
+    const w = rl.querySelector('.ins-w[data-step="' + s + '"]'), ins = w && w.querySelector('ins');
+    const len = ins ? [...ins.textContent].length : 0;
+    setTimeout(() => { if (ins) writeIn(ins); rl.classList.add(s); }, at);
+    at += len ? len * HERO_LETTER_MS + 500 : 900;
+  }
 }
 /** Write an insertion in letter by letter, each letter fading in, so the words after it glide along instead of jumping. */
 function writeIn(ins) {
   const text = ins.textContent;
   ins.textContent = '';
-  [...text].forEach((ch, i) => setTimeout(() => ins.append(h('span', { class: 'wl' }, ch)), i * 22));
+  [...text].forEach((ch, i) => setTimeout(() => ins.append(h('span', { class: 'wl' }, ch)), i * HERO_LETTER_MS));
 }
 
 /* ----------------------------------- Router ----------------------------------- */
