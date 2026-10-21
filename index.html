@@ -300,7 +300,7 @@ html[data-theme="dark"] .hero{background:#12061D}
 .arrow-link .arr{transition:transform .3s var(--ease)}
 .arrow-link:hover .arr,.arrow-link:focus-visible .arr{transform:translateX(4px)}
 
-/* Five steps: numbered rows with hairlines (SpaceX launch list), on the dark band */
+/* Four steps: numbered rows with hairlines (SpaceX launch list), on the dark band */
 .steps{border-top:1px solid var(--ink-line)}
 .step{display:grid;grid-template-columns:110px minmax(0,1fr) minmax(0,1.4fr);gap:8px 32px;align-items:baseline;padding:34px 0;border-bottom:1px solid var(--ink-line)}
 .step-n{font:300 44px/1 var(--serif);color:#C9A9E6;grid-row:1/span 2}
@@ -524,25 +524,8 @@ details.rejected{margin-top:40px}
 details.rejected>summary{cursor:pointer;font-weight:600;color:var(--text-2)}
 
 /* ==========================================================================
-   11. Check report, export, empty states, toasts, dialogs
+   11. Export, empty states, toasts, dialogs
    ========================================================================== */
-.report-head{display:flex;flex-wrap:wrap;gap:32px;align-items:flex-end;margin-bottom:24px}
-.big-num{font:300 64px/1 var(--serif);color:var(--link)}
-.check-list{list-style:none;margin:0;padding:0}
-.check-item{display:grid;grid-template-columns:76px minmax(0,1fr);gap:18px;padding:22px 0;border-bottom:1px solid var(--line)}
-.check-item:last-child{border-bottom:0}
-.status{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;border-radius:3px;padding:5px 8px;text-align:center}
-.status.pass{background:var(--ins-bg);color:var(--ins-text)}
-.status.fail{background:var(--del-bg);color:var(--del-text)}
-.status.warn{background:var(--amber-bg);color:var(--amber-text)}
-.check-rule{font:400 19px/1.4 var(--serif);margin-bottom:4px}
-.hit-list{margin:10px 0 0;padding-left:18px;display:grid;gap:6px;font-size:14.5px;color:var(--text-2)}
-mark.hit{background:rgba(180,35,24,.13);color:inherit;border-bottom:2px solid var(--del-text);border-radius:2px;padding:0 1px}
-html[data-theme="dark"] mark.hit{background:rgba(253,162,155,.18)}
-.annotated{white-space:pre-wrap;overflow-wrap:anywhere;font:15.5px/1.65 var(--sans);margin:0}
-.human-list{list-style:none;margin:0;padding:0;display:grid;gap:12px}
-.human-list label{display:flex;gap:12px;align-items:flex-start;font-size:16px;cursor:pointer}
-.human-list input{margin-top:5px;width:18px;height:18px;flex:none}
 .skill-preview{white-space:pre-wrap;overflow-wrap:anywhere;font:14.5px/1.6 ui-monospace,"SF Mono",Menlo,Consolas,monospace;background:var(--bg-alt);border-radius:6px;padding:24px;margin:0;max-height:560px;overflow:auto}
 .danger-zone{border-top:1px solid var(--line);margin-top:36px;padding-top:28px}
 .empty{text-align:center;padding:56px 24px}
@@ -627,7 +610,7 @@ details.cfg .rule-config{background:transparent!important;padding-top:0}
 }
 
 /* ==========================================================================
-   12. AI (optional): switch, banner, suggestions, quote checks
+   12. AI (optional): switch, banner, suggestions
    ========================================================================== */
 .ai-switch{display:inline-flex;align-items:center;gap:7px;background:transparent;border:1px solid rgba(255,255,255,.45);color:#fff;border-radius:999px;font:600 11px/1 var(--sans);letter-spacing:.1em;height:30px;padding:0 6px 0 12px;cursor:pointer;transition:background .2s}
 .ai-switch:hover{background:rgba(255,255,255,.08)}
@@ -659,14 +642,7 @@ html[data-theme="dark"] .ai-busy{--shimmer:rgba(201,169,230,.12)}
 .ai-bar .btn-outline:hover{background:var(--accent)}
 .ai-note{background:var(--chip-bg);border-radius:6px;padding:12px 16px;font-size:14px;color:var(--text)}
 .ai-note .btn-text{padding:2px 4px}
-.q-label{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;border-radius:3px;padding:5px 8px;margin-right:8px;white-space:nowrap}
-.q-label.verbatim{background:var(--ins-bg);color:var(--ins-text)}
-.q-label.close{background:var(--amber-bg);color:var(--amber-text)}
-.q-label.invented{background:var(--del-bg);color:var(--del-text)}
-.ai-findings{list-style:none;margin:10px 0 0;padding:0;display:grid;gap:14px}
 .ai-quote{margin:0 0 4px;padding:2px 0 2px 14px;border-left:3px solid var(--input-border);font:italic 16px/1.55 var(--serif)}
-mark.ai{background:rgba(87,6,140,.1);border-bottom:2px dashed var(--accent);color:inherit;border-radius:2px;padding:0 1px}
-html[data-theme="dark"] mark.ai{background:rgba(180,138,217,.18)}
 
 /* ==========================================================================
    13. First use (home panel, tour, hints) and the printable rules sheet
@@ -767,7 +743,6 @@ body.print-preview #printSheet{display:block;padding:40px 16px}
         <a href="#rules" data-sub="confirm" data-scroll="h-confirmed"><span class="cm-n">3.2</span><span class="cm-t">Confirm</span><span class="cm-d">Rules that enter the skill</span></a>
         </span>
       </span>
-      <a href="#check" data-tab="check" class="tab-link">Check</a>
       <a href="#export" data-tab="export" class="tab-link">Export</a>
     </nav>
     <div class="nav-tools">
@@ -798,7 +773,7 @@ body.print-preview #printSheet{display:block;padding:40px 16px}
       <div class="hero-text">
         <p class="eyebrow">NYU School of Law<span class="eb-course">Artificial Intelligence and Corporate Deals and Advice</span></p>
         <h1 class="tw" id="h-home" tabindex="-1">Learn from every <strong>redline</strong>.</h1>
-        <p class="sub">Turn a reviewer's actual edits and feedback into evidence-based drafting rules you can check and share.</p>
+        <p class="sub">Turn a reviewer's actual edits and feedback into evidence-based drafting rules for your firm's approved AI tool.</p>
         <div class="actions">
           <a class="btn btn-solid" href="#compare" data-focus="txtSent">Start a comparison <span class="arr" aria-hidden="true">→</span></a>
           <a class="btn btn-ghost" href="#how">See how it works</a>
@@ -837,7 +812,7 @@ body.print-preview #printSheet{display:block;padding:40px 16px}
     <div class="wrap">
       <div class="sec-head sec-head-row">
         <div>
-          <p class="eyebrow">Five steps</p>
+          <p class="eyebrow">Four steps</p>
           <h2 class="tw" id="h-how">How it <strong>works</strong></h2>
         </div>
         <p class="lede">Rules come from what the reviewer actually changed, not from anyone's description of their preferences.</p>
@@ -846,14 +821,13 @@ body.print-preview #printSheet{display:block;padding:40px 16px}
         <div class="step"><div class="step-n">1</div><h3>Compare and tag</h3><p><b>1.1 Compare.</b> Use your draft and the clean version that came back, one Word file with tracked changes, or your notes when the feedback was only oral. Every change is shown exactly.</p><p><b>1.2 Tag.</b> Record why each change was made: a category, a one-line reason and a scope.</p></div>
         <div class="step"><div class="step-n">2</div><h3>Ledger</h3><p>Every tagged change in one searchable record: the evidence behind your rules.</p></div>
         <div class="step"><div class="step-n">3</div><h3>Rules</h3><p><b>3.1 Learn.</b> Recurring tagged changes become candidate rules, each with its evidence attached.</p><p><b>3.2 Confirm.</b> Accept or reject candidates. Only rules with enough evidence enter the skill.</p></div>
-        <div class="step"><div class="step-n">4</div><h3>Check</h3><p>Test a new draft against the rules before it goes out: fixed text checks, plus an optional AI review of the rest.</p></div>
-        <div class="step"><div class="step-n">5</div><h3>Export</h3><p>Compile the confirmed rules, each with an example, into a plain-text skill for any approved AI tool, or a Word or PDF rules sheet.</p></div>
+        <div class="step"><div class="step-n">4</div><h3>Export</h3><p>Compile the confirmed rules, each with an example and its self-checks, into a skill for your firm's approved AI tool, where new drafts are checked. Also as a Markdown, Word or PDF rules sheet.</p></div>
       </div>
       <div class="card try-card" role="group" aria-labelledby="h-try">
         <div class="try-text">
           <p class="eyebrow">New here?</p>
           <h3 class="tw" id="h-try">Try it in <strong>2 minutes</strong></h3>
-          <p class="lede">Load the fictional demo (Partner A and Partner B) and follow a five-step tour: a redline becomes cards you tag, recurring edits become rules, a new draft is checked, and the rules are exported. Your own data stays as it is.</p>
+          <p class="lede">Load the fictional demo (Partner A and Partner B) and follow a four-step tour: a redline becomes cards you tag, recurring edits become rules, and the rules are exported as a skill. Your own data stays as it is.</p>
         </div>
         <button type="button" class="btn btn-solid" id="btnTour">Load the demo and take the tour <span class="arr" aria-hidden="true">→</span></button>
       </div>
@@ -864,11 +838,12 @@ body.print-preview #printSheet{display:block;padding:40px 16px}
     <div class="tile reveal">
       <p class="eyebrow"><span class="ai-mark" aria-hidden="true">✦</span> Optional AI</p>
       <h2 class="tw">It suggests.<br><strong>You decide.</strong></h2>
-      <p class="lede">Switch it on in the top bar. It suggests tags, groups reasons that mean the same thing, drafts rule wording and reviews a draft against the rules a pattern cannot check. Every finding has to quote your draft, and the app checks each quote.</p>
+      <p class="lede">Switch it on in the top bar. It suggests tags, groups reasons that mean the same thing and drafts rule wording. Nothing it suggests is saved until you confirm it.</p>
       <div class="tile-art" aria-hidden="true">
         <div class="quote-demo">
-          <p class="ai-quote">"…within 30 days after the Signing Date."</p>
-          <span class="q-label verbatim">Verbatim</span><span class="q-label close">Close</span><span class="q-label invented">May be invented</span>
+          <p class="meta" style="margin:0 0 10px"><span class="ai-mark">✦</span> Suggested tag · Structure</p>
+          <p class="ai-quote">Remove the background section</p>
+          <span class="chip">Not saved until you confirm</span>
         </div>
       </div>
     </div>
@@ -888,7 +863,7 @@ body.print-preview #printSheet{display:block;padding:40px 16px}
     <div class="wrap">
       <p class="eyebrow">Next step</p>
       <h2 class="tw" id="h-next">Your reviewer's edits<br><strong>are the rulebook.</strong></h2>
-      <p class="lede" id="closingText">Paste two versions of a draft to begin. Edits that recur become rules you confirm, check and export.</p>
+      <p class="lede" id="closingText">Paste two versions of a draft to begin. Edits that recur become rules you confirm and export.</p>
       <div class="actions" id="closingActions">
         <a class="btn btn-solid" href="#compare" data-focus="txtSent">Compare drafts <span class="arr" aria-hidden="true">→</span></a>
         <a class="btn btn-outline" href="#how">See how it works</a>
@@ -1045,7 +1020,7 @@ body.print-preview #printSheet{display:block;padding:40px 16px}
           <label for="minEvidence">Minimum instances for a rule (N)</label>
           <input type="number" id="minEvidence" min="1" max="20" step="1" value="2">
         </div>
-        <span class="meta">Only confirmed rules with at least N instances enter the skill and the draft check.</span>
+        <span class="meta">Only confirmed rules with at least N instances enter the skill.</span>
       </div>
       <div class="ai-bar" id="rulesAiBar" role="group" aria-label="AI help for rules" hidden>
         <span class="ai-mark" aria-hidden="true">✦ AI</span>
@@ -1071,49 +1046,14 @@ body.print-preview #printSheet{display:block;padding:40px 16px}
   </section>
 </div>
 
-<!-- ============================ CHECK ============================ -->
-<div class="view" id="view-check" data-view="check" hidden>
-  <section class="band" aria-labelledby="h-check">
-    <div class="wrap">
-      <div class="sec-head">
-        <p class="eyebrow">Step 4 · Check</p>
-        <h2 class="tw" id="h-check" tabindex="-1">Check a <strong>draft</strong></h2>
-        <p class="lede">Paste a new draft. It is checked right away against the confirmed rules for <span id="checkProfileName">this reviewer</span>.
-          <span class="help-wrap"><button type="button" class="help" aria-expanded="false" aria-controls="help-check" aria-label="Help: draft check">?</button><span class="help-pop" id="help-check" role="tooltip" hidden>Auto-checkable rules are tested with fixed text patterns, not AI, so read each result with care. Human-checked rules become a checklist; with AI on, you can also ask the AI to review them, and every quote it gives is checked against your draft. Only confirmed rules that meet the minimum instances are used.</span></span>
-        </p>
-      </div>
-      <form class="card" id="checkForm" novalidate>
-        <div class="grid-3">
-          <div class="field"><label for="checkType">Deliverable type</label><select id="checkType"></select></div>
-        </div>
-        <div class="field" style="margin-top:22px">
-          <div class="field-head"><label for="checkText">New draft</label><span class="meta" id="cntCheck">0 words</span></div>
-          <textarea id="checkText" spellcheck="false" placeholder="Paste the draft you are about to send."></textarea>
-          <div class="field-foot">
-            <label class="file-btn">Load .txt or .docx file<input type="file" accept=".txt,.docx,text/plain,application/vnd.openxmlformats-officedocument.wordprocessingml.document" data-target="checkText"></label>
-            <button type="button" class="btn-text" id="btnSampleDraft" hidden>Use a demo draft</button>
-          </div>
-        </div>
-        <div class="actions"><button type="submit" class="btn btn-solid">Check draft <span class="arr" aria-hidden="true">→</span></button></div>
-      </form>
-    </div>
-  </section>
-  <section class="band alt" id="reportSection" aria-labelledby="h-report" hidden>
-    <div class="wrap">
-      <div class="sec-head"><h2 class="tw" id="h-report" tabindex="-1">The <strong>report</strong></h2></div>
-      <div id="checkReport"></div>
-    </div>
-  </section>
-</div>
-
 <!-- ============================ EXPORT ============================ -->
 <div class="view" id="view-export" data-view="export" hidden>
   <section class="band" aria-labelledby="h-export">
     <div class="wrap">
       <div class="sec-head">
-        <p class="eyebrow">Step 5 · Export</p>
+        <p class="eyebrow">Step 4 · Export</p>
         <h2 class="tw" id="h-export" tabindex="-1">Export the <strong>skill</strong></h2>
-        <p class="lede">A portable plain-text skill built from the confirmed rules for <span id="exportProfileName">this reviewer</span>. Paste it into any approved AI tool.
+        <p class="lede">A portable skill built from the confirmed rules for <span id="exportProfileName">this reviewer</span>. Load it into your firm's approved AI tool: its self-check steps are where a new draft gets checked.
           <span class="help-wrap"><button type="button" class="help" aria-expanded="false" aria-controls="help-export" aria-label="Help: export">?</button><span class="help-pop" id="help-export" role="tooltip" hidden>The version number goes up each time you copy or download a skill whose rules have changed. Rules below the minimum number of instances are left out.</span></span>
         </p>
       </div>
@@ -1127,10 +1067,11 @@ body.print-preview #printSheet{display:block;padding:40px 16px}
         <div class="actions">
           <button type="button" class="btn btn-solid" id="btnCopySkill">Copy to clipboard <span class="arr" aria-hidden="true">→</span></button>
           <button type="button" class="btn btn-outline" id="btnDownloadSkill">Download .txt <span class="arr" aria-hidden="true">→</span></button>
-          <button type="button" class="btn btn-outline" id="btnWordSkill">Download Word (.docx) <span class="arr" aria-hidden="true">→</span></button>
+          <button type="button" class="btn btn-outline" id="btnMdSkill">Download .md <span class="arr" aria-hidden="true">→</span></button>
+          <button type="button" class="btn btn-outline" id="btnWordSkill">Download .docx <span class="arr" aria-hidden="true">→</span></button>
           <button type="button" class="btn btn-outline" id="btnPrintSkill">Print or save as PDF <span class="arr" aria-hidden="true">→</span></button>
         </div>
-        <p class="meta" style="margin-top:12px">The Word file and the PDF are a formatted rules sheet with the same content as the skill, made on this device. For a PDF in Safari, choose PDF ▸ Save as PDF in the print dialog.</p>
+        <p class="meta" style="margin-top:12px">The Markdown file, the Word file and the PDF are formatted rules sheets with the same content as the skill, made on this device. The Markdown file opens in any text editor and loads as a skill in AI tools that read skill files. For a PDF in Safari, choose PDF ▸ Save as PDF in the print dialog.</p>
       </div>
     </div>
   </section>
@@ -1166,7 +1107,7 @@ body.print-preview #printSheet{display:block;padding:40px 16px}
       </div>
       <nav class="foot-col" aria-labelledby="footWork">
         <h2 id="footWork">Workflow</h2>
-        <ul><li><a href="#compare">Compare</a></li><li><a href="#ledger">Ledger</a></li><li><a href="#rules">Rules</a></li><li><a href="#check">Check</a></li><li><a href="#export">Export</a></li></ul>
+        <ul><li><a href="#compare">Compare</a></li><li><a href="#ledger">Ledger</a></li><li><a href="#rules">Rules</a></li><li><a href="#export">Export</a></li></ul>
       </nav>
       <div class="foot-col">
         <h2>Get started</h2>
@@ -1190,7 +1131,7 @@ body.print-preview #printSheet{display:block;padding:40px 16px}
 <div class="toasts" id="toasts" role="status" aria-live="polite"></div>
 
 <!-- Guided flow: always shows the one next action -->
-<!-- Guided tour (Home > "Load the demo and take the tour"): one panel, five steps -->
+<!-- Guided tour (Home > "Load the demo and take the tour"): one panel, four steps -->
 <div class="tour" id="tour" role="dialog" aria-modal="false" aria-labelledby="tourTitle" hidden>
   <p class="tour-step" id="tourStep"></p>
   <h2 class="tour-title" id="tourTitle" tabindex="-1"></h2>
@@ -1231,9 +1172,9 @@ body.print-preview #printSheet{display:block;padding:40px 16px}
     <p class="lede">Junior lawyers get the same edits from the same reviewer again and again. Redline to Rule turns those edits into written drafting rules, each backed by the changes that prove it, so the next draft gets them right the first time.</p>
     <dl class="about-list">
       <dt>How rules are found</dt>
-      <dd>Every change you tag is kept as evidence. When the same kind of change recurs for a reviewer at least N times (set on the Rules screen; 2 by default), it becomes a candidate rule. Only rules a person confirms enter the skill and the draft check.</dd>
+      <dd>Every change you tag is kept as evidence. When the same kind of change recurs for a reviewer at least N times (set on the Rules screen; 2 by default), it becomes a candidate rule. Only rules a person confirms enter the skill.</dd>
       <dt>Optional AI</dt>
-      <dd>Off until you switch it on. It suggests tags, groups reasons that mean the same thing, proposes rule wording and reviews a draft. Every finding must quote the draft, and the app labels each quote Verbatim, Close or May be invented.</dd>
+      <dd>Off until you switch it on. It suggests tags, groups reasons that mean the same thing and proposes rule wording. Every suggestion waits for a person to confirm it.</dd>
       <dt>Privacy</dt>
       <dd>Everything runs in this browser and is stored only here. With AI on, only the text an AI feature needs goes to OpenRouter; the page can contact no other address.</dd>
       <dt>Course</dt>
@@ -1282,7 +1223,7 @@ body.print-preview #printSheet{display:block;padding:40px 16px}
    ========================================================================== */
 'use strict';
 
-const APP_VERSION = '1.4.25';
+const APP_VERSION = '1.4.27';
 const COURSE_LINE = 'NYU School of Law · Artificial Intelligence and Corporate Deals and Advice';
 const TOOL_CREDIT = 'Made with Redline to Rule, by Henning Fischer.';
 const STORAGE_KEY = 'redlineToRule.v1';
@@ -2228,6 +2169,40 @@ function compileSkill(st, profileId, type, meta) {
   return { body, hash: hashStr(body), count: sk.rules.length, sheet: sk };
 }
 
+/* ---------------------------- Markdown (.md) export ---------------------------- */
+
+/** Plain text made safe for Markdown: characters that would start formatting, links or lists are escaped. */
+function mdText(s) {
+  return String(s).replace(/([\\`*_<>])/g, '\\$1').replace(/\]\(/g, ']\\(')
+    .replace(/^([#>+-])(?=\s)/gm, '\\$1').replace(/^(\d+)\.(?=\s)/gm, '$1\\.');
+}
+/**
+ * The skill as a Markdown rules sheet with the same content as the Word file. It starts with a
+ * name/description block, the format AI tools use for skill files, so it can be loaded as a skill.
+ */
+function buildSkillMarkdown(sk, versionText) {
+  const id = String(sk.name).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 64).replace(/-$/, '') || 'drafting-skill';
+  const L = ['---', 'name: ' + id, 'description: ' + JSON.stringify(String(sk.purpose).replace(/\s+/g, ' ').trim().slice(0, 1024)), '---', '',
+    '# ' + mdText(sk.name), '', '*' + mdText(COURSE_LINE) + '*', '',
+    '- **Reviewer profile:** ' + mdText(sk.profile),
+    '- **Applies to:** ' + mdText(sk.applies),
+    '- **Version:** ' + mdText(String(versionText).replace(/^Version:\s*/, '')), '',
+    '*' + mdText(TOOL_CREDIT) + '*', '',
+    '## Purpose', '', mdText(sk.purpose), '',
+    '## Rules', ''];
+  if (!sk.rules.length) L.push('*No confirmed rules with at least ' + sk.minEvidence + ' instances yet.*', '');
+  for (const r of sk.rules) {
+    L.push('### ' + r.n + '. ' + mdText(r.text), '', '- **Category:** ' + mdText(r.category), '- **Evidence:** ' + mdText(r.evidence));
+    if (r.example) L.push('- **Example:** ' + mdText(r.example));
+    if (r.scope) L.push('- **Applies to:** ' + mdText(r.scope));
+    L.push('');
+  }
+  L.push('## Self-check steps', '');
+  for (const x of sk.selfChecks.length ? sk.selfChecks : ['None yet.']) L.push('- ' + mdText(x));
+  L.push('', '## Human review gate', '', mdText(sk.gate), '', '## Data handling', '', mdText(sk.data), '');
+  return L.join('\n');
+}
+
 /* ------------------------- Word (.docx) export, built on this device -------------------------
    A minimal Word file: three XML parts in an uncompressed ZIP. No library and no network. */
 
@@ -2316,14 +2291,13 @@ function skillVersion(st, key, hash) {
 function versionLine(n) { return 'Version: ' + n + ' · ' + fmtDate(todayISO()) + ' · Redline to Rule ' + APP_VERSION + ' (AI edition; every rule confirmed by a person)'; }
 
 /* --------------------------- AI helpers (pure, no network) ---------------------------
-   Prompt builders, answer readers and the quote check behind the optional AI features.
+   Prompt builders and answer readers behind the optional AI features.
    Nothing here sends anything: the one network call is in the APP script and runs only
    while AI is switched on. Every AI answer is validated before the app uses it, and an
    AI suggestion never becomes a tag or a rule until the user confirms it.
    ------------------------------------------------------------------------------------- */
 
 const AI_SYSTEM = 'Reply with one JSON object only, no other text.';
-const AI_MAX_DRAFT_WORDS = 12000;
 
 /** Normalised reason, so "Drop the background." and "drop the background" count as one wording. */
 function reasonKey(r) { return String(r || '').trim().toLowerCase().replace(/\s+/g, ' ').replace(/[.!?;:]+$/, ''); }
@@ -2520,118 +2494,6 @@ function readWordings(data, ids) {
   return out;
 }
 
-/* ---- 4. Reviewing human-checked rules, with a quote check ---- */
-
-function headWords(text, n) { const re = /\S+/g; let m, i = 0, end = 0; while (i < n && (m = re.exec(text))) { end = m.index + m[0].length; i++; } return text.slice(0, end); }
-function buildReviewPrompt(rules, text) {
-  const cut = countWords(text) > AI_MAX_DRAFT_WORDS;
-  const messages = aiChat("You review a junior lawyer's draft against a reviewer's drafting rules.", {
-    task: 'Check the draft against each rule below. These rules cannot be checked by a simple text pattern.',
-    instructions: [
-      'For each rule, decide: "follows", "does not follow" or "unclear".',
-      'Support every finding with a quote copied exactly, character for character, from the draft: at most 25 words, no ellipses, no paraphrase.',
-      'When the draft does not follow a rule, give up to 3 findings, each with the quote that shows the problem and one line on what to change.',
-      'When the draft follows a rule, give at most one finding, with a quote that shows it.',
-      'Never invent text. If you cannot quote the draft, leave the finding out.'
-    ],
-    rules: rules.map((r, i) => ({ id: 'r' + (i + 1), rule: r.text })),
-    draft: cut ? headWords(text, AI_MAX_DRAFT_WORDS) : text,
-    reply_format: { results: [{ id: 'r1', verdict: 'follows | does not follow | unclear', findings: [{ quote: 'exact words from the draft', note: 'one line' }] }] }
-  });
-  return { messages, cut };
-}
-/** Map rule id -> {verdict: follows|fails|unclear, findings:[{quote, note}], unquoted}. Findings without a quote are dropped. */
-function readReview(data, ids) {
-  const out = new Map();
-  for (const r of data && Array.isArray(data.results) ? data.results : []) {
-    if (!r || typeof r !== 'object') continue;
-    const id = String(r.id);
-    if (!ids.includes(id) || out.has(id)) continue;
-    const v = String(r.verdict || '').toLowerCase();
-    const verdict = /not|fail|violat|missing/.test(v) ? 'fails' : /follow|pass|compl|meets|yes/.test(v) ? 'follows' : 'unclear';
-    const all = (Array.isArray(r.findings) ? r.findings : []).filter(f => f && typeof f === 'object');
-    const findings = all.map(f => ({ quote: String(f.quote == null ? '' : f.quote).trim().slice(0, 600), note: cleanLine(f.note, 300) })).filter(f => f.quote);
-    out.set(id, { verdict, findings: findings.slice(0, 5), unquoted: all.length - findings.length });
-  }
-  return out;
-}
-
-/* Quote check: is the AI's quote really in the draft?
-   verbatim = found exactly (spacing and curly vs straight quotes or dashes aside)
-   close    = found with small differences (letter case, a word or two changed or missing)
-   invented = not found in the draft: the AI may have made it up. */
-const CHAR_FOLD = { '‘': "'", '’': "'", '‚': "'", '‛': "'", '′': "'", '“': '"', '”': '"', '„': '"', '‟': '"', '″': '"', '‐': '-', '‑': '-', '‒': '-', '–': '-', '—': '-', '―': '-' };
-/** Fold typography and collapse whitespace; map[i] = index in the original of folded character i. */
-function foldText(s) {
-  let text = '', space = true;
-  const map = [];
-  for (let i = 0; i < s.length; i++) {
-    const c = s[i];
-    if (c === '…') { text += '...'; map.push(i, i, i); space = false; continue; }
-    if (/\s/.test(c)) { if (!space) { text += ' '; map.push(i); space = true; } continue; }
-    text += CHAR_FOLD[c] || c; map.push(i); space = false;
-  }
-  if (text.endsWith(' ')) { text = text.slice(0, -1); map.pop(); }
-  return { text, map };
-}
-function locateExact(fold, part, caseless) {
-  const hay = caseless ? fold.text.toLowerCase() : fold.text;
-  if (hay.length !== fold.text.length) return null;   // a rare case change altered the length
-  const i = hay.indexOf(caseless ? part.toLowerCase() : part);
-  return i < 0 ? null : { start: fold.map[i], end: fold.map[i + part.length - 1] + 1 };
-}
-/** Best in-order word match for a quote of 4+ words; at least 80% of its words must match. */
-function locateFuzzy(text, part) {
-  const q = wordsOf(part).map(w => normWord(foldText(w).text)).filter(Boolean);
-  if (q.length < 4) return null;
-  const toks = [], re = /\S+/g;
-  let m;
-  while ((m = re.exec(text))) { const w = normWord(foldText(m[0]).text); if (w) toks.push({ w, start: m.index, end: m.index + m[0].length }); }
-  const qset = new Set(q), L = q.length, need = Math.ceil(L * 0.8);
-  let best = null;
-  for (let i = 0; i < toks.length; i++) {
-    if (!qset.has(toks[i].w)) continue;
-    const win = toks.slice(i, i + L + 3);
-    if (win.filter(t => qset.has(t.w)).length < need) continue;
-    const W = win.length, dp = [];
-    for (let a = 0; a <= L; a++) dp.push(new Int16Array(W + 1));
-    for (let a = 1; a <= L; a++) for (let b = 1; b <= W; b++) dp[a][b] = q[a - 1] === win[b - 1].w ? dp[a - 1][b - 1] + 1 : Math.max(dp[a - 1][b], dp[a][b - 1]);
-    const score = dp[L][W];
-    if (score >= need && (!best || score > best.score)) {
-      let b = W;
-      while (b > 1 && dp[L][b - 1] === score) b--;
-      const last = b - 1;
-      // Walk the alignment back to its first matched word, so the highlight starts there.
-      let a = L, first = last;
-      while (a > 0 && b > 0) {
-        if (q[a - 1] === win[b - 1].w && dp[a][b] === dp[a - 1][b - 1] + 1) { first = b - 1; a--; b--; }
-        else if (dp[a - 1][b] >= dp[a][b - 1]) a--;
-        else b--;
-      }
-      best = { score, start: win[first].start, end: win[last].end };
-    }
-  }
-  return best && { start: best.start, end: best.end };
-}
-/** {label: 'verbatim'|'close'|'invented', spans:[{start,end}]} for one AI quote against the draft. */
-function verifyQuote(text, quote) {
-  text = String(text || '');
-  const fold = foldText(text);
-  const q = foldText(String(quote || '')).text.replace(/^["']+|["']+$/g, '').trim();
-  // "..." or "[...]" inside a quote marks words the AI left out: each piece must be found on its own.
-  const parts = q.split(/\s*(?:\[\.\.\.\]|\.\.\.)\s*/).map(p => p.trim()).filter(p => p.replace(/[^\p{L}\p{N}]/gu, '').length >= 2);
-  if (!parts.length) return { label: 'invented', spans: [] };
-  let label = 'verbatim';
-  const spans = [];
-  for (const p of parts) {
-    let hit = locateExact(fold, p, false);
-    if (!hit) { hit = locateExact(fold, p, true) || locateFuzzy(text, p); label = 'close'; }
-    if (!hit) return { label: 'invented', spans: [] };
-    spans.push(hit);
-  }
-  return { label, spans };
-}
-
 /* ------------------------------------ State ------------------------------------ */
 
 const STARTER_PROFILE = 'My reviewer';
@@ -2646,7 +2508,7 @@ function defaultState() {
     comparisons: [], changes: [], rules: [], rejected: [], candidateEdits: {}, skillVersions: {},
     aiMerges: [], aiWordings: {},
     settings: { minEvidence: 2, theme: null, ai: false },
-    ui: { openComparisonId: null, compareMode: 'two', compareDraft: {}, checkDraft: {}, exportMeta: {} }
+    ui: { openComparisonId: null, compareMode: 'two', compareDraft: {}, exportMeta: {} }
   };
 }
 
@@ -2718,12 +2580,11 @@ function migrate(raw) {
   }
   const s = obj(raw.settings);
   st.settings = { minEvidence: Math.min(20, Math.max(1, Math.floor(Number(s.minEvidence)) || 2)), theme: s.theme === 'dark' || s.theme === 'light' ? s.theme : null, ai: s.ai === true };
-  const u = obj(raw.ui), cd = obj(u.compareDraft), kd = obj(u.checkDraft), em = obj(u.exportMeta);
+  const u = obj(raw.ui), cd = obj(u.compareDraft), em = obj(u.exportMeta);
   st.ui = {
     openComparisonId: cmpIds.has(u.openComparisonId) ? u.openComparisonId : null,
     compareMode: u.compareMode === 'redline' || u.compareMode === 'oral' ? u.compareMode : 'two',
     compareDraft: { type: str(cd.type, 60), date: str(cd.date, 10), matter: str(cd.matter, 80), sent: str(cd.sent, 3e6), returned: str(cd.returned, 3e6), oral: str(cd.oral, 1e5) },
-    checkDraft: { type: str(kd.type, 60), text: str(kd.text, 3e6) },
     // Export settings are kept per reviewer profile: { [profileId]: {name, purpose, type} }
     exportMeta: Object.fromEntries(Object.entries(em).filter(([, v]) => v && typeof v === 'object')
       .map(([k, v]) => [k, { name: str(v.name, 120), purpose: str(v.purpose, 1000), type: str(v.type, 60) || 'all' }]))
@@ -2937,7 +2798,7 @@ function demoTagFor(tags, h) {
 
 /** Replace any earlier demo data with fresh demo profiles, comparisons and tags. */
 /** The pair "Load demo" puts in the Compare form, so a first-time user starts at step 1.1 and walks
-    the whole flow: compare, tag, review rules, check, export. Partner A's usual edits, not yet compared. */
+    the whole flow: compare, tag, review rules, export. Partner A's usual edits, not yet compared. */
 const DEMO_START = {
   type: 'Memo', date: '2026-10-13', matter: 'Matter 5',
   sent: `MEMORANDUM
@@ -3172,7 +3033,7 @@ function matchComments(changes, comments) {
 <script>
 /* ==========================================================================
    APP (DOM). Sections: helpers · storage · chrome · router · compare/tag
-   · ledger · rules · check · export · init.
+   · ledger · rules · export · init.
    All user text is rendered with textContent / text nodes, never innerHTML.
    ========================================================================== */
 'use strict';
@@ -3359,7 +3220,7 @@ function renderChrome() {
   $('numCandidates').textContent = visibleCandidates(pid).length;
   $('numConfirmed').textContent = S.rules.filter(r => r.profileId === pid).length;
   $('numbersProfile').textContent = 'For ' + name;
-  for (const id of ['rulesProfileName', 'checkProfileName', 'exportProfileName', 'cmpProfileChip']) $(id).textContent = name;
+  for (const id of ['rulesProfileName', 'exportProfileName', 'cmpProfileChip']) $(id).textContent = name;
   renderAiChrome();
   renderEmptyStart();
   renderNextBar();
@@ -3414,7 +3275,7 @@ function writeIn(ins) {
 
 /* ----------------------------------- Router ----------------------------------- */
 
-const VIEWS = ['home', 'compare', 'ledger', 'rules', 'check', 'export'];
+const VIEWS = ['home', 'compare', 'ledger', 'rules', 'export'];
 const RENDER = {};   // view name -> render function (filled in below)
 
 function renderView(name) { if (RENDER[name]) RENDER[name](); }
@@ -3544,7 +3405,6 @@ const updateCounts = debounce(() => {
   $('cntSent').textContent = plural(countWords($('txtSent').value), 'word');
   $('cntBack').textContent = plural(countWords($('txtBack').value), 'word');
   $('cntOral').textContent = plural(splitFeedback($('txtOral').value).length, 'point');
-  $('cntCheck').textContent = plural(countWords($('checkText').value), 'word');
 }, 150);
 
 function storeCompareDraft() {
@@ -4137,7 +3997,7 @@ function ruleConfigEditor(cfg, onChange) {
       showDesc();
       wrap.append(desc);
     } else {
-      wrap.append(h('p', { class: 'meta', style: 'flex-basis:100%' }, 'Human-checked rules become a checklist item in the draft check.'));
+      wrap.append(h('p', { class: 'meta', style: 'flex-basis:100%' }, 'A human-checked rule appears in the exported skill as a self-check to confirm by hand.'));
     }
     if (focusId) { const el = $(focusId); if (el) el.focus(); }
   };
@@ -4220,7 +4080,7 @@ function ruleCard(r) {
     ta,
     evidenceBlock(ev.length, dates, true),
     aiMergeNotes(aiMergesIn(S, r.profileId, r.category, ev.map(x => x.reason).concat(r.seedReasons || [])), ev.map(x => x.reason).concat(r.seedReasons || [])),
-    ev.length < N ? h('p', { class: 'warn-note' }, 'Below the minimum of ' + N + ' instances, so it is left out of the skill and the draft check.') : null,
+    ev.length < N ? h('p', { class: 'warn-note' }, 'Below the minimum of ' + N + ' instances, so it is left out of the skill.') : null,
     signals.length ? h('div', { class: 'outdated-note', role: 'note' },
       h('strong', null, 'Newer evidence may contradict this rule.'),
       signals.map(s => h('div', { style: 'margin-top:6px' }, '• ' + s.text)),
@@ -4254,104 +4114,6 @@ function afterStaleAction(profileId, msg) {
   toast(msg);
   pendingScroll = 'rule-' + stale[0].id;
   setTimeout(consumePendingScroll, 0);
-}
-
-/* ------------------------------------ Check ------------------------------------ */
-
-let checkFilled = false, lastReportProfile = null;
-
-RENDER.check = () => {
-  fillSelect($('checkType'), [['all', 'All deliverable types']].concat(S.deliverableTypes.map(t => [t, t])), S.ui.checkDraft.type || 'all');
-  if (!checkFilled) { $('checkText').value = S.ui.checkDraft.text || ''; updateCounts(); checkFilled = true; }
-  $('btnSampleDraft').hidden = !S.comparisons.some(c => c.profileId === S.activeProfileId && c.demo);
-  if (lastReportProfile && lastReportProfile !== S.activeProfileId) { $('reportSection').hidden = true; lastReportProfile = null; }
-};
-
-/** A line of the draft around a hit, with the offending text marked. */
-function excerpt(text, hit) {
-  const ls = text.lastIndexOf('\n', hit.start - 1) + 1;
-  let le = text.indexOf('\n', hit.end); if (le < 0) le = text.length;
-  const from = Math.max(ls, hit.start - 80), to = Math.min(le, hit.end + 80);
-  return h('li', null, (from > ls ? '…' : '') + text.slice(from, hit.start),
-    h('mark', { class: 'hit' }, text.slice(hit.start, Math.min(hit.end, hit.start + 240))),
-    text.slice(Math.min(hit.end, hit.start + 240), to) + (to < le ? '…' : ''));
-}
-
-/** Whole draft with every hit marked; overlapping hits are merged. Marks with `ai` are quotes from the AI review. */
-function annotated(text, marks) {
-  const sorted = marks.slice().sort((a, b) => a.start - b.start), merged = [];
-  for (const m of sorted) {
-    const last = merged[merged.length - 1];
-    if (last && m.start <= last.end) { last.end = Math.max(last.end, m.end); last.ai = last.ai && !!m.ai; if (!last.notes.includes(m.note)) last.notes.push(m.note); }
-    else merged.push({ start: m.start, end: m.end, notes: [m.note], ai: !!m.ai });
-  }
-  const pre = h('pre', { class: 'annotated' });
-  let pos = 0;
-  for (const m of merged) {
-    pre.append(text.slice(pos, m.start), h('mark', { class: m.ai ? 'ai' : 'hit', title: m.notes.join(' | ') }, text.slice(m.start, m.end)));
-    pos = m.end;
-  }
-  pre.append(text.slice(pos));
-  return pre;
-}
-
-function runDraftCheck() {
-  const raw = $('checkText').value, type = $('checkType').value;
-  if (!raw.trim()) { toast('Paste a draft to check.'); $('checkText').focus(); return; }
-  const text = raw.replace(/\r\n?/g, '\n'), pid = S.activeProfileId, N = S.settings.minEvidence;
-  const rules = activeRules(S, pid, type);
-  const sec = $('reportSection'), out = clear($('checkReport'));
-  sec.hidden = false; lastReportProfile = pid;
-  const focusReport = () => setTimeout(() => { $('h-report').focus({ preventScroll: true }); $('h-report').scrollIntoView({ behavior: reducedMotion() ? 'auto' : 'smooth', block: 'start' }); });
-  if (!rules.length) {
-    out.append(emptyState('No confirmed rules for ' + activeProfile().name + ' have at least ' + plural(N, 'instance') + ' yet.', 'Review candidate rules', '#rules'));
-    focusReport(); return;
-  }
-  const autos = rules.filter(r => r.checkType === 'auto' && r.check), humans = rules.filter(r => !(r.checkType === 'auto' && r.check));
-  const results = autos.map(r => ({ r, res: runCheck(r.check, text) }));
-  const passed = results.filter(x => x.res.status === 'pass').length;
-
-  out.append(h('div', { class: 'report-head' },
-    h('div', null, h('div', { class: 'big-num' }, passed + '/' + results.length), h('p', { class: 'meta' }, 'automatic checks passed')),
-    h('div', null, h('div', { class: 'big-num' }, String(humans.length + 1)), h('p', { class: 'meta' }, 'items for human review')),
-    h('p', { class: 'meta', style: 'flex-basis:100%' }, activeProfile().name + ' · ' + (type === 'all' ? 'all deliverable types' : type) + ' · ' + plural(countWords(text), 'word'))));
-
-  if (results.length) {
-    const ol = h('ol', { class: 'check-list' });
-    for (const { r, res } of results) {
-      const label = res.status === 'pass' ? 'Pass' : res.status === 'fail' ? 'Fail' : 'Check';
-      ol.append(h('li', { class: 'check-item' },
-        h('div', null, h('span', { class: 'status ' + res.status }, label)),
-        h('div', null,
-          h('p', { class: 'check-rule' }, r.text),
-          h('p', { class: 'meta' }, CHECKS[r.check.type].label + ' · ' + describeCheck(r.check)),
-          h('p', { style: 'margin-top:6px' }, res.message),
-          res.hits.length ? h('ul', { class: 'hit-list' }, res.hits.slice(0, 5).map(hit => excerpt(text, hit)),
-            res.hits.length > 5 ? h('li', null, 'and ' + (res.hits.length - 5) + ' more (see the annotated draft below)') : null) : null)));
-    }
-    out.append(h('div', { class: 'card', style: 'margin-bottom:24px' }, h('h3', { class: 'h3' }, 'Automatic checks'), ol));
-  }
-
-  const ul = h('ul', { class: 'human-list' });
-  humans.forEach((r, i) => ul.append(h('li', null, h('label', { for: 'hc-' + i }, h('input', { type: 'checkbox', id: 'hc-' + i }), h('span', null, r.text, ' ', h('span', { class: 'chip muted' }, r.category))))));
-  ul.append(h('li', null, h('label', { for: 'hc-gate' }, h('input', { type: 'checkbox', id: 'hc-gate' }), h('strong', null, 'A qualified lawyer must review the output before it is sent.'))));
-  out.append(h('div', { class: 'card', style: 'margin-bottom:24px' }, h('h3', { class: 'h3' }, 'Human review checklist'), ul));
-
-  const marks = results.flatMap(({ r, res }) => res.status === 'fail' ? res.hits.map(x => ({ start: x.start, end: x.end, note: r.text })) : []);
-  const annot = h('div', { class: 'card' });
-  const drawAnnotated = aiMarks => {
-    const all = marks.concat(aiMarks || []);
-    annot.replaceChildren(h('h3', { class: 'h3' }, 'Annotated draft'),
-      h('p', { class: 'meta', style: 'margin:-12px 0 16px' }, (marks.length ? 'Highlighted text failed a check. ' : '') + (aiMarks && aiMarks.length ? 'Dashed highlights are quotes from the AI review. ' : '') + (all.length ? 'Hover a highlight to see which rule.' : 'Nothing to highlight.')),
-      annotated(text, all));
-  };
-  if (aiOn() && humans.length) out.append(aiReviewCard(text, humans, drawAnnotated));
-  else if (humans.length && showAiTeaser(pid)) out.append(aiTeaser(h('div', { class: 'ai-teaser', style: 'margin-bottom:24px' }), true, TEASE.check));
-  drawAnnotated([]);
-  out.append(annot);
-  flowChecked.add(pid);
-  renderNextBar();
-  focusReport();
 }
 
 /* ------------------------------------ Export ------------------------------------ */
@@ -4391,8 +4153,7 @@ async function clearAllData() {
   const second = await askConfirm({ title: 'This cannot be undone', body: 'Confirm a second time to delete everything.', ok: 'Delete everything', typeToConfirm: 'DELETE' });
   if (!second) return;
   try { localStorage.removeItem(STORAGE_KEY); } catch (e) { /* ignore */ }
-  S = defaultState(); compareFormFilled = false; checkFilled = false;
-  $('reportSection').hidden = true;
+  S = defaultState(); compareFormFilled = false;
   applyTheme(); commit();
   location.hash = '#home';
   toast('All data cleared.');
@@ -4405,7 +4166,7 @@ async function importBackup(file) {
   const ok = await askConfirm({ title: 'Replace current data?', body: 'The backup has ' + plural(next.profiles.length, 'profile') + ', ' + plural(next.comparisons.length, 'comparison') + ' and ' + plural(next.rules.length, 'rule') + '. It replaces everything stored in this browser now.', ok: 'Import backup' });
   if (!ok) return;
   next.settings.ai = S.settings.ai;   // a backup never switches AI on (or off) by itself
-  S = next; compareFormFilled = false; checkFilled = false;
+  S = next; compareFormFilled = false;
   applyTheme(); commit();
   toast('Backup imported.');
 }
@@ -4419,9 +4180,8 @@ async function loadDemoData() {
   loadDemo(S);
   // Start at step 1.1: a new demo memo waits in the Compare form, and the bar at the bottom leads on to Export.
   S.ui.compareMode = 'two';
-  S.ui.compareDraft = Object.assign({}, DEMO_START); S.ui.checkDraft = {};
-  $('reportSection').hidden = true; lastReportProfile = null;
-  compareFormFilled = false; checkFilled = false;
+  S.ui.compareDraft = Object.assign({}, DEMO_START);
+  compareFormFilled = false;
   commit();
   toast('Demo loaded. Step 1.1: compare the two versions, then follow the bar at the bottom.');
   goTo('compare');
@@ -4440,7 +4200,6 @@ async function copySkill() {
    data. Finishing a step (last tag, last candidate, pasting text) moves on by itself.
    ---------------------------------------------------------------------------------- */
 
-const flowChecked = new Set();   // profiles whose draft was checked this session
 
 /** True when the current skill text for this reviewer has already been copied or downloaded. */
 function skillUpToDate(pid) {
@@ -4505,7 +4264,6 @@ async function importRedline(f) {
 
 /** After text arrives in a field (paste or .txt file), take the obvious next action. */
 function afterTextLoaded(id) {
-  if (id === 'checkText') { if ($('checkText').value.trim()) runDraftCheck(); return; }
   if (S.ui.compareMode === 'oral') return;   // notes are often typed in several goes: "Add feedback" starts it
   // Your own text pasted next to the untouched demo memo starts a fresh pair instead of comparing against the demo.
   const other = id === 'txtSent' ? 'txtBack' : 'txtSent', demoText = { txtSent: DEMO_START.sent, txtBack: DEMO_START.returned };
@@ -4542,10 +4300,6 @@ function nextStep() {
     if (S.ui.compareMode === 'redline') return { step: 'Compare', text: 'drop the Word file with tracked changes', btn: 'Choose file', run: () => currentView === 'compare' ? $('redlineFile').click() : goTo('compare', 'redlineFile') };
     return { step: 'Compare', text: any ? 'compare another draft to find recurring edits' : 'paste two versions of a draft to begin', btn: 'Compare drafts', run: () => goTo('compare', 'txtSent') };
   }
-  if (!flowChecked.has(pid)) {
-    if (currentView === 'check' && $('checkText').value.trim()) return { step: 'Check', text: 'run the check on your draft', btn: 'Check draft', run: runDraftCheck };
-    return { step: 'Check', text: (isDemoProfile(pid) ? 'paste your next draft, or use the demo draft, to check it against ' : 'paste your next draft to check it against ') + plural(rules.length, 'rule'), btn: 'Check a draft', run: () => goTo('check', 'checkText') };
-  }
   if (!skillUpToDate(pid)) {
     const updated = Object.keys(S.skillVersions).some(k => k.startsWith(pid + '|'));
     return currentView === 'export'
@@ -4556,13 +4310,13 @@ function nextStep() {
 }
 
 /** Home closing band: the same next step as the guide bar, so it follows the workflow
-    (compare and tag first, then rules; check and export once rules are confirmed). */
+    (compare and tag first, then rules; export once rules are confirmed). */
 function renderClosing() {
   const ns = nextStep(), hasRules = activeRules(S, S.activeProfileId, 'all').length > 0;
-  const why = hasRules ? '' : ns.step === 'Learn' ? ' Only rules you confirm enter the draft check and the skill.' : ' Edits that recur become rules you confirm, check and export.';
+  const why = hasRules ? '' : ns.step === 'Learn' ? ' Only rules you confirm enter the skill.' : ' Edits that recur become rules you confirm and export.';
   $('closingText').textContent = capitalize(ns.text) + '.' + why;
   const second = !hasRules ? h('a', { class: 'btn btn-outline', href: '#how' }, 'See how it works')
-    : ns.step === 'Export' ? h('a', { class: 'btn btn-outline', href: '#check', 'data-focus': 'checkText' }, 'Check a draft', ' ', arrow())
+    : ns.step === 'Export' ? h('a', { class: 'btn btn-outline', href: '#rules' }, 'Review rules', ' ', arrow())
     : h('a', { class: 'btn btn-outline', href: '#export' }, 'Export skill', ' ', arrow());
   $('closingActions').replaceChildren(h('button', { type: 'button', class: 'btn btn-solid', onclick: ns.run }, ns.btn, ' ', arrow()), second);
 }
@@ -4613,7 +4367,6 @@ function setAiBusy(ids, on) {
   for (const id of ids) { if (on) AI.busyCards.add(id); else AI.busyCards.delete(id); const el = $(id); if (el) markAiBusy(el); }
 }
 const aiCardHooks = new Map();                       // change id -> refresh that card's AI suggestion
-const Q_LABEL = { verbatim: 'Verbatim', close: 'Close', invented: 'May be invented' };
 let aiKeyCache = null, tagAiStatus = null, rulesAiStatus = null, footerLocalText = '';
 
 function aiKey() {
@@ -4718,7 +4471,6 @@ function setAI(on) {
   S.settings.ai = on;
   if (!on) for (const c of AI.controllers) { c.byUser = true; c.abort(); }
   commit();
-  if (currentView === 'check' && !$('reportSection').hidden && $('checkText').value.trim()) runDraftCheck();   // show or hide the AI review
   toast(on ? 'AI on. Check each suggestion before you save it.' : 'AI off. Nothing leaves this device.');
 }
 function renderAiChrome() {
@@ -4733,7 +4485,7 @@ function renderAiChrome() {
   $('privacyAI').hidden = !on;
   $('privacyNote').classList.toggle('ai-on', on);
   $('footerPrivacy').textContent = on
-    ? "Privacy: AI is on. Text used by AI features (changes to tag, reasons, rule evidence, a draft you ask the AI to review) is sent to OpenRouter (openrouter.ai) and the AI model; the page can contact no other address, and nothing is sent while AI is off. Data is stored only in this browser's local storage. Use sample or anonymized text; do not paste client confidential information."
+    ? "Privacy: AI is on. Text used by AI features (changes to tag, reasons, rule evidence) is sent to OpenRouter (openrouter.ai) and the AI model; the page can contact no other address, and nothing is sent while AI is off. Data is stored only in this browser's local storage. Use sample or anonymized text; do not paste client confidential information."
     : footerLocalText;
   $('rulesAiBar').hidden = !on;
   aiTeaser($('rulesAiTeaser'), showAiTeaser(S.activeProfileId), TEASE.rules);
@@ -4903,53 +4655,6 @@ function aiWordingBox(c, byId, cfg, ta, store) {
   return box;
 }
 
-/* ---- 4. AI review of human-checked rules, with every quote checked against the draft ---- */
-
-function aiReviewCard(text, rules, onMarks) {
-  const status = h('p', { class: 'ai-status', role: 'status', 'aria-live': 'polite', style: 'margin-top:12px' });
-  const results = h('div');
-  const btn = h('button', { type: 'button', class: 'btn btn-solid' }, 'Review ' + plural(rules.length, 'rule') + ' with AI', ' ', arrow());
-  const card = h('div', { class: 'card', style: 'margin-bottom:24px', id: 'aiReviewCard' },
-    h('h3', { class: 'h3' }, h('span', { class: 'ai-mark', 'aria-hidden': 'true' }, '✦ '), 'AI review of human-checked rules'),
-    h('p', { class: 'meta', style: 'margin:-12px 0 16px' }, 'Sends this draft and the rule wording to OpenRouter. The AI must quote your draft for every finding, and each quote is checked against your text: Verbatim (found word for word), Close (nearly the same text found) or May be invented (not in your draft: do not rely on it).'),
-    h('div', { class: 'actions', style: 'margin-top:0' }, btn), status, results);
-  btn.addEventListener('click', async () => {
-    btn.disabled = true;
-    status.classList.remove('err');
-    status.classList.add('sr-only');   // the card shimmers while the AI reviews
-    setAiBusy(['aiReviewCard'], true);
-    try {
-      const { messages, cut } = buildReviewPrompt(rules, text);
-      const r = await aiRequest(messages, { maxTokens: 6000, onStatus: s => { status.textContent = s; } });
-      if (!aiOn() || !card.isConnected) return;
-      const ids = rules.map((_, i) => 'r' + (i + 1)), got = readReview(r.data, ids), marks = [];
-      const ol = h('ol', { class: 'check-list' });
-      rules.forEach((rule, i) => {
-        const res = got.get(ids[i]);
-        const [cls, label] = !res ? ['warn', 'No answer'] : res.verdict === 'follows' ? ['pass', 'Follows'] : res.verdict === 'fails' ? ['fail', 'Fails'] : ['warn', 'Unclear'];
-        const checked = (res ? res.findings : []).map(f => Object.assign({ v: verifyQuote(text, f.quote) }, f));
-        for (const f of checked) for (const s of f.v.spans) marks.push({ start: s.start, end: s.end, note: 'AI, ' + Q_LABEL[f.v.label].toLowerCase() + ' quote: ' + rule.text, ai: true });
-        const allInvented = checked.length && checked.every(f => f.v.label === 'invented');
-        ol.append(h('li', { class: 'check-item' },
-          h('div', null, h('span', { class: 'status ' + cls }, label)),
-          h('div', null,
-            h('p', { class: 'check-rule' }, rule.text),
-            checked.length ? h('ul', { class: 'ai-findings' }, checked.map(f => h('li', null,
-              h('p', { class: 'ai-quote' }, '“' + f.quote + '”'),
-              h('p', null, h('span', { class: 'q-label ' + f.v.label }, Q_LABEL[f.v.label]), f.note)))) : h('p', { class: 'meta' }, res ? 'No quoted findings.' : 'The AI did not answer for this rule.'),
-            allInvented ? h('p', { class: 'warn-note', style: 'margin-top:8px' }, 'None of these quotes is in your draft, so this verdict is unsupported.') : null,
-            res && res.unquoted ? h('p', { class: 'meta', style: 'margin-top:6px' }, plural(res.unquoted, 'finding') + ' without a quote ' + (res.unquoted === 1 ? 'was' : 'were') + ' left out.') : null)));
-      });
-      results.replaceChildren(ol);
-      status.textContent = 'Reviewed by ' + aiModelName(r.model) + (cut ? '; only the first ' + AI_MAX_DRAFT_WORDS.toLocaleString('en-US') + ' words were sent' : '') + '. The AI can be wrong: you still tick each checklist item yourself.';
-      onMarks(marks);
-      setBtnLabel(btn, 'Review again');
-    } catch (e) { status.textContent = aiFailText(e); status.classList.add('err'); }
-    finally { btn.disabled = false; status.classList.remove('sr-only'); setAiBusy(['aiReviewCard'], false); }
-  });
-  return card;
-}
-
 /* ------------------------------- Word and PDF export ------------------------------- */
 
 function exportDocx() {
@@ -5002,8 +4707,7 @@ function isDemoProfile(pid) { const p = S.profiles.find(x => x.id === pid); retu
 function showAiTeaser(pid) { return !aiOn() && aiAvailable() && isDemoProfile(pid); }
 const TEASE = {
   tags: 'with AI on, each change gets a suggested category and reason, which you confirm or change.',
-  rules: 'with AI on, the AI can group reasons that mean the same thing and propose clear rule wording.',
-  check: 'with AI on, the AI can review the human-checked rules, and every quote it gives is checked against your draft.'
+  rules: 'with AI on, the AI can group reasons that mean the same thing and propose clear rule wording.'
 };
 function aiTeaser(el, show, text) {
   el.hidden = !show;
@@ -5033,7 +4737,7 @@ function renderEmptyStart() {
   el.replaceChildren(h('span', null, 'Start with the person whose edits you learn from: their name labels the rules.'), form, ...next);
 }
 
-/* Guided tour: five steps over the fictional demo (Partner A). It only ever changes demo data. */
+/* Guided tour: four steps over the fictional demo (Partner A). It only ever changes demo data. */
 let tourStep = -1;
 const tourPause = ms => new Promise(r => setTimeout(r, ms));
 function tourProfile() { return S.profiles.find(p => p.demo && p.name === 'Partner A') || S.profiles.find(p => p.demo); }
@@ -5059,7 +4763,7 @@ const TOUR = [
     } },
   { title: 'Recurring edits become rules', text: 'When the same kind of edit comes back, it becomes a candidate rule with its evidence attached. You adjust the wording, then confirm or reject it. Only rules with enough evidence count.',
     go: async live => await tourGo('rules', live) && (document.querySelector('#candList .rule-card') || document.querySelector('#ruleList .rule-card')) },
-  { title: 'Check a new draft', text: 'Before the next draft goes out, check it against the confirmed rules. Pattern checks run by themselves and highlight problems; the other rules become a checklist, or with AI on, an AI review whose quotes are checked against your draft.',
+  { title: 'Export the skill', text: "The confirmed rules, each with its evidence, an example and its self-checks, become a skill to load into your firm's approved AI tool, where new drafts are checked. It also comes as a Markdown, Word or PDF rules sheet.",
     go: async live => {
       const p = tourProfile();
       let note = '';
@@ -5073,15 +4777,9 @@ const TOUR = [
         commit();
         note = 'For this tour, the demo candidates were confirmed for you.';
       }
-      if (!await tourGo('check', live)) return null;
-      const text = tourComparison().sent;
-      $('checkText').value = text; S.ui.checkDraft.text = text; updateCounts();
-      runDraftCheck();
-      await tourPause(300);
-      return { el: document.querySelector('#checkReport .report-head') || $('reportSection'), note };
-    } },
-  { title: 'Export the skill', text: 'The confirmed rules, each with its evidence and an example, become a plain-text skill for any approved AI tool, or a Word or PDF rules sheet to share.',
-    go: async live => await tourGo('export', live) && $('skillPreview').closest('.card') }
+      if (!await tourGo('export', live)) return null;
+      return { el: $('skillPreview').closest('.card'), note };
+    } }
 ];
 function clearTourFocus() { for (const el of document.querySelectorAll('.tour-focus')) el.classList.remove('tour-focus'); }
 async function showTourStep(i) {
@@ -5277,18 +4975,6 @@ function wireEvents() {
     commit(); toast('Minimum set to ' + plural(v, 'instance') + '.');
   });
 
-  // Check
-  $('checkForm').addEventListener('submit', e => { e.preventDefault(); runDraftCheck(); });
-  $('checkType').addEventListener('change', () => { S.ui.checkDraft.type = $('checkType').value; saveSoon(); });
-  $('checkText').addEventListener('input', () => { S.ui.checkDraft.text = $('checkText').value; updateCounts(); saveSoon(); });
-  $('btnSampleDraft').addEventListener('click', () => {
-    const c = S.comparisons.find(x => x.profileId === S.activeProfileId && x.demo);
-    if (!c) return;
-    $('checkText').value = c.sent;
-    $('checkText').dispatchEvent(new Event('input'));
-    runDraftCheck();
-  });
-
   // Export
   $('expName').addEventListener('input', () => { exportMetaFor(S.activeProfileId).name = $('expName').value; saveSoon(); updatePreview(); });
   $('expPurpose').addEventListener('input', () => { exportMetaFor(S.activeProfileId).purpose = $('expPurpose').value; saveSoon(); updatePreview(); });
@@ -5299,6 +4985,12 @@ function wireEvents() {
     downloadFile(slug(sk.name) + '-v' + sk.v + '.txt', sk.text);
     recordVersion(sk); updatePreview(); renderNextBar();
     toast('Skill downloaded (version ' + sk.v + ').');
+  });
+  $('btnMdSkill').addEventListener('click', () => {
+    const sk = currentSkill();
+    downloadFile(slug(sk.name) + '-v' + sk.v + '.md', buildSkillMarkdown(sk.sheet, versionLine(sk.v)), 'text/markdown;charset=utf-8');
+    recordVersion(sk); updatePreview(); renderNextBar();
+    toast('Markdown file downloaded (version ' + sk.v + ').');
   });
   $('btnBackup').addEventListener('click', () => {
     downloadFile('redline-to-rule-backup-' + todayISO() + '.json', JSON.stringify(S, null, 2), 'application/json');
@@ -5339,8 +5031,8 @@ function wireEvents() {
   window.addEventListener('dragover', e => e.preventDefault());
   window.addEventListener('drop', e => { if (!e.target.closest || !e.target.closest('#dropZone')) e.preventDefault(); });
 
-  // Guided flow: pasting moves on by itself (second version pasted -> compare; draft pasted -> check).
-  for (const id of ['txtSent', 'txtBack', 'checkText']) $(id).addEventListener('paste', () => setTimeout(() => afterTextLoaded(id), 0));
+  // Guided flow: pasting moves on by itself (second version pasted -> compare).
+  for (const id of ['txtSent', 'txtBack']) $(id).addEventListener('paste', () => setTimeout(() => afterTextLoaded(id), 0));
   $('nextBtn').addEventListener('click', () => nextStep().run());
   // "See how it works": also scrolls when the address already ends in #how.
   document.addEventListener('click', e => {
