@@ -385,6 +385,9 @@ html[data-theme="dark"] .site-footer{background:#3D0563}
 .chip.muted{background:var(--bg-alt);color:var(--text-2)}
 .badge-confirmed{display:inline-flex;align-items:center;gap:5px;background:var(--chip-bg);color:var(--chip-text);font-size:12px;font-weight:700;border-radius:3px;padding:4px 10px}
 .badge-amber{display:inline-flex;align-items:center;gap:5px;background:var(--amber-bg);color:var(--amber-text);font-size:12px;font-weight:700;border-radius:3px;padding:4px 10px}
+.src-tags{display:block;margin-top:5px;white-space:nowrap}
+.src-tag{font:700 10.5px/1 var(--sans);letter-spacing:.06em;text-transform:uppercase;color:var(--text-2);margin-right:10px}
+.badge-pin{display:inline-flex;align-items:center;gap:5px;color:var(--chip-text);box-shadow:inset 0 0 0 1px currentColor;font-size:12px;font-weight:700;border-radius:3px;padding:4px 10px}
 
 .help-wrap{position:relative;display:inline-block;vertical-align:middle;margin-left:6px}
 .help{width:22px;height:22px;border-radius:50%;border:1px solid var(--input-border);background:var(--surface);color:var(--text-2);font:700 12px/1 var(--sans);cursor:pointer;padding:0}
@@ -584,7 +587,11 @@ html.has-next{scroll-padding-bottom:110px}
 .drop svg{width:44px;height:44px;color:var(--link)}
 .drop-title{font:700 22px/1.3 var(--serif)}
 .comment-note{font-size:13px;color:var(--text-2);margin-top:6px}
-.tag-actions{grid-column:1/-1;display:flex;justify-content:flex-end}
+.tag-actions{grid-column:1/-1;display:flex;justify-content:flex-end;align-items:center;flex-wrap:wrap;gap:12px 16px}
+.tag-more{display:flex;align-items:center;flex-wrap:wrap;gap:12px 28px;margin-right:auto}
+.field-inline{flex-direction:row;align-items:center;gap:12px}
+@media (max-width:600px){.field-inline{flex-direction:column;align-items:flex-start;gap:6px}.tag-actions .seg label{padding:7px 11px}}
+.pin-toggle input:disabled,.pin-toggle:has(input:disabled){cursor:not-allowed;opacity:.6}
 .reason-sugg{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-top:8px}
 .sugg-label{font-size:12.5px;color:var(--text-2);margin-right:2px}
 .sugg-chip{border:1px solid var(--input-border);background:var(--surface);color:var(--text);border-radius:4px;padding:5px 12px;font:500 13px/1.3 var(--sans);cursor:pointer;text-align:left;transition:border-color .2s,color .2s}
@@ -943,7 +950,7 @@ body.print-preview #printSheet{display:block;padding:40px 16px}
         <p class="eyebrow">Step 1.2 · Tag</p>
         <h2 class="tw" id="h-tag">Tag the <strong>changes</strong></h2>
         <p class="lede">Pick a category, write a one-line reason and press Enter. The next change opens by itself.
-          <span class="help-wrap"><button type="button" class="help" aria-expanded="false" aria-controls="help-tag" aria-label="Help: tagging">?</button><span class="help-pop" id="help-tag" role="tooltip" hidden>Choose a category and write a one-line reason in your own words. Use "This matter only" for edits driven by the facts of one deal; those never count toward a rule. "Judgment call/one-off" is also excluded from rule counting.</span></span>
+          <span class="help-wrap"><button type="button" class="help" aria-expanded="false" aria-controls="help-tag" aria-label="Help: tagging">?</button><span class="help-pop" id="help-tag" role="tooltip" hidden>Choose a category and write a one-line reason in your own words. Use "This matter only" for edits driven by the facts of one deal; those never count toward a rule. "Judgment call/one-off" is also excluded from rule counting. Set the reason source to "Reviewer said" when the reviewer explained the edit, or "My inference" when the reason is your own reading of it. "Pin as lesson" lets one important point become a rule without waiting for it to recur.</span></span>
         </p>
       </div>
       <div id="cmpSummary" class="cmp-summary"></div>
@@ -1012,7 +1019,7 @@ body.print-preview #printSheet{display:block;padding:40px 16px}
         <p class="eyebrow">Step 3.1 · Learn</p>
         <h2 class="tw" id="h-rules" tabindex="-1">Your <strong>rules</strong></h2>
         <p class="lede">Candidates appear when the same kind of change recurs for <span id="rulesProfileName">this reviewer</span>. Edit the wording, then confirm or reject.
-          <span class="help-wrap"><button type="button" class="help" aria-expanded="false" aria-controls="help-rules" aria-label="Help: candidate rules">?</button><span class="help-pop" id="help-rules" role="tooltip" hidden>Changes are grouped by reviewer and category, then by similar reasons (shared key words; with AI on, also reasons the AI found to mean the same thing). Changes tagged "This matter only" or "Judgment call/one-off" are ignored. A rule can only be confirmed once it has at least the minimum number of instances.</span></span>
+          <span class="help-wrap"><button type="button" class="help" aria-expanded="false" aria-controls="help-rules" aria-label="Help: candidate rules">?</button><span class="help-pop" id="help-rules" role="tooltip" hidden>Changes are grouped by reviewer and category, then by similar reasons (shared key words; with AI on, also reasons the AI found to mean the same thing). Changes tagged "This matter only" or "Judgment call/one-off" are ignored. A rule can only be confirmed once it has at least the minimum number of instances, unless one of its changes is pinned as a lesson.</span></span>
         </p>
       </div>
       <div class="settings-row">
@@ -1020,7 +1027,7 @@ body.print-preview #printSheet{display:block;padding:40px 16px}
           <label for="minEvidence">Minimum instances for a rule (N)</label>
           <input type="number" id="minEvidence" min="1" max="20" step="1" value="2">
         </div>
-        <span class="meta">Only confirmed rules with at least N instances enter the skill.</span>
+        <span class="meta">Only confirmed rules with at least N instances, and pinned lessons, enter the skill.</span>
       </div>
       <div class="ai-bar" id="rulesAiBar" role="group" aria-label="AI help for rules" hidden>
         <span class="ai-mark" aria-hidden="true">✦ AI</span>
@@ -1039,8 +1046,9 @@ body.print-preview #printSheet{display:block;padding:40px 16px}
       <div class="sec-head">
         <p class="eyebrow">Step 3.2 · Confirm</p>
         <h2 class="tw" id="h-confirmed">Confirmed <strong>rules</strong></h2>
-        <p class="lede">Each rule keeps its evidence. A rule is flagged "May be outdated" when newer evidence contradicts it.</p>
+        <p class="lede">Each rule keeps its evidence, shows whether its reasons were stated by the reviewer or inferred by you, and when it was last seen. A rule is flagged "May be outdated" when newer evidence contradicts it.</p>
       </div>
+      <div class="card style-card" id="styleCard" style="margin-bottom:28px"></div>
       <div id="ruleList" class="rule-list"></div>
     </div>
   </section>
@@ -1054,7 +1062,7 @@ body.print-preview #printSheet{display:block;padding:40px 16px}
         <p class="eyebrow">Step 4 · Export</p>
         <h2 class="tw" id="h-export" tabindex="-1">Export the <strong>skill</strong></h2>
         <p class="lede">A portable skill built from the confirmed rules for <span id="exportProfileName">this reviewer</span>. Load it into your firm's approved AI tool: its self-check steps are where a new draft gets checked.
-          <span class="help-wrap"><button type="button" class="help" aria-expanded="false" aria-controls="help-export" aria-label="Help: export">?</button><span class="help-pop" id="help-export" role="tooltip" hidden>The version number goes up each time you copy or download a skill whose rules have changed. Rules below the minimum number of instances are left out.</span></span>
+          <span class="help-wrap"><button type="button" class="help" aria-expanded="false" aria-controls="help-export" aria-label="Help: export">?</button><span class="help-pop" id="help-export" role="tooltip" hidden>The version number goes up each time you copy or download a skill whose rules have changed. Rules below the minimum number of instances are left out, unless they are pinned lessons. Each rule says whether its reason was stated by the reviewer and when it was last seen; a rule that newer evidence may contradict is marked "Under review".</span></span>
         </p>
       </div>
       <div class="card">
@@ -1172,7 +1180,7 @@ body.print-preview #printSheet{display:block;padding:40px 16px}
     <p class="lede">Junior lawyers get the same edits from the same reviewer again and again. Redline to Rule turns those edits into written drafting rules, each backed by the changes that prove it, so the next draft gets them right the first time.</p>
     <dl class="about-list">
       <dt>How rules are found</dt>
-      <dd>Every change you tag is kept as evidence. When the same kind of change recurs for a reviewer at least N times (set on the Rules screen; 2 by default), it becomes a candidate rule. Only rules a person confirms enter the skill.</dd>
+      <dd>Every change you tag is kept as evidence. When the same kind of change recurs for a reviewer at least N times (set on the Rules screen; 2 by default), it becomes a candidate rule. A point too important to wait for can be pinned as a lesson and confirmed at once. Each rule shows whether the reviewer stated its reason or you inferred it, and when it was last seen. Only rules a person confirms enter the skill, together with the reviewer's stated preferences on length, format, tone and order.</dd>
       <dt>Optional AI</dt>
       <dd>Off until you switch it on. It suggests tags, groups reasons that mean the same thing and proposes rule wording. Every suggestion waits for a person to confirm it.</dd>
       <dt>Privacy</dt>
@@ -1223,7 +1231,7 @@ body.print-preview #printSheet{display:block;padding:40px 16px}
    ========================================================================== */
 'use strict';
 
-const APP_VERSION = '1.4.27';
+const APP_VERSION = '1.5.0';
 const COURSE_LINE = 'NYU School of Law · Artificial Intelligence and Corporate Deals and Advice';
 const TOOL_CREDIT = 'Made with Redline to Rule, by Henning Fischer.';
 const STORAGE_KEY = 'redlineToRule.v1';
@@ -1231,6 +1239,10 @@ const SCHEMA_VERSION = 1;
 const ONE_OFF = 'Judgment call/one-off';
 const DEFAULT_CATEGORIES = ['Substance', 'Structure', 'Length/concision', 'Tone', 'Citation/sourcing', 'Formatting', 'Defined terms', ONE_OFF];
 const DEFAULT_TYPES = ['Memo', 'Issues list', 'Email', 'Contract markup', 'Slides', 'Other'];
+/** "How this reviewer wants work": stated preferences per reviewer, entered by hand rather than learned from edits. */
+const STYLE_FIELDS = [['length', 'Length'], ['format', 'Format'], ['tone', 'Tone'], ['order', 'Order']];
+/** Where a reason comes from: the reviewer stated it (oral feedback, a Word comment) or the user inferred it from the edit. */
+const SOURCE_LABEL = { said: 'Reviewer said', inferred: 'My inference' };
 
 /* ---------------------------------- Utilities ---------------------------------- */
 
@@ -1538,7 +1550,7 @@ function createOralComparison(st, input) {
   // The note is offered as the reason (like a Word comment): the user confirms or shortens it.
   points.forEach((p, i) => st.changes.push({
     id: uid('x'), comparisonId: cmp.id, idx: i, kind: 'oral', del: '', ins: '', before: '', after: '', feedback: p,
-    category: '', reason: p.slice(0, 300), scope: 'always', fromComment: true
+    category: '', reason: p.slice(0, 300), scope: 'always', fromComment: true, source: 'said', pinned: false
   }));
   return cmp;
 }
@@ -1711,6 +1723,14 @@ function evidenceDates(st, changes) {
   const docs = new Set(changes.map(c => c.comparisonId)).size;
   return { first: dates[0] || '', latest: dates[dates.length - 1] || '', docs };
 }
+/** A rule or candidate rests on the reviewer's stated reason when at least one of its changes is marked "Reviewer said". */
+function evidenceSource(changes) { return changes.some(c => c.source === 'said') ? 'said' : 'inferred'; }
+/** A pinned lesson skips the minimum: one pinned change is enough. */
+function hasPinned(changes) { return changes.some(c => c.pinned); }
+/** Does a confirmed rule enter the skill? N instances, or a pinned lesson. */
+function ruleCounts(st, rule) { const ev = liveEvidence(st, rule); return ev.length >= st.settings.minEvidence || hasPinned(ev); }
+/** "First 1 Sep 2026, last seen 3 Oct 2026" (one date when both are the same). */
+function seenText(d) { return !d.latest ? '' : d.first === d.latest ? 'last seen ' + fmtDate(d.latest) : 'first ' + fmtDate(d.first) + ', last seen ' + fmtDate(d.latest); }
 
 /**
  * Recompute derived data. Mutates st.rules (absorbs new evidence into confirmed
@@ -1780,7 +1800,7 @@ function deriveCandidates(st) {
     const types = new Set(changes.map(c => (cmps.get(c.comparisonId) || {}).type || ''));
     const sug = suggestCheck(reasons.join(' '));
     candidates.push(Object.assign({}, cl, {
-      count: cl.members.length, rejected,
+      count: cl.members.length, rejected, pinned: hasPinned(changes), source: evidenceSource(changes),
       aiMerges: aiMergesIn(st, cl.profileId, cl.category, reasons),
       proposed: proposeRuleText(reasons, cl.category),
       suggested: { deliverableScope: types.size === 1 && [...types][0] ? [...types][0] : 'all', checkType: sug.checkType, check: sug.check },
@@ -2086,7 +2106,7 @@ function describeCheck(check) {
 
 /** Confirmed rules that meet the evidence threshold for a profile (and deliverable type). */
 function activeRules(st, profileId, type) {
-  return st.rules.filter(r => r.profileId === profileId && ruleApplies(r, type) && liveEvidence(st, r).length >= st.settings.minEvidence);
+  return st.rules.filter(r => r.profileId === profileId && ruleApplies(r, type) && ruleCounts(st, r));
 }
 
 /** One evidence change as a short example: a before -> after pair if there is one, else the shortest edit or oral note. */
@@ -2124,18 +2144,23 @@ function skillSheet(st, profileId, type, meta) {
     const ev = liveEvidence(st, r), d = evidenceDates(st, ev);
     return {
       n: i + 1, category: r.category, text: r.text,
-      evidence: plural(ev.length, 'instance') + ' in ' + plural(d.docs, 'draft') + ', ' + fmtDate(d.first) + (d.latest !== d.first ? ' to ' + fmtDate(d.latest) : '') + '.',
+      basis: [evidenceSource(ev) === 'said' ? "reviewer's stated reason" : 'inferred from edits'].concat(hasPinned(ev) ? ['pinned lesson'] : []).join('; '),
+      evidence: plural(ev.length, 'instance') + ' in ' + plural(d.docs, 'draft') + ', ' + seenText(d) + '.',
       example: ruleExample(ev), scope: r.deliverableScope !== 'all' ? r.deliverableScope + ' only.' : '',
-      check: r.checkType === 'auto' && r.check ? describeCheck(r.check) : ''
+      check: r.checkType === 'auto' && r.check ? describeCheck(r.check) : '',
+      review: outdatedSignals(st, r).length ? 'Under review: a newer edit may contradict this rule.' : ''
     };
   });
+  const style = styleItems(st, profileId);
   const selfChecks = items.filter(x => x.check).map(x => 'Rule ' + x.n + ': ' + x.check);
   const humans = items.filter(x => !x.check).map(x => x.n);
   if (humans.length) selfChecks.push('Rule' + (humans.length > 1 ? 's ' : ' ') + humans.join(', ') + ': read the draft and confirm by hand.');
+  if (style.length) selfChecks.push('Stated preferences (' + style.map(x => x.label.toLowerCase()).join(', ') + '): read the draft and confirm by hand.');
   return {
     name: meta.name || profile.name + ' drafting skill', profile: profile.name,
     applies: type && type !== 'all' ? type : scoped.length ? 'All deliverables (some rules apply only to: ' + scoped.join(', ') + ')' : 'All deliverables',
     purpose: meta.purpose || defaultPurpose(profile.name), minEvidence: st.settings.minEvidence, rules: items, selfChecks,
+    style, styleHead: 'How ' + profile.name + ' wants work', styleNote: 'Stated preferences, not derived from edits.',
     gate: 'A qualified lawyer must review the output before it is sent.',
     data: 'Use labels such as Buyer, Seller and Target; do not include client names or confidential facts.'
   };
@@ -2148,11 +2173,17 @@ function compileSkill(st, profileId, type, meta) {
   L.push('Reviewer profile: ' + sk.profile);
   L.push('Applies to: ' + sk.applies);
   L.push('Purpose: ' + sk.purpose);
+  if (sk.style.length) {
+    L.push('');
+    L.push(sk.styleHead + ' (' + sk.styleNote.replace(/\.$/, '').toLowerCase() + '):');
+    for (const x of sk.style) L.push('- ' + x.label + ': ' + x.text);
+  }
   L.push('');
   L.push('Rules:');
   if (!sk.rules.length) L.push('(No confirmed rules with at least ' + sk.minEvidence + ' instances yet.)');
   for (const r of sk.rules) {
-    L.push(r.n + '. [' + r.category + '] ' + r.text);
+    L.push(r.n + '. [' + r.category + '] ' + r.text + ' (' + r.basis + ')');
+    if (r.review) L.push('   ' + r.review);
     L.push('   Evidence: ' + r.evidence);
     if (r.example) L.push('   Example: ' + r.example);
     if (r.scope) L.push('   Applies to: ' + r.scope);
@@ -2188,11 +2219,14 @@ function buildSkillMarkdown(sk, versionText) {
     '- **Applies to:** ' + mdText(sk.applies),
     '- **Version:** ' + mdText(String(versionText).replace(/^Version:\s*/, '')), '',
     '*' + mdText(TOOL_CREDIT) + '*', '',
-    '## Purpose', '', mdText(sk.purpose), '',
-    '## Rules', ''];
+    '## Purpose', '', mdText(sk.purpose), ''];
+  if (sk.style.length) L.push('## ' + mdText(sk.styleHead), '', '*' + mdText(sk.styleNote) + '*', '', ...sk.style.map(x => '- **' + x.label + ':** ' + mdText(x.text)), '');
+  L.push('## Rules', '');
   if (!sk.rules.length) L.push('*No confirmed rules with at least ' + sk.minEvidence + ' instances yet.*', '');
   for (const r of sk.rules) {
-    L.push('### ' + r.n + '. ' + mdText(r.text), '', '- **Category:** ' + mdText(r.category), '- **Evidence:** ' + mdText(r.evidence));
+    L.push('### ' + r.n + '. ' + mdText(r.text), '', '- **Category:** ' + mdText(r.category), '- **Basis:** ' + mdText(r.basis));
+    if (r.review) L.push('- **Status:** ' + mdText(r.review));
+    L.push('- **Evidence:** ' + mdText(r.evidence));
     if (r.example) L.push('- **Example:** ' + mdText(r.example));
     if (r.scope) L.push('- **Applies to:** ' + mdText(r.scope));
     L.push('');
@@ -2257,10 +2291,16 @@ function buildSkillDocx(sk, versionText) {
   P.push(wPara([{ text: versionText, size: 10, color: gray }], { after: 60 }));
   P.push(wPara([{ text: TOOL_CREDIT, size: 10, color: gray }], { after: 200 }));
   P.push(wPara([{ text: 'Purpose: ', bold: true }, { text: sk.purpose }]));
+  if (sk.style.length) {
+    head(sk.styleHead);
+    P.push(wPara([{ text: sk.styleNote, italic: true, size: 10, color: gray }], { after: 60 }));
+    for (const x of sk.style) P.push(wPara([{ text: x.label + ': ', bold: true }, { text: x.text }], { indent: 360, after: 40 }));
+  }
   head('Rules');
   if (!sk.rules.length) P.push(wPara([{ text: 'No confirmed rules with at least ' + sk.minEvidence + ' instances yet.', italic: true }]));
   for (const r of sk.rules) {
-    P.push(wPara([{ text: r.n + '. ', bold: true, size: 12 }, { text: r.text, bold: true, size: 12 }, { text: '  [' + r.category + ']', size: 10, color: gray }], { before: 120, after: 40, keepNext: true }));
+    P.push(wPara([{ text: r.n + '. ', bold: true, size: 12 }, { text: r.text, bold: true, size: 12 }, { text: '  [' + r.category + '] (' + r.basis + ')', size: 10, color: gray }], { before: 120, after: 40, keepNext: true }));
+    if (r.review) P.push(wPara([{ text: r.review, bold: true, size: 10, color: '8A5A00' }], { indent: 360, after: 20 }));
     P.push(wPara([{ text: 'Evidence: ', bold: true, size: 10 }, { text: r.evidence, size: 10 }], { indent: 360, after: 20 }));
     if (r.example) P.push(wPara([{ text: 'Example: ', bold: true, size: 10 }, { text: r.example, size: 10, italic: true }], { indent: 360, after: 20 }));
     if (r.scope) P.push(wPara([{ text: 'Applies to: ', bold: true, size: 10 }, { text: r.scope, size: 10 }], { indent: 360, after: 20 }));
@@ -2278,6 +2318,11 @@ function buildSkillDocx(sk, versionText) {
     { name: '_rels/.rels', text: '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="word/document.xml"/></Relationships>' },
     { name: 'word/document.xml', text: doc }
   ]);
+}
+/** The reviewer's filled-in stated preferences, in field order: [{key, label, text}]. */
+function styleItems(st, profileId) {
+  const p = st.profiles.find(x => x.id === profileId), style = (p && p.style) || {};
+  return STYLE_FIELDS.map(([key, label]) => ({ key, label, text: String(style[key] || '').trim() })).filter(x => x.text);
 }
 function defaultPurpose(name) {
   return 'Apply ' + name + "'s recurring drafting preferences, learned from their actual edits, to a draft before it is sent to them for review.";
@@ -2533,7 +2578,10 @@ function migrate(raw) {
   const obj = v => v && typeof v === 'object' && !Array.isArray(v) ? v : {};
   const names = (v, def) => { const a = arr(v).filter(x => typeof x === 'string' && x.trim()).map(x => x.trim().slice(0, 60)); return a.length ? [...new Set(a)] : def.slice(); };
   const st = d;
-  st.profiles = arr(raw.profiles).filter(p => p && typeof p.id === 'string').map(p => ({ id: p.id, name: str(p.name, 80) || 'Unnamed', demo: !!p.demo }));
+  st.profiles = arr(raw.profiles).filter(p => p && typeof p.id === 'string').map(p => {
+    const style = obj(p.style);
+    return { id: p.id, name: str(p.name, 80) || 'Unnamed', demo: !!p.demo, style: Object.fromEntries(STYLE_FIELDS.map(([k]) => [k, str(style[k], 300)])) };
+  });
   if (!st.profiles.length) st.profiles = defaultState().profiles;
   st.activeProfileId = st.profiles.some(p => p.id === raw.activeProfileId) ? raw.activeProfileId : st.profiles[0].id;
   st.categories = names(raw.categories, DEFAULT_CATEGORIES);
@@ -2549,6 +2597,8 @@ function migrate(raw) {
     kind: ['replace', 'delete', 'insert', 'paragraph', 'oral'].includes(c.kind) ? c.kind : 'replace',
     del: str(c.del, 1e6), ins: str(c.ins, 1e6), before: str(c.before, 400), after: str(c.after, 400), feedback: str(c.feedback, 2000),
     category: str(c.category, 60), reason: str(c.reason, 300), scope: c.scope === 'matter' ? 'matter' : 'always', fromComment: !!c.fromComment,
+    // Data from before v1.5.0 has no source: oral points and Word comments were the reviewer's words.
+    source: c.source === 'said' || c.source === 'inferred' ? c.source : c.kind === 'oral' || c.fromComment ? 'said' : 'inferred', pinned: !!c.pinned,
     ai: c.ai && typeof c.ai === 'object' && str(c.ai.category, 60) ? { category: str(c.ai.category, 60), reason: str(c.ai.reason, 300), model: str(c.ai.model, 80) } : null
   }));
   st.rules = arr(raw.rules).filter(r => r && typeof r.id === 'string').map(r => {
@@ -2603,7 +2653,7 @@ function createComparison(st, input) {
   st.comparisons.push(cmp);
   res.hunks.forEach((h, i) => st.changes.push({
     id: uid('x'), comparisonId: cmp.id, idx: i, kind: h.kind, del: h.del, ins: h.ins,
-    before: h.before, after: h.after, category: '', reason: '', scope: 'always'
+    before: h.before, after: h.after, category: '', reason: '', scope: 'always', source: 'inferred', pinned: false
   }));
   return cmp;
 }
@@ -3170,8 +3220,8 @@ function cmpById(id) { return S.comparisons.find(c => c.id === id); }
 /** Confirmed rules that newer evidence may contradict. */
 function staleRules(pid) { return S.rules.filter(r => r.profileId === pid && outdatedSignals(S, r).length); }
 /** Candidates that can be confirmed now (they meet the minimum N). */
-function readyCandidates(pid) { return visibleCandidates(pid).filter(c => c.count >= S.settings.minEvidence); }
-function visibleCandidates(pid) { const min = candidateMin(S); return CANDS.filter(c => c.profileId === pid && !c.rejected && c.count >= min); }
+function readyCandidates(pid) { return visibleCandidates(pid).filter(c => c.count >= S.settings.minEvidence || c.pinned); }
+function visibleCandidates(pid) { const min = candidateMin(S); return CANDS.filter(c => c.profileId === pid && !c.rejected && (c.count >= min || c.pinned)); }
 function taggedCountFor(pid) {
   const ids = new Set(S.comparisons.filter(c => c.profileId === pid).map(c => c.id));
   return S.changes.filter(c => c.category && ids.has(c.comparisonId)).length;
@@ -3506,7 +3556,7 @@ async function runCompare() {
         const fresh = S.changes.filter(c => c.comparisonId === cmp.id);
         for (const [id, text] of matchComments(fresh, pendingComments)) {
           const ch = fresh.find(c => c.id === id);
-          ch.reason = text.slice(0, 300); ch.fromComment = true;
+          ch.reason = text.slice(0, 300); ch.fromComment = true; ch.source = 'said';
         }
       }
       $('txtSent').value = ''; $('txtBack').value = ''; $('cmpMatter').value = '';
@@ -3605,7 +3655,16 @@ function changeCard(ch, i, n) {
   const note = !ch.fromComment ? h('span') : h('p', { class: 'comment-note' }, ch.kind === 'oral'
     ? 'Taken from your notes of what the reviewer said. Shorten it to a general reason if needed, then press Enter.'
     : "Suggested from the reviewer's Word comment. Edit it if needed, then press Enter.");
-  const afterTag = () => { applyAi(false); derive(); save(); renderChrome(); updateTagProgress(); renderTagAiBar(); };
+  // A pinned change can be confirmed as a rule without waiting for N; it needs a lasting tag (scope "Always", not a one-off).
+  const pinId = 'pin-' + ch.id, pin = h('input', { type: 'checkbox', id: pinId, checked: !!ch.pinned });
+  const pinLabel = h('label', { class: 'check-inline pin-toggle', for: pinId }, pin, 'Pin as lesson');
+  const syncPin = () => {
+    pin.disabled = ch.category === ONE_OFF || ch.scope === 'matter';
+    pinLabel.title = pin.disabled ? 'A pinned lesson needs the scope "Always" and a category other than one-off.' : 'Lets this change become a rule on its own, without waiting for the minimum number of instances.';
+  };
+  syncPin();
+  const afterTag = () => { applyAi(false); syncPin(); derive(); save(); renderChrome(); updateTagProgress(); renderTagAiBar(); };
+  pin.addEventListener('change', () => { ch.pinned = pin.checked; afterTag(); if (ch.pinned) announceEvidence(ch); });
   const afterReason = debounce(() => { derive(); save(); renderChrome(); }, 400);
   // Guided flow: category -> reason -> Enter -> next untagged change (then the next step).
   cat.addEventListener('change', () => {
@@ -3647,6 +3706,7 @@ function changeCard(ch, i, n) {
     finishCard();
   });
   const seg = segmented('scope-' + ch.id, 'Scope', [['always', 'Always'], ['matter', 'This matter only']], ch.scope, v => { ch.scope = v; afterTag(); });
+  const srcSeg = segmented('src-' + ch.id, 'Reason source', [['said', SOURCE_LABEL.said], ['inferred', SOURCE_LABEL.inferred]], ch.source || 'inferred', v => { ch.source = v; afterTag(); });
 
   const reasonField = h('div', { class: 'field' }, h('label', { for: rsnId }, 'Reason'), rsn, note, sugg);
   const catField = h('div', { class: 'field' }, h('label', { for: catId }, 'Category'), cat);
@@ -3691,7 +3751,11 @@ function changeCard(ch, i, n) {
     catField,
     reasonField,
     h('div', { class: 'field' }, h('span', { class: 'label', 'aria-hidden': 'true' }, 'Scope'), seg),
-    h('div', { class: 'tag-actions' }, h('button', { type: 'button', class: 'btn btn-outline btn-sm', onmousedown: keepFocus, onclick: finishCard }, 'Save and next', ' ', arrow()))));
+    h('div', { class: 'tag-actions' },
+      h('div', { class: 'tag-more' },
+        h('div', { class: 'field field-inline' }, h('span', { class: 'label', 'aria-hidden': 'true' }, 'Reason source'), srcSeg),
+        pinLabel),
+      h('button', { type: 'button', class: 'btn btn-outline btn-sm', onmousedown: keepFocus, onclick: finishCard }, 'Save and next', ' ', arrow()))));
   applyAi(true);
   return markAiBusy(card);
 }
@@ -3733,7 +3797,8 @@ function announceEvidence(ch) {
   const rule = S.rules.find(r => r.evidenceIds.includes(ch.id));
   if (rule) { toast('Counts toward the rule "' + rule.text.replace(/\.$/, '') + '" (' + plural(liveEvidence(S, rule).length, 'instance') + ').'); return; }
   const cand = CANDS.find(c => c.members.includes(ch.id));
-  if (cand && cand.count >= candidateMin(S)) toast('Part of a candidate rule (' + plural(cand.count, 'instance') + ').');
+  if (cand && cand.pinned && cand.count < candidateMin(S)) toast('Pinned: it is a candidate rule now and can be confirmed without waiting for more instances.');
+  else if (cand && cand.count >= candidateMin(S)) toast('Part of a candidate rule (' + plural(cand.count, 'instance') + ').');
 }
 
 function renderHistory() {
@@ -3830,7 +3895,7 @@ function renderLedgerRows() {
     if (!c || (!untagged && !ch.category)) return false;
     if ((fp && c.profileId !== fp) || (ft && c.type !== ft) || (fc && ch.category !== fc) || (fs && ch.scope !== fs)) return false;
     if (q) {
-      const hay = [ch.reason, ch.del, ch.ins, ch.feedback, ch.category, c.matter, c.type, profileName(c.profileId)].join(' ').toLowerCase();
+      const hay = [ch.reason, ch.del, ch.ins, ch.feedback, ch.category, c.matter, c.type, profileName(c.profileId), ch.source === 'said' ? SOURCE_LABEL.said : '', ch.pinned ? 'pinned' : ''].join(' ').toLowerCase();
       if (!hay.includes(q)) return false;
     }
     return true;
@@ -3858,7 +3923,10 @@ function renderLedgerRows() {
           ch.del ? h('span', { class: 'mini-del' }, trunc(ch.del, 40)) : null,
           ch.del && ch.ins ? ' → ' : '',
           ch.ins ? h('span', { class: 'mini-ins' }, trunc(ch.ins, 40)) : null)),
-      h('td', { class: 'cell-reason', title: ch.reason || '' }, h('span', { class: 'trunc' }, ch.reason || '—')),
+      h('td', { class: 'cell-reason', title: ch.reason || '' }, h('span', { class: 'trunc' }, ch.reason || '—'),
+        ch.pinned || ch.source === 'said' ? h('span', { class: 'src-tags' },
+          ch.pinned ? h('span', { class: 'src-tag' }, 'Pinned') : null,
+          ch.source === 'said' ? h('span', { class: 'src-tag' }, SOURCE_LABEL.said) : null) : null),
       h('td', { style: 'white-space:nowrap' }, ch.scope === 'matter' ? 'This matter only' : 'Always'),
       h('td', { style: 'white-space:nowrap' }, c.matter || '—')));
   }
@@ -3884,7 +3952,7 @@ function renderLedgerRows() {
 RENDER.rules = () => {
   $('minEvidence').value = S.settings.minEvidence;
   const pid = S.activeProfileId, min = candidateMin(S), name = activeProfile().name;
-  const cands = CANDS.filter(c => c.profileId === pid && c.count >= min);
+  const cands = CANDS.filter(c => c.profileId === pid && (c.count >= min || c.pinned));
   const live = cands.filter(c => !c.rejected), rejected = cands.filter(c => c.rejected);
 
   const list = clear($('candList'));
@@ -3905,7 +3973,24 @@ RENDER.rules = () => {
   if (!rules.length) out.append(emptyState('No confirmed rules for ' + name + ' yet. Confirm a candidate above to start the skill.', 'Review candidates', () => $('h-rules').scrollIntoView({ behavior: reducedMotion() ? 'auto' : 'smooth' })));
   for (const r of rules) out.append(ruleCard(r));
   for (const ta of document.querySelectorAll('#view-rules textarea.rule-text')) autoGrow(ta);
+  renderStyleCard();
 };
+
+const STYLE_HINTS = { length: 'e.g. One page; summary under 150 words', format: 'e.g. Bullets, not prose; short headings', tone: 'e.g. Direct; no hedging', order: 'e.g. Bottom line first, then risks, then next steps' };
+/** "How [reviewer] wants work": stated preferences typed in by the user, since length, format, tone and order rarely show up as redlines. */
+function renderStyleCard() {
+  const p = activeProfile(), style = p.style || (p.style = {});
+  const fields = STYLE_FIELDS.map(([key, label]) => {
+    const id = 'style-' + key;
+    const inp = h('input', { type: 'text', id, value: style[key] || '', maxlength: '300', placeholder: STYLE_HINTS[key], autocomplete: 'off' });
+    inp.addEventListener('input', () => { style[key] = inp.value; saveSoon(); });
+    return h('div', { class: 'field' }, h('label', { for: id }, label), inp);
+  });
+  $('styleCard').replaceChildren(
+    h('h3', { class: 'h3', id: 'h-style' }, 'How ' + p.name + ' wants work'),
+    h('p', { class: 'meta', style: 'margin:-12px 0 18px' }, 'Stated preferences, not derived from edits. Filled-in lines head the exported skill, and its self-check steps ask for them to be confirmed by hand.'),
+    h('div', { class: 'grid-2' }, fields));
+}
 
 /** Collapsible list of supporting changes, each linking back to its change card. */
 function evidenceList(changes) {
@@ -4012,21 +4097,22 @@ function candidateCard(c) {
     check: c.suggested.check ? JSON.parse(JSON.stringify(c.suggested.check)) : null
   };
   const store = () => { S.candidateEdits[c.key] = cfg; saveSoon(); };
-  const N = S.settings.minEvidence, enough = c.count >= N;
+  const N = S.settings.minEvidence, enough = c.count >= N || c.pinned;
   const byId = new Map(S.changes.map(x => [x.id, x]));
   const ta = h('textarea', { class: 'rule-text', rows: '1', 'aria-label': 'Proposed rule wording (editable)', value: cfg.text });
   ta.addEventListener('input', () => { cfg.text = ta.value; store(); autoGrow(ta); });
   const confirmBtn = h('button', { type: 'button', class: 'btn btn-solid btn-confirm', disabled: !enough, onclick: () => confirmCandidate(c, cfg) }, 'Confirm rule', ' ', arrow());
   const members = c.members.map(id => byId.get(id)).filter(Boolean);
   return markAiBusy(h('article', { class: 'rule-card', id: 'cand-' + c.key, 'aria-label': 'Candidate rule: ' + cfg.text },
-    h('div', { class: 'rule-top' }, h('span', { class: 'chip' }, c.category), h('span', { class: 'meta' }, 'Candidate')),
+    h('div', { class: 'rule-top' }, h('span', { class: 'chip' }, c.category), basisBadges(c.source, c.pinned), h('span', { class: 'meta' }, 'Candidate')),
     ta,
     aiWordingBox(c, byId, cfg, ta, store),
     aiMergeNotes(c.aiMerges || [], members.map(x => x.reason)),
     evidenceBlock(c.count, c.dates, false),
     evidenceList(c.members.map(id => byId.get(id)).filter(Boolean)),
     ruleConfigBlock(cfg, store),
-    enough ? null : h('p', { class: 'warn-note' }, 'Needs ' + N + ' instances to confirm (has ' + c.count + ').'),
+    enough ? null : h('p', { class: 'warn-note' }, 'Needs ' + N + ' instances to confirm (has ' + c.count + '), or pin one of its changes as a lesson.'),
+    c.pinned && c.count < N ? h('p', { class: 'meta' }, 'Pinned lesson: it can be confirmed below the minimum of ' + N + ' instances.') : null,
     h('div', { class: 'actions', style: 'margin-top:0' }, confirmBtn,
       h('button', { type: 'button', class: 'btn-text', onclick: () => rejectCandidate(c) }, 'Reject'))));
 }
@@ -4065,8 +4151,15 @@ function restoreCandidate(c) {
   toast('Candidate restored.');
 }
 
+/** Badges for where a rule's reasons come from, and for a pinned lesson. */
+function basisBadges(source, pinned) {
+  return [
+    h('span', { class: 'chip muted', title: source === 'said' ? 'At least one reason was stated by the reviewer' : 'The reasons are your reading of the edits' }, source === 'said' ? "Reviewer's stated reason" : 'My inference'),
+    pinned ? h('span', { class: 'badge-pin', title: 'Counts without waiting for the minimum number of instances' }, 'Pinned lesson') : null];
+}
+
 function ruleCard(r) {
-  const ev = liveEvidence(S, r), dates = evidenceDates(S, ev), N = S.settings.minEvidence, signals = outdatedSignals(S, r);
+  const ev = liveEvidence(S, r), dates = evidenceDates(S, ev), N = S.settings.minEvidence, signals = outdatedSignals(S, r), pinned = hasPinned(ev);
   const ta = h('textarea', { class: 'rule-text', rows: '1', 'aria-label': 'Rule wording (editable)', value: r.text });
   ta.addEventListener('input', () => { autoGrow(ta); if (ta.value.trim()) { r.text = ta.value; saveSoon(); } });
   ta.addEventListener('change', () => { if (!ta.value.trim()) ta.value = r.text; });
@@ -4074,13 +4167,14 @@ function ruleCard(r) {
     h('div', { class: 'rule-top' },
       h('span', { class: 'badge-confirmed' }, '★ Confirmed'),
       h('span', { class: 'chip' }, r.category),
+      ev.length ? basisBadges(evidenceSource(ev), pinned) : null,
       signals.length ? h('span', { class: 'badge-amber' }, 'May be outdated') : null,
       h('span', { class: 'spacer' }),
-      h('span', { class: 'meta' }, 'Confirmed ' + fmtDate(r.confirmedAt))),
+      h('span', { class: 'meta' }, 'Confirmed ' + fmtDate(r.confirmedAt) + (dates.latest ? ' · Last seen ' + fmtDate(dates.latest) : ''))),
     ta,
     evidenceBlock(ev.length, dates, true),
     aiMergeNotes(aiMergesIn(S, r.profileId, r.category, ev.map(x => x.reason).concat(r.seedReasons || [])), ev.map(x => x.reason).concat(r.seedReasons || [])),
-    ev.length < N ? h('p', { class: 'warn-note' }, 'Below the minimum of ' + N + ' instances, so it is left out of the skill.') : null,
+    ev.length < N && !pinned ? h('p', { class: 'warn-note' }, 'Below the minimum of ' + N + ' instances, so it is left out of the skill.') : null,
     signals.length ? h('div', { class: 'outdated-note', role: 'note' },
       h('strong', null, 'Newer evidence may contradict this rule.'),
       signals.map(s => h('div', { style: 'margin-top:6px' }, '• ' + s.text)),
@@ -4674,9 +4768,13 @@ function renderPrintSheet(sk) {
       h('p', { class: 'ps-meta' }, versionLine(sk.v)),
       h('p', { class: 'ps-meta' }, TOOL_CREDIT)),
     h('p', { style: 'margin-top:10pt' }, h('b', null, 'Purpose: '), s.purpose),
+    s.style.length ? h('h2', null, s.styleHead) : null,
+    s.style.length ? h('p', { class: 'ps-line' }, h('i', null, s.styleNote)) : null,
+    s.style.length ? h('ul', null, s.style.map(x => h('li', null, h('b', null, x.label + ': '), x.text))) : null,
     h('h2', null, 'Rules'),
     s.rules.length ? h('ol', null, s.rules.map(r => h('li', null,
-      h('span', { class: 'ps-rule' }, r.text), ' ', h('span', { class: 'ps-cat' }, '[' + r.category + ']'),
+      h('span', { class: 'ps-rule' }, r.text), ' ', h('span', { class: 'ps-cat' }, '[' + r.category + '] (' + r.basis + ')'),
+      r.review ? h('p', { class: 'ps-line' }, h('b', null, r.review)) : null,
       h('p', { class: 'ps-line' }, h('b', null, 'Evidence: '), r.evidence),
       r.example ? h('p', { class: 'ps-line' }, h('b', null, 'Example: '), h('i', null, r.example)) : null,
       r.scope ? h('p', { class: 'ps-line' }, h('b', null, 'Applies to: '), r.scope) : null)))
