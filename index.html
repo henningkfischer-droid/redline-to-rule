@@ -607,6 +607,16 @@ details.cfg>summary::-webkit-details-marker{display:none}
 .cfg-edit::after{content:" ▾"}
 details.cfg[open] .cfg-edit::after{content:" ▴"}
 details.cfg .rule-config{background:transparent!important;padding-top:0}
+/* Example in the export (v1.5.1) */
+.ex-block{background:var(--bg-alt);border-radius:6px;padding:14px 18px 12px;margin-bottom:14px;display:grid;gap:10px;justify-items:start}
+.band.alt .ex-block{background:rgba(0,0,0,.035)}
+html[data-theme="dark"] .band.alt .ex-block{background:rgba(255,255,255,.04)}
+.ex-block input[type=text]{width:100%}
+.ex-block .seg{flex-wrap:wrap;max-width:100%}
+@media (max-width:600px){.ex-block .seg label{padding:7px 11px}}
+.ex-quote{margin:0;padding:2px 0 2px 14px;border-left:3px solid var(--line);font:italic 16.5px/1.5 var(--serif);white-space:pre-wrap;overflow-wrap:anywhere}
+.ex-source,.ex-status,.ex-off{font-size:13.5px;color:var(--text-2);margin:0}
+.ex-hint{font-size:13.5px;color:var(--amber-text);margin:0}
 .rule-card{transition:box-shadow .3s}
 @media (max-width:600px){
   .next-bar{left:12px;right:12px;transform:none;width:auto;bottom:12px;padding-left:16px;gap:10px}
@@ -828,7 +838,7 @@ body.print-preview #printSheet{display:block;padding:40px 16px}
         <div class="step"><div class="step-n">1</div><h3>Compare and tag</h3><p><b>1.1 Compare.</b> Use your draft and the clean version that came back, one Word file with tracked changes, or your notes when the feedback was only oral. Every change is shown exactly.</p><p><b>1.2 Tag.</b> Record why each change was made: a category, a one-line reason and a scope.</p></div>
         <div class="step"><div class="step-n">2</div><h3>Ledger</h3><p>Every tagged change in one searchable record: the evidence behind your rules.</p></div>
         <div class="step"><div class="step-n">3</div><h3>Rules</h3><p><b>3.1 Learn.</b> Recurring tagged changes become candidate rules, each with its evidence attached.</p><p><b>3.2 Confirm.</b> Accept or reject candidates. Only rules with enough evidence enter the skill.</p></div>
-        <div class="step"><div class="step-n">4</div><h3>Export</h3><p>Compile the confirmed rules, each with an example and its self-checks, into a skill for your firm's approved AI tool, where new drafts are checked. Also as a Markdown, Word or PDF rules sheet.</p></div>
+        <div class="step"><div class="step-n">4</div><h3>Export</h3><p>Compile the confirmed rules, each with its self-checks and, once you choose one, an example, into a skill for your firm's approved AI tool, where new drafts are checked. Also as a Markdown, Word or PDF rules sheet.</p></div>
       </div>
       <div class="card try-card" role="group" aria-labelledby="h-try">
         <div class="try-text">
@@ -1046,7 +1056,7 @@ body.print-preview #printSheet{display:block;padding:40px 16px}
       <div class="sec-head">
         <p class="eyebrow">Step 3.2 · Confirm</p>
         <h2 class="tw" id="h-confirmed">Confirmed <strong>rules</strong></h2>
-        <p class="lede">Each rule keeps its evidence, shows whether its reasons were stated by the reviewer or inferred by you, and when it was last seen. A rule is flagged "May be outdated" when newer evidence contradicts it.</p>
+        <p class="lede">Each rule keeps its evidence, shows whether its reasons were stated by the reviewer or inferred by you, and when it was last seen. An example quoted from a draft enters the exports only after you choose it. A rule is flagged "May be outdated" when newer evidence contradicts it.</p>
       </div>
       <div class="card style-card" id="styleCard" style="margin-bottom:28px"></div>
       <div id="ruleList" class="rule-list"></div>
@@ -1062,7 +1072,7 @@ body.print-preview #printSheet{display:block;padding:40px 16px}
         <p class="eyebrow">Step 4 · Export</p>
         <h2 class="tw" id="h-export" tabindex="-1">Export the <strong>skill</strong></h2>
         <p class="lede">A portable skill built from the confirmed rules for <span id="exportProfileName">this reviewer</span>. Load it into your firm's approved AI tool: its self-check steps are where a new draft gets checked.
-          <span class="help-wrap"><button type="button" class="help" aria-expanded="false" aria-controls="help-export" aria-label="Help: export">?</button><span class="help-pop" id="help-export" role="tooltip" hidden>The version number goes up each time you copy or download a skill whose rules have changed. Rules below the minimum number of instances are left out, unless they are pinned lessons. Each rule says whether its reason was stated by the reviewer and when it was last seen; a rule that newer evidence may contradict is marked "Under review".</span></span>
+          <span class="help-wrap"><button type="button" class="help" aria-expanded="false" aria-controls="help-export" aria-label="Help: export">?</button><span class="help-pop" id="help-export" role="tooltip" hidden>The version number goes up each time you copy or download a skill whose rules have changed. Rules below the minimum number of instances are left out, unless they are pinned lessons. An example quoted from a draft enters the skill only after you choose it on the rule's card. Each rule says whether its reason was stated by the reviewer and when it was last seen; a rule that newer evidence may contradict is marked "Under review".</span></span>
         </p>
       </div>
       <div class="card">
@@ -1071,6 +1081,10 @@ body.print-preview #printSheet{display:block;padding:40px 16px}
           <div class="field"><label for="expType">Applies to</label><select id="expType"></select></div>
         </div>
         <div class="field" style="margin-top:20px"><label for="expPurpose">Purpose</label><textarea id="expPurpose" style="min-height:90px"></textarea></div>
+        <div class="field ex-export" style="margin-top:20px">
+          <label class="check-inline" for="expExamples"><input type="checkbox" id="expExamples"> Include examples</label>
+          <p class="meta" id="examplesNote" aria-live="polite"></p>
+        </div>
         <div class="field" style="margin-top:24px"><span class="label">Preview</span><pre class="skill-preview" id="skillPreview" tabindex="0" aria-label="Skill preview"></pre></div>
         <div class="actions">
           <button type="button" class="btn btn-solid" id="btnCopySkill">Copy to clipboard <span class="arr" aria-hidden="true">→</span></button>
@@ -1231,7 +1245,7 @@ body.print-preview #printSheet{display:block;padding:40px 16px}
    ========================================================================== */
 'use strict';
 
-const APP_VERSION = '1.5.0';
+const APP_VERSION = '1.5.1';
 const COURSE_LINE = 'NYU School of Law · Artificial Intelligence and Corporate Deals and Advice';
 const TOOL_CREDIT = 'Made with Redline to Rule, by Henning Fischer.';
 const STORAGE_KEY = 'redlineToRule.v1';
@@ -1769,7 +1783,8 @@ function ruleFromCandidate(st, cand, cfg) {
   return {
     id: uid('r'), profileId: cand.profileId, category: cand.category, text: String(cfg.text || '').trim(),
     deliverableScope: cfg.deliverableScope || 'all', checkType: auto ? 'auto' : 'human', check: auto ? cfg.check : null,
-    evidenceIds: cand.members.slice(), seedReasons: [...new Set(reasons)], confirmedAt: todayISO(), dismissed: []
+    evidenceIds: cand.members.slice(), seedReasons: [...new Set(reasons)], confirmedAt: todayISO(), dismissed: [],
+    exampleMode: '', exampleText: '', exampleChangeId: '', exampleHash: ''   // no example until the user chooses one
   };
 }
 
@@ -2109,28 +2124,150 @@ function activeRules(st, profileId, type) {
   return st.rules.filter(r => r.profileId === profileId && ruleApplies(r, type) && ruleCounts(st, r));
 }
 
-/** One evidence change as a short example: a before -> after pair if there is one, else the shortest edit or oral note. */
-function ruleExample(changes) {
+/**
+ * One evidence change as a short example: {text, parts}. `parts` are the quoted pieces as they appear
+ * inside the quote marks (the client-detail hint reads those).
+ */
+function exampleParts(c) {
+  const q = s => clip(s, 140);
+  if (c.kind === 'oral') { const p = q(c.feedback); return { text: 'the reviewer said "' + p + '"', parts: [p] }; }
+  if (c.del && c.ins) {
+    // A short replacement reads better with the words that lead into it.
+    const lead = countWords(c.del) < 4 && countWords(c.ins) < 6 ? wordsOf(c.before.replace(/[…¶]/g, ' ')).slice(-4).join(' ') : '';
+    const parts = lead ? [q('…' + lead + ' ' + c.del), q('…' + lead + ' ' + c.ins)] : [q(c.del), q(c.ins)];
+    return { text: '"' + parts[0] + '" → "' + parts[1] + '"', parts };
+  }
+  const p = q(c.del || c.ins);
+  return { text: (c.del ? 'deleted "' : 'added "') + p + '"', parts: [p] };
+}
+function exampleOf(c) { return exampleParts(c).text; }
+/** The change a rule's example would quote: a before -> after pair if there is one, else the shortest edit or oral note. {change, text} or null. */
+function pickExample(changes) {
   const usable = changes.filter(c => c.kind === 'oral' ? (c.feedback || '').trim() : (c.del || c.ins));
-  if (!usable.length) return '';
+  if (!usable.length) return null;
   const letters = s => String(s || '').replace(/[^\p{L}\p{N}]/gu, '').length;
-  const q = s => '"' + clip(s, 140) + '"';
-  const show = c => {
-    if (c.kind === 'oral') return 'the reviewer said ' + q(c.feedback);
-    if (c.del && c.ins) {
-      // A short replacement reads better with the words that lead into it.
-      const lead = countWords(c.del) < 4 && countWords(c.ins) < 6 ? wordsOf(c.before.replace(/[…¶]/g, ' ')).slice(-4).join(' ') : '';
-      return lead ? q('…' + lead + ' ' + c.del) + ' → ' + q('…' + lead + ' ' + c.ins) : q(c.del) + ' → ' + q(c.ins);
-    }
-    return c.del ? 'deleted ' + q(c.del) : 'added ' + q(c.ins);
-  };
   // Prefer a before -> after pair with real words in it, about a sentence long; whole rewritten paragraphs come last.
   const rank = c => {
-    const n = letters(show(c));
+    const n = letters(exampleOf(c));
     return (c.kind === 'oral' ? 3 : c.kind === 'paragraph' ? 2 : c.del && c.ins ? 0 : 1) * 1e6 + (n < 15 ? 5e5 : 0) + Math.abs(n - 70);
   };
-  return show(usable.slice().sort((a, b) => rank(a) - rank(b))[0]);
+  const change = usable.slice().sort((a, b) => rank(a) - rank(b))[0];
+  return { change, text: exampleOf(change) };
 }
+function ruleExample(changes) { const p = pickExample(changes); return p ? p.text : ''; }
+
+/* --------------------- Examples in the export (v1.5.1): nothing is quoted unless chosen ---------------------
+   An example quotes a real edit, and a rulebook gathers edits from many matters: client text must not reach an
+   export the user has not cleared. Each rule therefore carries a choice (exampleMode):
+     ''      not chosen yet (new rules and rules from before v1.5.1): no example is exported
+     'auto'  "Auto: use this quote": the quote of one chosen edit (exampleChangeId), checked by a fingerprint of the
+             text the user saw (exampleHash). The text itself is not stored, so deleting a matter's comparison also
+             removes its quote; when the edit leaves the evidence the choice lapses and nothing is exported.
+     'own'   the user's own wording (exampleText, one line, at most OWN_EXAMPLE_MAX characters)
+     'none'  no example
+   settings.includeExamples = false leaves every example out. */
+const EXAMPLE_MODES = ['auto', 'own', 'none'];
+const OWN_EXAMPLE_MAX = 200;
+/** FNV-1a, 32 bits: a second hash next to hashStr (djb2), whose collisions are easy to build ("Ab" and "BA"). */
+function fnv1a(s) {
+  let h = 0x811c9dc5;
+  for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 0x01000193); }
+  return (h >>> 0).toString(36);
+}
+function exampleFingerprint(s) { s = String(s); return s.length + ':' + hashStr(s) + ':' + fnv1a(s); }
+/** Own wording is one line (it cannot start a new line in the skill) of at most OWN_EXAMPLE_MAX characters. */
+function cleanOwnExample(s) { return String(s || '').replace(/\s+/g, ' ').trim().slice(0, OWN_EXAMPLE_MAX); }
+/** "Auto: use this quote": the user chose the quote `text` of `change`, as shown to them. */
+function chooseAutoExample(rule, change, text) {
+  rule.exampleMode = 'auto'; rule.exampleChangeId = change.id; rule.exampleHash = exampleFingerprint(text);
+}
+/**
+ * Where a rule's example stands, given its live evidence `ev`: {state, text, change, proposal}.
+ *  state: 'unchosen' | 'lapsed' (the chosen edit left the evidence or its text no longer matches) | 'auto' | 'own' |
+ *         'empty' (own wording chosen but blank) | 'none'
+ *  text: what the export carries while examples are on ('' unless 'auto' or 'own')
+ *  change: the chosen edit ('auto'); proposal: {change, text} the card offers for "Auto: use this quote".
+ */
+function exampleChoice(rule, ev) {
+  const proposal = pickExample(ev), mode = rule.exampleMode || '';
+  if (mode === 'none') return { state: 'none', text: '', change: null, proposal };
+  if (mode === 'own') { const text = cleanOwnExample(rule.exampleText); return { state: text ? 'own' : 'empty', text, change: null, proposal }; }
+  if (mode === 'auto' && rule.exampleChangeId) {
+    const change = ev.find(c => c.id === rule.exampleChangeId), text = change ? exampleOf(change) : '';
+    if (change && exampleFingerprint(text) === rule.exampleHash) return { state: 'auto', text, change, proposal };
+    return { state: 'lapsed', text: '', change: null, proposal };
+  }
+  return { state: 'unchosen', text: '', change: null, proposal };
+}
+/** The example a rule carries in every export format ('' for none). */
+function exportExample(st, rule, ev) { return st.settings.includeExamples === false ? '' : exampleChoice(rule, ev).text; }
+/** Export screen: how many of the skill's rules carry a chosen example, and how many still wait for a choice. */
+function examplesSummary(st, profileId, type) {
+  const rules = activeRules(st, profileId, type), states = rules.map(r => exampleChoice(r, liveEvidence(st, r)).state);
+  const waitingIdx = states.map((s, i) => ['unchosen', 'lapsed', 'empty'].includes(s) ? i : -1).filter(i => i >= 0);
+  return { total: rules.length, chosen: states.filter(s => s === 'auto' || s === 'own').length, waiting: waitingIdx.length, firstWaiting: waitingIdx.length ? rules[waitingIdx[0]].id : '' };
+}
+
+/* Client-detail hint: a simple pattern check, not a guarantee. It lists words that look like names (capitalised
+   words other than Buyer, Seller, Target, the built-in ignore list and the rule's own words), amounts, dates and
+   email addresses. A single capitalised word at the start of a sentence is left out: in feedback it is usually an
+   imperative ("Drop the background"), so "Acme shall pay" alone is missed. Words inside [brackets] are markers. */
+const HINT_IGNORE = new Set(['buyer', 'seller', 'target'].concat(DEFAULT_IGNORE.toLowerCase().split(/,\s*/)));
+const HINT_MONTHS = 'Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|June?|July?|Aug(?:ust)?|Sep(?:t(?:ember)?)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?';
+const HINT_PATTERNS = [
+  /[\p{L}\p{N}._%+-]+@[\p{L}\p{N}-]+(?:\.[\p{L}\p{N}-]+)+/gu,                                    // email
+  new RegExp('\\b\\d{1,2}(?:st|nd|rd|th)?\\.?\\s(?:' + HINT_MONTHS + ')\\b(?:\\.?,?\\s\\d{4}\\b)?', 'g'),     // 3 March 2026, 30 June
+  new RegExp('\\b(?:' + HINT_MONTHS + ')\\.?\\s\\d{1,2}(?:st|nd|rd|th)?\\b(?:,?\\s\\d{4}\\b)?', 'g'),        // March 3, 2026, March 3
+  /\b\d{4}[-/]\d{2}[-/]\d{2}\b/g, /\b\d{1,2}[./-]\d{1,2}[./-]\d{2,4}\b/g,                         // 2026-03-03, 03/03/2026, 03-03-2026
+  /(?:\b[A-Z]{1,3})?(?:[$€£¥₹]|\b(?:USD|EUR|GBP|CHF|JPY|CAD|AUD)\b)\s?\d[\d,.]*(?:\s?(?:million|billion|thousand|mn|bn|m|k)\b)?/gi, // $4.2m, US$5m, USD 10 million
+  /\b\d[\d.,]*\s?(?:[$€£¥₹]|(?:USD|EUR|GBP|CHF|JPY|CAD|AUD|SEK|NOK|DKK|HKD|SGD|INR)\b|(?:euros?|dollars?|pounds?|francs?)\b)/giu, // 500 €, 750 dollars
+  /\b\d[\d,.]*\s?(?:million|billion|thousand|mn|bn)\b/gi,                                             // 10 million
+  /\b\d+(?:[.,]\d+)?\s?(?:%|per ?cent\b|percent\b)/gi,                                                  // 15%
+  /\b\d{1,3}(?:,\d{3})+(?:\.\d+)?\b/g, /\b\d{1,3}(?:\.\d{3})+(?:,\d+)?\b/g, /\b\d{5,}\b/g,               // 4,250,000 and 4.250.000
+  /\b(?:19|20)\d{2}\b/g                                                                              // 2025
+];
+/** Titles, initials and abbreviations whose full stop does not end a sentence ("Mr. Smith", "J. Smith", "e.g. Siemens"). */
+const HINT_ABBR = /^(?:mr|mrs|ms|dr|prof|st|messrs|e\.g|i\.e|cf|v|vs|no|inc|ltd|co|corp|\p{L})$/iu;
+function exampleHints(parts, ruleText) {
+  const ruleWords = new Set(wordsOf(ruleText).map(normWord));
+  const allowed = w => { const l = w.toLowerCase().replace(/['’]s$/, ''); return HINT_IGNORE.has(l) || HINT_IGNORE.has(l.replace(/s$/, '')) || STOP.has(l) || ruleWords.has(normWord(l)); };
+  const out = [];
+  for (const part of [].concat(parts)) {
+    const text = String(part || '').replace(/\[[^\]]*\]/g, m => ' '.repeat(m.length));   // markers, length kept so positions hold
+    const found = [], inside = i => found.some(f => i >= f.i && i < f.i + f.len);
+    for (const re of HINT_PATTERNS) for (const m of text.matchAll(re)) {
+      const t = m[0].replace(/[.,]+$/, '');
+      if (!inside(m.index) && !inside(m.index + t.length - 1)) found.push({ i: m.index, len: t.length, t });
+    }
+    // Names: runs of capitalised words that are not allowed; punctuation inside a word or after it ends the run.
+    const toks = [...text.matchAll(/\S+/g)].map(m => {
+      const raw = m[0], lead = raw.match(/^[^\p{L}\p{N}]*/u)[0], trail = raw.match(/[^\p{L}\p{N}]*$/u)[0];
+      return { i: m.index + lead.length, raw, lead, trail, core: raw.slice(lead.length, raw.length - trail.length || undefined) };
+    });
+    let run = [];
+    const flush = () => {
+      // A lone capitalised word that starts a sentence is left out (unless it is all capitals, like ACME).
+      const lone = run.length === 1 && run[0].start && !(run[0].core.length > 1 && run[0].core === run[0].core.toUpperCase());
+      if (run.length && !lone) found.push({ i: run[0].i, len: 0, t: run.map(x => x.core.replace(/['’]s$/, '')).join(' ') });
+      run = [];
+    };
+    toks.forEach((tk, k) => {
+      const prev = toks[k - 1];
+      // A sentence starts at the beginning of a piece (not after "…" or "("), after . ! ? : ; and after a dash, bullet or arrow.
+      const abbr = t => t && t.trail.startsWith('.') && HINT_ABBR.test(t.core);
+      const start = !/[…(]|^\.\.\./.test(tk.lead) && (k === 0 || (/[.!?:;]["”’)]*$/.test(prev.raw) && !abbr(prev)) || /^[-–—•*→]+$/.test(prev.raw));
+      const overlaps = [...tk.core].some((_, j) => inside(tk.i + j));
+      const cap = /^\p{Lu}/u.test(tk.core) && !overlaps && !allowed(tk.core);
+      if (!cap || tk.lead) flush();   // "(Acme" or "\"Acme" starts a new run
+      if (cap) { run.push(Object.assign({ start: !run.length && start }, tk)); if (tk.trail && !(tk.trail === '.' && abbr(tk))) flush(); }
+    });
+    flush();
+    for (const f of found.sort((a, b) => a.i - b.i)) if (f.t && !out.includes(f.t)) out.push(f.t);
+  }
+  return out;
+}
+/** The hint for an Auto example reads the quoted pieces of its edit. */
+function autoExampleHints(change, ruleText) { return exampleHints(exampleParts(change).parts, ruleText); }
 
 /**
  * The skill as structured data, shared by the plain-text skill, the Word file and the
@@ -2146,7 +2283,7 @@ function skillSheet(st, profileId, type, meta) {
       n: i + 1, category: r.category, text: r.text,
       basis: [evidenceSource(ev) === 'said' ? "reviewer's stated reason" : 'inferred from edits'].concat(hasPinned(ev) ? ['pinned lesson'] : []).join('; '),
       evidence: plural(ev.length, 'instance') + ' in ' + plural(d.docs, 'draft') + ', ' + seenText(d) + '.',
-      example: ruleExample(ev), scope: r.deliverableScope !== 'all' ? r.deliverableScope + ' only.' : '',
+      example: exportExample(st, r, ev), scope: r.deliverableScope !== 'all' ? r.deliverableScope + ' only.' : '',
       check: r.checkType === 'auto' && r.check ? describeCheck(r.check) : '',
       review: outdatedSignals(st, r).length ? 'Under review: a newer edit may contradict this rule.' : ''
     };
@@ -2552,7 +2689,7 @@ function defaultState() {
     categories: DEFAULT_CATEGORIES.slice(), deliverableTypes: DEFAULT_TYPES.slice(),
     comparisons: [], changes: [], rules: [], rejected: [], candidateEdits: {}, skillVersions: {},
     aiMerges: [], aiWordings: {},
-    settings: { minEvidence: 2, theme: null, ai: false },
+    settings: { minEvidence: 2, theme: null, ai: false, includeExamples: true },
     ui: { openComparisonId: null, compareMode: 'two', compareDraft: {}, exportMeta: {} }
   };
 }
@@ -2607,7 +2744,10 @@ function migrate(raw) {
       id: r.id, profileId: str(r.profileId, 100), category: str(r.category, 60), text: str(r.text, 1000),
       deliverableScope: str(r.deliverableScope, 60) || 'all', checkType: r.checkType === 'auto' && check ? 'auto' : 'human',
       check, evidenceIds: ids(r.evidenceIds), confirmedAt: str(r.confirmedAt, 40), dismissed: ids(r.dismissed),
-      seedReasons: Array.isArray(r.seedReasons) ? r.seedReasons.filter(x => typeof x === 'string').map(x => x.slice(0, 300)) : undefined
+      seedReasons: Array.isArray(r.seedReasons) ? r.seedReasons.filter(x => typeof x === 'string').map(x => x.slice(0, 300)) : undefined,
+      // v1.5.1: rules from older data and backups start with no example chosen, so nothing is quoted until the user chooses.
+      exampleMode: EXAMPLE_MODES.includes(r.exampleMode) ? r.exampleMode : '', exampleText: cleanOwnExample(str(r.exampleText, 2000)),
+      exampleChangeId: str(r.exampleChangeId, 100), exampleHash: /^\d+:[0-9a-z]+:[0-9a-z]+$/.test(str(r.exampleHash, 60)) ? r.exampleHash : ''
     };
   });
   st.rejected = arr(raw.rejected).filter(r => r && typeof r.key === 'string').map(r => ({ key: r.key, profileId: str(r.profileId, 100), category: str(r.category, 60), memberIds: ids(r.memberIds) }));
@@ -2629,7 +2769,8 @@ function migrate(raw) {
     if (str(e.text, 1000)) st.aiWordings[k] = { text: str(e.text, 1000), sig: str(e.sig, 40), model: str(e.model, 80) };
   }
   const s = obj(raw.settings);
-  st.settings = { minEvidence: Math.min(20, Math.max(1, Math.floor(Number(s.minEvidence)) || 2)), theme: s.theme === 'dark' || s.theme === 'light' ? s.theme : null, ai: s.ai === true };
+  st.settings = { minEvidence: Math.min(20, Math.max(1, Math.floor(Number(s.minEvidence)) || 2)), theme: s.theme === 'dark' || s.theme === 'light' ? s.theme : null, ai: s.ai === true,
+    includeExamples: s.includeExamples === undefined || s.includeExamples === true };   // missing: on; anything but true: off
   const u = obj(raw.ui), cd = obj(u.compareDraft), em = obj(u.exportMeta);
   st.ui = {
     openComparisonId: cmpIds.has(u.openComparisonId) ? u.openComparisonId : null,
@@ -4181,9 +4322,69 @@ function ruleCard(r) {
       h('div', { class: 'actions', style: 'margin-top:8px' },
         h('button', { type: 'button', class: 'btn-text', onclick: () => keepRule(r, signals) }, 'Keep the rule as it is'))) : null,
     ev.length ? evidenceList(ev) : null,
+    exampleBlock(r, ev),
     ruleConfigBlock(r, () => { if (r.checkType === 'auto' && !r.check) r.checkType = 'human'; saveSoon(); }),
     h('div', { class: 'actions', style: 'margin-top:0' },
       h('button', { type: 'button', class: 'btn-text danger', onclick: () => removeRule(r) }, 'Remove rule')));
+}
+
+/** Where a quoted example comes from: a real draft, or the user's notes of oral feedback. */
+function exampleSource(change) {
+  const cmp = cmpById(change.comparisonId) || {}, where = (cmp.matter || 'No matter label') + ' (' + (cmp.type || 'Other') + ', ' + fmtDate(cmp.date) + ')';
+  return (change.kind === 'oral' ? 'Quoted from your notes of what the reviewer said: ' : 'Quoted word for word from a real draft: ') + where + '. Check it holds no client details.';
+}
+/** The client-detail hint: words that look like names, amounts or dates. Nothing is shown when nothing matches. */
+function hintNote(tokens) {
+  if (!tokens.length) return null;
+  return h('p', { class: 'ex-hint' }, h('strong', null, 'Possible client details: '),
+    tokens.slice(0, 5).join(', ') + (tokens.length > 5 ? ' (+' + (tokens.length - 5) + ' more)' : '') + '. A simple pattern check: it can miss details and flag harmless words.');
+}
+const EXAMPLE_STATUS = {
+  unchosen: 'Not chosen yet, so the exports have no example for this rule.',
+  lapsed: "The edit you chose is no longer in this rule's evidence, so its quote is left out. Choose again (it returns by itself if that edit comes back).",
+  auto: 'In the export: this quote.', own: 'In the export: your own wording.',
+  empty: 'Type an example, or choose No example.', none: 'No example in the exports for this rule.'
+};
+/** Rule card: which example the exports carry. Nothing is quoted until the user chooses (v1.5.1). */
+function exampleBlock(r, ev) {
+  const wrap = h('div', { class: 'ex-block', id: 'ex-' + r.id });
+  const draw = focusId => {
+    const ch = exampleChoice(r, ev), shown = ch.state === 'auto' ? { change: ch.change, text: ch.text } : ch.proposal;
+    const value = ch.state === 'auto' ? 'auto' : ch.state === 'own' || ch.state === 'empty' ? 'own' : ch.state === 'none' ? 'none' : '';
+    const options = (shown ? [['auto', 'Auto: use this quote']] : []).concat([['own', 'My own wording'], ['none', 'No example']]);
+    // The quote chosen is the one on screen (`shown`), so a card drawn before newer evidence can only fail closed.
+    const seg = segmented('exm-' + r.id, 'Example in the export', options, value, v => {
+      if (v === 'auto') chooseAutoExample(r, shown.change, shown.text); else r.exampleMode = v;
+      saveSoon(); renderNextBar(); draw('exm-' + r.id + '-' + v);
+    });
+    const statusText = st => S.settings.includeExamples === false && (st === 'auto' || st === 'own') ? 'Chosen; left out while examples are switched off.' : EXAMPLE_STATUS[st];
+    const status = h('p', { class: 'ex-status' }, statusText(ch.state));
+    const kids = [h('span', { class: 'label' }, 'Example in the export'),
+      S.settings.includeExamples === false ? h('p', { class: 'ex-off' }, 'Examples are switched off on the Export screen.') : null, seg];
+    if (value === 'own') {
+      const inp = h('input', { type: 'text', id: 'exText-' + r.id, value: r.exampleText || '', maxlength: String(OWN_EXAMPLE_MAX), autocomplete: 'off', spellcheck: 'false',
+        placeholder: 'e.g. "Buyer may wish to consider" → "Buyer should"', 'aria-label': 'Your own example for this rule' });
+      const hint = h('div', null, hintNote(exampleHints(cleanOwnExample(inp.value), r.text)));
+      inp.addEventListener('input', () => {
+        r.exampleText = inp.value.replace(/[\r\n]+/g, ' ').slice(0, OWN_EXAMPLE_MAX); saveSoon(); renderNextBar();
+        status.textContent = statusText(exampleChoice(r, ev).state);
+        hint.replaceChildren(...[hintNote(exampleHints(cleanOwnExample(inp.value), r.text))].filter(Boolean));
+      });
+      kids.push(inp, hint);
+    }
+    // Whenever "Auto: use this quote" is offered, the quote it would use is on screen, so the choice never binds unseen text.
+    if (shown) {
+      kids.push(value === 'auto' || !value ? null : h('p', { class: 'ex-source' }, 'Auto would use this quote:'),
+        h('blockquote', { class: 'ex-quote' }, shown.text), h('p', { class: 'ex-source' }, exampleSource(shown.change)), hintNote(autoExampleHints(shown.change, r.text)));
+    } else if (value !== 'none' && value !== 'own') {
+      kids.push(h('p', { class: 'ex-source' }, 'This rule has no remaining evidence, so there is no quote to use.'));
+    }
+    kids.push(status);
+    wrap.replaceChildren(...kids.filter(Boolean));
+    if (focusId && $(focusId)) $(focusId).focus();
+  };
+  draw();
+  return wrap;
 }
 
 function keepRule(r, signals) {
@@ -4228,7 +4429,27 @@ function currentSkill() {
   const key = skillKey(pid, type), v = skillVersion(S, key, sk.hash);
   return Object.assign(sk, { key, v, name: m.name.trim() || activeProfile().name + ' drafting skill', text: sk.body + '\n\n' + versionLine(v) });
 }
-function updatePreview() { $('skillPreview').textContent = currentSkill().text; }
+function updatePreview() { $('skillPreview').textContent = currentSkill().text; renderExamplesNote(); }
+/** Export screen: the "Include examples" switch and how many rules carry an example the user chose. */
+function renderExamplesNote() {
+  const note = $('examplesNote'), on = S.settings.includeExamples !== false;
+  $('expExamples').checked = on;
+  if (!on) { note.dataset.text = ''; note.replaceChildren('Examples are switched off: no rule in the skill carries one.'); return; }
+  const s = examplesSummary(S, S.activeProfileId, $('expType').value || 'all');
+  if (!s.total) { note.dataset.text = ''; note.replaceChildren(); return; }
+  const review = () => {
+    const first = examplesSummary(S, S.activeProfileId, $('expType').value || 'all').firstWaiting, r = S.rules.find(x => x.id === first);
+    if (!r) return;
+    const c = exampleChoice(r, liveEvidence(S, r));
+    goTo('rules', c.state === 'empty' ? 'exText-' + r.id : 'exm-' + r.id + '-' + (c.proposal ? 'auto' : 'own'));
+  };
+  const text = s.chosen + ' of ' + s.total + ' rules carry an example you chose.' +
+    (s.waiting ? ' ' + plural(s.waiting, 'rule') + (s.waiting === 1 ? ' has no example chosen yet, so it is' : ' have no example chosen yet, so they are') + ' exported without one. ' : '');
+  // The note is a live region: rewrite it only when its content changes, not on every keystroke in Skill name or Purpose.
+  if (note.dataset.text === text) return;
+  note.dataset.text = text;
+  note.replaceChildren(text, s.waiting ? h('button', { type: 'button', class: 'btn-text', id: 'btnReviewExamples', onclick: review }, 'Review examples') : null);
+}
 function recordVersion(sk) { S.skillVersions[sk.key] = { n: sk.v, hash: sk.hash }; save(); }
 
 async function copyText(text) {
@@ -4260,6 +4481,7 @@ async function importBackup(file) {
   const ok = await askConfirm({ title: 'Replace current data?', body: 'The backup has ' + plural(next.profiles.length, 'profile') + ', ' + plural(next.comparisons.length, 'comparison') + ' and ' + plural(next.rules.length, 'rule') + '. It replaces everything stored in this browser now.', ok: 'Import backup' });
   if (!ok) return;
   next.settings.ai = S.settings.ai;   // a backup never switches AI on (or off) by itself
+  if (S.settings.includeExamples === false) next.settings.includeExamples = false;   // nor examples back on
   S = next; compareFormFilled = false;
   applyTheme(); commit();
   toast('Backup imported.');
@@ -4398,7 +4620,7 @@ function nextStep() {
     const updated = Object.keys(S.skillVersions).some(k => k.startsWith(pid + '|'));
     return currentView === 'export'
       ? { step: 'Export', text: 'copy the ' + (updated ? 'updated ' : '') + 'skill into your AI tool', btn: 'Copy skill', run: copySkill }
-      : { step: 'Export', text: (updated ? 'the skill has new evidence: export the updated version for ' : 'export the skill for ') + name, btn: 'Export skill', run: () => goTo('export', 'btnCopySkill') };
+      : { step: 'Export', text: (updated ? 'the skill has changed: export the updated version for ' : 'export the skill for ') + name, btn: 'Export skill', run: () => goTo('export', 'btnCopySkill') };
   }
   return { step: 'Repeat', text: 'compare the next draft that comes back', btn: 'Compare drafts', run: () => goTo('compare', S.ui.compareMode === 'redline' ? 'redlineFile' : S.ui.compareMode === 'oral' ? 'txtOral' : 'txtSent') };
 }
@@ -4861,19 +5083,21 @@ const TOUR = [
     } },
   { title: 'Recurring edits become rules', text: 'When the same kind of edit comes back, it becomes a candidate rule with its evidence attached. You adjust the wording, then confirm or reject it. Only rules with enough evidence count.',
     go: async live => await tourGo('rules', live) && (document.querySelector('#candList .rule-card') || document.querySelector('#ruleList .rule-card')) },
-  { title: 'Export the skill', text: "The confirmed rules, each with its evidence, an example and its self-checks, become a skill to load into your firm's approved AI tool, where new drafts are checked. It also comes as a Markdown, Word or PDF rules sheet.",
+  { title: 'Export the skill', text: "The confirmed rules, each with its evidence, its self-checks and, once you choose one, an example, become a skill to load into your firm's approved AI tool, where new drafts are checked. It also comes as a Markdown, Word or PDF rules sheet.",
     go: async live => {
       const p = tourProfile();
       let note = '';
       if (!live()) return null;
       if (!activeRules(S, p.id, 'all').length) {
-        for (const c of readyCandidates(p.id)) {
+        // Only candidates built entirely from demo comparisons: the user's own notes filed under the demo profile are never confirmed for them.
+        const demoOnly = c => c.members.every(id => { const ch = S.changes.find(x => x.id === id); return ch && (cmpById(ch.comparisonId) || {}).demo; });
+        for (const c of readyCandidates(p.id).filter(demoOnly)) {
           const cfg = S.candidateEdits[c.key] || { text: c.proposed, deliverableScope: c.suggested.deliverableScope, checkType: c.suggested.checkType, check: c.suggested.check };
           S.rules.push(ruleFromCandidate(S, c, cfg));
           delete S.candidateEdits[c.key];
         }
         commit();
-        note = 'For this tour, the demo candidates were confirmed for you.';
+        note = 'For this tour, the demo candidates were confirmed for you. Their examples wait until you choose them under 3.2 Confirm.';
       }
       if (!await tourGo('export', live)) return null;
       return { el: $('skillPreview').closest('.card'), note };
@@ -5077,6 +5301,7 @@ function wireEvents() {
   $('expName').addEventListener('input', () => { exportMetaFor(S.activeProfileId).name = $('expName').value; saveSoon(); updatePreview(); });
   $('expPurpose').addEventListener('input', () => { exportMetaFor(S.activeProfileId).purpose = $('expPurpose').value; saveSoon(); updatePreview(); });
   $('expType').addEventListener('change', () => { exportMetaFor(S.activeProfileId).type = $('expType').value; saveSoon(); updatePreview(); });
+  $('expExamples').addEventListener('change', () => { S.settings.includeExamples = $('expExamples').checked; save(); updatePreview(); renderNextBar(); });
   $('btnCopySkill').addEventListener('click', copySkill);
   $('btnDownloadSkill').addEventListener('click', () => {
     const sk = currentSkill();
