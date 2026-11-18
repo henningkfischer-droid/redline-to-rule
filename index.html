@@ -545,6 +545,10 @@ dialog::backdrop{background:rgba(20,8,32,.45);-webkit-backdrop-filter:blur(4px);
 .dlg-body h2{font:700 24px/1.25 var(--serif);margin:0 0 10px}
 .dlg-body .lede{margin-top:0;font-size:15.5px}
 .dlg-actions{display:flex;justify-content:flex-end;flex-wrap:wrap;gap:12px;margin-top:28px}
+/* Cancel next to a main button: two frames of the same size (v1.5.4) */
+.dlg-actions.pair{flex-wrap:nowrap;align-items:stretch}
+.dlg-actions.pair>.btn{flex:1 1 0;min-width:0}
+@media (max-width:600px){.dlg-actions.pair>.btn{padding:14px 12px;gap:8px}}
 /* Close (X) in the top right corner: the demo confirmation (askConfirm closeX) and About this project */
 .dlg-x{position:absolute;top:14px;right:14px;z-index:1;width:36px;height:36px;display:grid;place-items:center;background:var(--surface);border:0;border-radius:50%;color:var(--text-2);cursor:pointer;transition:background .2s,color .2s}
 .dlg-x:hover{background:var(--chip-bg);color:var(--text)}
@@ -796,7 +800,7 @@ body.print-preview #printSheet{display:block;padding:40px 16px}
           <a class="btn btn-ghost" href="#how">See how it works</a>
         </div>
       </div>
-      <!-- Decorative: a redline turning into a rule (plays once; shown complete with reduced motion) -->
+      <!-- Decorative: a redline turning into a rule (plays once, when it first comes into view; shown complete with reduced motion) -->
       <div class="redline" id="heroRedline" aria-hidden="true">
         <div class="doc">
           <div class="doc-text">
@@ -1178,8 +1182,8 @@ body.print-preview #printSheet{display:block;padding:40px 16px}
     <h2 id="dlgConfirmTitle" tabindex="-1">Are you sure?</h2>
     <p class="lede" id="dlgConfirmBody"></p>
     <div class="field" id="dlgConfirmField" hidden style="margin-top:18px"><label for="dlgConfirmInput" id="dlgConfirmLabel">Type DELETE to confirm</label><input type="text" id="dlgConfirmInput" autocomplete="off"></div>
-    <div class="dlg-actions">
-      <button type="button" class="btn-text" id="dlgConfirmCancel">Cancel</button>
+    <div class="dlg-actions pair" id="dlgConfirmActions">
+      <button type="button" class="btn btn-outline" id="dlgConfirmCancel">Cancel</button>
       <button type="button" class="btn btn-solid" id="dlgConfirmOk">Confirm <span class="arr" aria-hidden="true">→</span></button>
     </div>
   </form>
@@ -1232,9 +1236,9 @@ body.print-preview #printSheet{display:block;padding:40px 16px}
       <div class="field"><label for="listCategories">Change categories</label><textarea id="listCategories" style="min-height:220px"></textarea></div>
       <div class="field"><label for="listTypes">Deliverable types</label><textarea id="listTypes" style="min-height:220px"></textarea></div>
     </div>
-    <div class="dlg-actions">
-      <button type="button" class="btn-text" id="dlgListsCancel">Cancel</button>
-      <button type="submit" class="btn btn-solid">Save <span class="arr" aria-hidden="true">→</span></button>
+    <div class="dlg-actions pair">
+      <button type="button" class="btn btn-outline" id="dlgListsCancel">Cancel</button>
+      <button type="submit" class="btn btn-solid" id="dlgListsSave">Save <span class="arr" aria-hidden="true">→</span></button>
     </div>
   </form>
 </dialog>
@@ -1245,7 +1249,7 @@ body.print-preview #printSheet{display:block;padding:40px 16px}
    ========================================================================== */
 'use strict';
 
-const APP_VERSION = '1.5.2';
+const APP_VERSION = '1.5.5';
 const COURSE_LINE = 'NYU School of Law · Artificial Intelligence and Corporate Deals and Advice';
 const TOOL_CREDIT = 'Made with Redline to Rule, by Henning Fischer.';
 const STORAGE_KEY = 'redlineToRule.v1';
@@ -3305,11 +3309,12 @@ function askConfirm({ title, body, ok = 'Confirm', typeToConfirm = null, closeX 
     okBtn.onclick = () => done(true);
     // closeX: an X in the top right corner replaces the Cancel button (Escape still cancels).
     cancel.hidden = closeX; x.hidden = !closeX;
+    $('dlgConfirmActions').classList.toggle('pair', !closeX);   // a lone button keeps its own width
     cancel.onclick = x.onclick = () => done(false);
     dlg.oncancel = e => { e.preventDefault(); done(false); };
     dlg.showModal();
-    // With the X, start on the title (like About) so the X does not open with a focus ring.
-    (typeToConfirm ? input : closeX ? $('dlgConfirmTitle') : cancel).focus();
+    // Start on the title (like About), so neither button opens with a focus ring; Tab reaches them, Escape cancels.
+    (typeToConfirm ? input : $('dlgConfirmTitle')).focus();
   });
 }
 
@@ -3443,11 +3448,24 @@ function setupReveal() {
   setTimeout(() => document.querySelectorAll('.reveal').forEach(el => el.classList.add('in')), 2500);
 }
 
-/** Home hero: the redline strikes, inserts, then shows the rule it became. Shown complete with reduced motion. */
+/**
+ * Home hero: the redline strikes, inserts, then shows the rule it became. Shown complete with reduced motion.
+ * It starts the first time its sentence is on screen (and the tab is in front), so on a phone, where the sentence
+ * sits below the fold, it is never over before the reader gets there.
+ */
 const HERO_LETTER_MS = 60;   // pace of the green insertions: one letter every 60 ms
 function playHeroRedline() {
   const rl = $('heroRedline'), steps = ['s1', 's2', 's3', 's4', 's5'];
   if (reducedMotion()) { rl.classList.add(...steps); return; }
+  if (!('IntersectionObserver' in window)) { runHeroRedline(rl, steps); return; }
+  const start = () => { if (document.hidden) document.addEventListener('visibilitychange', start, { once: true }); else runHeroRedline(rl, steps); };
+  const io = new IntersectionObserver(entries => {
+    if (!entries.some(e => e.isIntersecting)) return;
+    io.disconnect(); start();
+  }, { threshold: 0.75 });
+  io.observe(rl.querySelector('.doc-text'));
+}
+function runHeroRedline(rl, steps) {
   // Each step waits for the one before it; after an insertion, until its last letter is in.
   let at = 700;
   for (const s of steps) {
@@ -4661,7 +4679,7 @@ function renderNextBar() {
 // The OpenRouter key for this copy of the app, reversed and base64-encoded so that automatic
 // secret scanners do not flag it. This does NOT hide it: anyone can decode it from the page
 // source, so give this key its own small credit limit on openrouter.ai.
-const AI_KEY_ENC = 'ZWQwZjE3YjE2ZjQ3OGIyYjZmOTg1ODFlZmJmZDNlZGIwMDRhMjRmOGQzZDZkYjBhMjJhNTFiYmIxZWU5MjExMi0xdi1yby1rcw==';
+const AI_KEY_ENC = 'YTY4ODM4NTYyODE0Y2U3YzIyNjdiZmVmM2RhNzMxMzE4N2E0Y2EwODdhZjg0MzM4Y2JjYmUwNGQ2OGRjMDE4Mi0xdi1yby1rcw==';
 
 const AI_ENDPOINT = 'https://openrouter.ai/api/v1/chat/completions';
 const AI_PAID = 'openai/gpt-5-nano';
@@ -4778,7 +4796,7 @@ async function toggleAI() {
   if (S.settings.ai) { setAI(false); return; }
   const ok = await askConfirm({
     title: 'Turn on AI?',
-    body: 'AI features send the text they work on to OpenRouter (openrouter.ai), which passes it to the AI model (GPT-5 nano, or a free model if credit runs out). Nothing is sent anywhere else. Use anonymized text only: Buyer, Seller, Target; no client names or confidential facts. The AI only suggests: tags and rules are saved only when you confirm them.',
+    body: 'AI features send the text they work on to OpenRouter (openrouter.ai), which passes it to an AI model: GPT-5 nano while the account has credit, otherwise a free model, which is slower and has a daily limit. Nothing is sent anywhere else. Use anonymized text only: Buyer, Seller, Target; no client names or confidential facts. The AI only suggests: tags and rules are saved only when you confirm them.',
     ok: 'Turn on AI'
   });
   if (ok) setAI(true);
