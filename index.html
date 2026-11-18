@@ -151,6 +151,7 @@ html[data-theme="dark"] .site-header{background:#3D0563}
 .site-header .icon-btn{width:30px;height:30px;background:transparent;color:#fff;border-color:rgba(255,255,255,.45)}
 .site-header .icon-btn:hover{border-color:#fff;color:#fff}
 .menu-btn{display:none}
+.menu-backdrop{display:none;position:fixed;inset:0;z-index:49;background:rgba(10,0,20,.5);touch-action:none}   /* under the header (z 50) */
 /* Privacy note: a small panel under the "Local only" label; with AI on, a full-width amber strip */
 .local-note{position:absolute;top:calc(100% + 10px);left:var(--note-left,auto);right:auto;width:min(340px,calc(100% - 32px));background:var(--surface);color:var(--text);font-size:13.5px;line-height:1.5;text-align:left;
   padding:14px 18px;border-top:3px solid var(--accent);border-radius:0 0 8px 8px;box-shadow:0 0 0 1px var(--line),0 24px 60px rgba(30,10,48,.18);z-index:60;
@@ -188,6 +189,11 @@ html[data-theme="dark"] .sub-menu{box-shadow:0 0 0 1px var(--line),0 24px 60px r
   html[data-theme="light"] .tabs{background:#57068C}
   html[data-theme="dark"] .tabs{background:#3D0563}
   .tabs.open{display:flex}
+  /* While the menu is open the page behind stays put (v1.5.9): the page cannot scroll, a dark layer covers it (a tap
+     there closes the menu), and a menu taller than the screen scrolls on its own */
+  .tabs{max-height:calc(100vh - var(--head-h,64px));max-height:calc(100dvh - var(--head-h,64px));overflow-y:auto;overscroll-behavior:contain}
+  html.menu-open{overflow:hidden}
+  html.menu-open .menu-backdrop{display:block}
   .tab-link{padding:16px 4px;border-bottom:1px solid rgba(255,255,255,.14)}
   .tab-link::after{left:4px;right:auto;width:28px;bottom:8px}
   /* In the menu panel the sub-steps are listed under their screen */
@@ -295,10 +301,12 @@ html[data-theme="dark"] .hero{background:#12061D}
    bottom bar; the redline starts on the next screen (it waits until it is scrolled to). --head-h is set by fitHeroToScreen(). */
 @media (max-width:760px){
   .hero .wrap{--hero-pad:28px;padding-top:var(--hero-pad);gap:0}
-  .hero-text{position:relative;min-height:calc(100svh - var(--head-h,90px) - var(--hero-pad));padding-bottom:64px;box-sizing:border-box}
+  /* 100lvh, the screen without browser bars: Safari's bottom bar is see-through, so with 100svh the top of the redline
+     still showed under it. The page shows nothing below the intro until it is scrolled. (100vh: browsers without lvh) */
+  .hero-text{position:relative;min-height:calc(100vh - var(--head-h,90px) - var(--hero-pad));min-height:calc(100lvh - var(--head-h,90px) - var(--hero-pad));padding-bottom:64px;box-sizing:border-box}
   .hero .sub{margin:20px 0 28px}
-  /* the scroll cue at the foot of the first screen, where tall phones have room to spare */
-  .hero-text::after{content:"";position:absolute;left:50%;bottom:14px;width:1px;height:36px;background:linear-gradient(rgba(255,255,255,0),rgba(255,255,255,.7));animation:cue 2.4s var(--ease) infinite}
+  /* the scroll cue at the foot of the first screen (above Safari's bars: 100svh), where tall phones have room to spare */
+  .hero-text::after{content:"";position:absolute;left:50%;top:calc(100svh - var(--head-h,90px) - var(--hero-pad) - 50px);width:1px;height:36px;background:linear-gradient(rgba(255,255,255,0),rgba(255,255,255,.7));animation:cue 2.4s var(--ease) infinite}
 }
 @media (max-width:760px) and (max-height:640px){
   .hero .wrap{--hero-pad:20px}
@@ -805,6 +813,7 @@ body.print-preview #printSheet{display:block;padding:40px 16px}
     <span id="privacyAI" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M7 18a5 5 0 0 1-.6-9.96A6 6 0 0 1 18 9a4.5 4.5 0 0 1-.5 9z"/></svg>AI on: text used by AI features is sent to OpenRouter (openrouter.ai) and the AI model. Use anonymized text only.<button type="button" class="btn-text" id="btnAIOff">Turn AI off</button></span>
   </div>
 </header>
+<div class="menu-backdrop" id="menuBackdrop" aria-hidden="true"></div>
 
 <main id="main">
 
@@ -1270,7 +1279,7 @@ body.print-preview #printSheet{display:block;padding:40px 16px}
    ========================================================================== */
 'use strict';
 
-const APP_VERSION = '1.5.7';
+const APP_VERSION = '1.5.9';
 const COURSE_LINE = 'NYU School of Law · Artificial Intelligence and Corporate Deals and Advice';
 const TOOL_CREDIT = 'Made with Redline to Rule, by Henning Fischer.';
 const STORAGE_KEY = 'redlineToRule.v1';
@@ -3443,11 +3452,15 @@ function renderChrome() {
   renderNextBar();
 }
 
-function closeMenu() {
-  $('navTabs').classList.remove('open');
-  $('btnMenu').setAttribute('aria-expanded', 'false');
-  $('btnMenu').setAttribute('aria-label', 'Open menu');
+/** Open or close the menu (below 1200px). While it is open the page behind is locked and dimmed. */
+function setMenu(open) {
+  open = open && getComputedStyle($('btnMenu')).display !== 'none';
+  $('navTabs').classList.toggle('open', open);
+  document.documentElement.classList.toggle('menu-open', open);
+  $('btnMenu').setAttribute('aria-expanded', String(open));
+  $('btnMenu').setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
 }
+function closeMenu() { setMenu(false); }
 function closeHelpTips(except) {
   for (const b of document.querySelectorAll('.help[aria-expanded="true"]')) {
     if (b === except) continue;
@@ -5229,11 +5242,11 @@ function wireEvents() {
 
   $('btnMenu').addEventListener('click', () => {
     const open = !$('navTabs').classList.contains('open');
-    $('navTabs').classList.toggle('open', open);
-    $('btnMenu').setAttribute('aria-expanded', String(open));
-    $('btnMenu').setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
-    if (open) $('navTabs').querySelector('a').focus();
+    setMenu(open);
+    if (open) $('navTabs').querySelector('a').focus({ preventScroll: true });   // focus without jumping the page
   });
+  // Widening the window past 1200px hides the menu button: close the menu, so the page is not left locked.
+  window.addEventListener('resize', () => { if ($('navTabs').classList.contains('open') && getComputedStyle($('btnMenu')).display === 'none') closeMenu(); });
   // Header shadow once scrolled; the guide bar steps aside once you have scrolled down to the footer.
   const onScroll = () => {
     $('siteHeader').classList.toggle('scrolled', window.scrollY > 8);
