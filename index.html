@@ -151,7 +151,7 @@ html[data-theme="dark"] .site-header{background:#3D0563}
 .site-header .icon-btn:hover{border-color:#fff;color:#fff}
 .menu-btn{display:none}
 /* Privacy note: a small panel under the "Local only" label; with AI on, a full-width amber strip */
-.local-note{position:absolute;top:calc(100% + 10px);right:var(--note-right,40px);width:min(340px,calc(100% - 32px));background:var(--surface);color:var(--text);font-size:13.5px;line-height:1.5;text-align:left;
+.local-note{position:absolute;top:calc(100% + 10px);left:var(--note-left,auto);right:auto;width:min(340px,calc(100% - 32px));background:var(--surface);color:var(--text);font-size:13.5px;line-height:1.5;text-align:left;
   padding:14px 18px;border-top:3px solid var(--accent);border-radius:0 0 8px 8px;box-shadow:0 0 0 1px var(--line),0 24px 60px rgba(30,10,48,.18);z-index:60;
   opacity:0;visibility:hidden;transform:translateY(6px);transition:opacity .2s var(--ease),transform .2s var(--ease),visibility 0s .2s}
 .local-note.open{opacity:1;visibility:visible;transform:none;transition:opacity .2s var(--ease),transform .2s var(--ease),visibility 0s}
@@ -1245,7 +1245,7 @@ body.print-preview #printSheet{display:block;padding:40px 16px}
    ========================================================================== */
 'use strict';
 
-const APP_VERSION = '1.5.1';
+const APP_VERSION = '1.5.2';
 const COURSE_LINE = 'NYU School of Law · Artificial Intelligence and Corporate Deals and Advice';
 const TOOL_CREDIT = 'Made with Redline to Rule, by Henning Fischer.';
 const STORAGE_KEY = 'redlineToRule.v1';
@@ -4807,10 +4807,18 @@ function renderAiChrome() {
   aiTeaser($('rulesAiTeaser'), showAiTeaser(S.activeProfileId), TEASE.rules);
   renderRulesAiButtons();
 }
-/** The "Local only" label opens a small panel with the full privacy note, aligned under the label. */
+/**
+ * The "Local only" label opens a small panel with the full privacy note, right-aligned under the label, but always
+ * kept 16px inside the screen: on phones the label sits at the left edge, where right-aligning pushed the panel off screen.
+ */
+function placePrivacyPanel() {
+  const note = $('privacyNote'), head = $('siteHeader').getBoundingClientRect(), btn = $('btnMode').getBoundingClientRect();
+  const left = btn.right - note.offsetWidth - head.left, max = Math.min(head.width, document.documentElement.clientWidth - head.left) - note.offsetWidth - 16;
+  note.style.setProperty('--note-left', Math.round(Math.max(16, Math.min(left, max))) + 'px');
+}
 function setPrivacyPanel(open) {
   const note = $('privacyNote'), btn = $('btnMode');
-  if (open) note.style.setProperty('--note-right', Math.max(16, Math.round($('siteHeader').getBoundingClientRect().right - btn.getBoundingClientRect().right)) + 'px');
+  if (open) placePrivacyPanel();
   note.classList.toggle('open', open);
   btn.setAttribute('aria-expanded', String(open));
 }
@@ -5147,6 +5155,7 @@ function wireEvents() {
   $('btnDemoFooter').addEventListener('click', loadDemoData);
   wireSubMenus();
   $('btnMode').addEventListener('click', () => setPrivacyPanel(!$('privacyNote').classList.contains('open')));
+  window.addEventListener('resize', () => { if ($('privacyNote').classList.contains('open')) placePrivacyPanel(); });   // turning a phone
   document.addEventListener('click', e => { if (!e.target.closest('#btnMode') && !e.target.closest('#privacyNote')) setPrivacyPanel(false); });
   document.addEventListener('keydown', e => { if (e.key === 'Escape' && $('privacyNote').classList.contains('open')) { setPrivacyPanel(false); $('btnMode').focus(); } });
   $('btnAboutFooter').addEventListener('click', () => {
